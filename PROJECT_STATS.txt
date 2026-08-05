@@ -1,0 +1,25 @@
+SCIENTIFIC CALCULATOR - PROJECT STATISTICS
+===========================================
+
+Generated: $(date)
+
+FILE COUNTS:
+-----------
+Total Project Files (excluding node_modules, build, .git):
+30
+
+JavaScript/React Files:
+10
+
+CSS Files:
+6
+
+Test Files:
+2
+
+Documentation Files:
+7
+
+Component Files:
+8
+
