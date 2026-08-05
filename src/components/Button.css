@@ -1,0 +1,203 @@
+.calculator-button {
+  background: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #333;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app.dark .calculator-button {
+  background: #2d2d2d;
+  color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.calculator-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.calculator-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Button types */
+.calculator-button.number {
+  background: #fff;
+  color: #333;
+}
+
+.app.dark .calculator-button.number {
+  background: #2d2d2d;
+  color: #fff;
+}
+
+.calculator-button.operator {
+  background: #667eea;
+  color: white;
+}
+
+.app.dark .calculator-button.operator {
+  background: #5568d3;
+}
+
+.calculator-button.function {
+  background: #48bb78;
+  color: white;
+  font-size: 14px;
+}
+
+.app.dark .calculator-button.function {
+  background: #38a169;
+}
+
+.calculator-button.equals {
+  background: #f56565;
+  color: white;
+  font-size: 24px;
+}
+
+.app.dark .calculator-button.equals {
+  background: #e53e3e;
+}
+
+.calculator-button.clear {
+  background: #ed8936;
+  color: white;
+}
+
+.app.dark .calculator-button.clear {
+  background: #dd6b20;
+}
+
+.calculator-button.memory {
+  background: #9f7aea;
+  color: white;
+  font-size: 14px;
+}
+
+.app.dark .calculator-button.memory {
+  background: #805ad5;
+}
+
+.calculator-button.mode {
+  background: #4299e1;
+  color: white;
+  font-size: 14px;
+}
+
+.app.dark .calculator-button.mode {
+  background: #3182ce;
+}
+
+.calculator-button.bracket {
+  background: #edf2f7;
+  color: #667eea;
+  font-weight: 700;
+}
+
+.app.dark .calculator-button.bracket {
+  background: #1a1a1a;
+  color: #5568d3;
+}
+
+/* Span classes for multi-column buttons */
+.calculator-button.span-2 {
+  grid-column: span 2;
+}
+
+.calculator-button.span-3 {
+  grid-column: span 3;
+}
+
+.calculator-button.span-4 {
+  grid-column: span 4;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .calculator-button {
+    font-size: 16px;
+    padding: 15px;
+    min-height: 55px;
+    border-radius: 10px;
+  }
+
+  .calculator-button.function,
+  .calculator-button.memory,
+  .calculator-button.mode {
+    font-size: 13px;
+  }
+
+  .calculator-button.equals {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calculator-button {
+    font-size: 14px;
+    padding: 12px;
+    min-height: 50px;
+    border-radius: 8px;
+  }
+
+  .calculator-button.function,
+  .calculator-button.memory,
+  .calculator-button.mode {
+    font-size: 11px;
+  }
+
+  .calculator-button.equals {
+    font-size: 20px;
+  }
+}
+
+/* Landscape mode optimizations */
+@media (max-height: 600px) and (orientation: landscape) {
+  .calculator-button {
+    font-size: 12px;
+    padding: 8px;
+    min-height: 40px;
+    border-radius: 6px;
+  }
+
+  .calculator-button.function,
+  .calculator-button.memory,
+  .calculator-button.mode {
+    font-size: 10px;
+  }
+
+  .calculator-button.equals {
+    font-size: 16px;
+  }
+}
+
+/* Animation on button press */
+@keyframes buttonPress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.calculator-button:active {
+  animation: buttonPress 0.1s ease;
+}

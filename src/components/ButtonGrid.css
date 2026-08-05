@@ -1,0 +1,75 @@
+.button-grid-container {
+  display: grid;
+  gap: 15px;
+}
+
+.scientific-panel,
+.basic-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .button-grid-container {
+    gap: 10px;
+  }
+
+  .scientific-panel,
+  .basic-panel {
+    gap: 8px;
+  }
+
+  .button-row {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .button-grid-container {
+    gap: 8px;
+  }
+
+  .scientific-panel,
+  .basic-panel {
+    gap: 6px;
+  }
+
+  .button-row {
+    gap: 6px;
+  }
+}
+
+/* Landscape mode optimizations */
+@media (max-height: 600px) and (orientation: landscape) {
+  .button-grid-container {
+    display: flex;
+    gap: 10px;
+  }
+
+  .scientific-panel {
+    flex: 1;
+    max-width: 50%;
+  }
+
+  .basic-panel {
+    flex: 1;
+    max-width: 50%;
+  }
+
+  .button-row {
+    gap: 6px;
+  }
+
+  .scientific-panel,
+  .basic-panel {
+    gap: 6px;
+  }
+}
