@@ -1,6 +1,6 @@
-# Scientific Calculator
+# Scientific Calculator & EMI Calculator
 
-A modern, feature-rich scientific calculator web application built with React. This calculator supports basic arithmetic operations, advanced scientific functions, memory operations, calculation history, and both light/dark themes.
+A modern, feature-rich web application built with React that includes both a scientific calculator and an EMI (Equated Monthly Installment) calculator. The scientific calculator supports basic arithmetic operations, advanced scientific functions, memory operations, calculation history, and both light/dark themes. The EMI calculator helps you calculate loan payments with detailed principal and interest breakup.
 
 ## Features
 
@@ -33,6 +33,42 @@ A modern, feature-rich scientific calculator web application built with React. T
 - Multi-line expression display
 - Scientific notation for very large/small numbers
 - Accessibility features
+
+## EMI Calculator
+
+### Features
+- **Loan Amount Input**: Set principal amount from ₹10,000 to ₹1,00,00,000
+- **Interest Rate**: Configure annual interest rate from 0% to 30%
+- **Loan Tenure**: Set tenure from 1 to 360 months (30 years)
+- **Interactive Controls**: Use sliders or manual input for precise values
+- **Real-time Calculation**: EMI updates automatically as you adjust parameters
+
+### EMI Breakdown Display
+- **Monthly EMI**: Highlighted card showing your monthly payment
+- **Principal Amount**: Total loan amount
+- **Total Interest**: Complete interest payable over loan tenure
+- **Total Amount**: Sum of principal and interest
+
+### Visual Analytics
+- **Pie Chart**: Visual representation of principal vs interest ratio
+- **Color-coded Legend**: 
+  - Teal: Principal amount
+  - Amber: Interest amount
+- **Percentage Display**: Shows exact percentage split
+
+### Amortization Schedule
+- **Month-by-month Breakdown**: Detailed table showing:
+  - Month number
+  - EMI amount
+  - Principal component (highlighted in teal)
+  - Interest component (highlighted in amber)
+  - Outstanding balance
+- **Scrollable Table**: Easy navigation through the entire loan period
+- **Sticky Header**: Table header remains visible while scrolling
+
+### Theme Support
+- Works seamlessly with both light and dark themes
+- Consistent teal color scheme for professional appearance
 
 ## Installation
 
@@ -92,6 +128,11 @@ Example: To calculate sin(30°), click: `sin` → `3` → `0` → `)` → `=`
 2. Click any history item to use that result
 3. Click "Clear All" to delete all history
 
+### Switching Between Calculators
+- Click the 💰 icon in the header to switch to EMI Calculator
+- Click the 🔢 icon to return to Scientific Calculator
+- Each calculator maintains its own state
+
 ### Keyboard Shortcuts
 - **Numbers**: 0-9
 - **Operations**: +, -, *, /
@@ -133,6 +174,8 @@ src/
 │   ├── ButtonGrid.css
 │   ├── Display.js         # Calculator display component
 │   ├── Display.css
+│   ├── EMICalculator.js   # EMI calculator component
+│   ├── EMICalculator.css
 │   ├── History.js         # History panel component
 │   └── History.css
 ├── utils/

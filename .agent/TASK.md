@@ -2,7 +2,7 @@
 
 # Iteration
 
-- Choose technology stack (e.g., React/Flutter for frontend, Node.js/Firebase for backend)
+- Set up development environment and version control
 
 ## Application
 
