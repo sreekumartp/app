@@ -3,6 +3,7 @@ import './App.css';
 import Display from './components/Display';
 import ButtonGrid from './components/ButtonGrid';
 import History from './components/History';
+import EMICalculator from './components/EMICalculator';
 import { evaluateExpression } from './utils/calculator';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   const [showHistory, setShowHistory] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [error, setError] = useState('');
+  const [showEMI, setShowEMI] = useState(false);
 
   useEffect(() => {
     // Load history and memory from localStorage
@@ -191,15 +193,24 @@ function App() {
     <div className={`app ${theme}`}>
       <div className="calculator">
         <div className="calculator-header">
-          <h1>Scientific Calculator</h1>
+          <h1>{showEMI ? 'EMI Calculator' : 'Scientific Calculator'}</h1>
           <div className="header-controls">
             <button
               className="icon-button"
-              onClick={() => setShowHistory(!showHistory)}
-              title="History"
+              onClick={() => setShowEMI(!showEMI)}
+              title={showEMI ? 'Switch to Calculator' : 'Switch to EMI Calculator'}
             >
-              📋
+              {showEMI ? '🔢' : '💰'}
             </button>
+            {!showEMI && (
+              <button
+                className="icon-button"
+                onClick={() => setShowHistory(!showHistory)}
+                title="History"
+              >
+                📋
+              </button>
+            )}
             <button
               className="icon-button"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -210,26 +221,32 @@ function App() {
           </div>
         </div>
 
-        <Display
-          value={display}
-          expression={expression}
-          isDegree={isDegree}
-          memory={memory}
-          error={error}
-        />
+        {showEMI ? (
+          <EMICalculator />
+        ) : (
+          <>
+            <Display
+              value={display}
+              expression={expression}
+              isDegree={isDegree}
+              memory={memory}
+              error={error}
+            />
 
-        <ButtonGrid
-          onInput={handleInput}
-          isDegree={isDegree}
-        />
+            <ButtonGrid
+              onInput={handleInput}
+              isDegree={isDegree}
+            />
 
-        {showHistory && (
-          <History
-            history={history}
-            onSelect={handleHistorySelect}
-            onClear={clearHistory}
-            onClose={() => setShowHistory(false)}
-          />
+            {showHistory && (
+              <History
+                history={history}
+                onSelect={handleHistorySelect}
+                onClear={clearHistory}
+                onClose={() => setShowHistory(false)}
+              />
+            )}
+          </>
         )}
       </div>
     </div>

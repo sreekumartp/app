@@ -1,0 +1,440 @@
+.emi-calculator {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+.emi-calculator h2 {
+  text-align: center;
+  color: #0f766e;
+  margin-bottom: 30px;
+  font-size: 2em;
+  font-weight: 700;
+}
+
+.dark .emi-calculator h2,
+.dark .emi-calculator h3 {
+  color: #ecf0f1;
+}
+
+/* Input Section */
+.emi-inputs {
+  background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%);
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.1);
+  border: 1px solid #99f6e4;
+}
+
+.dark .emi-inputs {
+  background: linear-gradient(135deg, #134e4a 0%, #115e59 100%);
+  border-color: #14b8a6;
+}
+
+.input-group {
+  margin-bottom: 25px;
+}
+
+.input-group:last-child {
+  margin-bottom: 0;
+}
+
+.input-group label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: #0f766e;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.dark .input-group label {
+  color: #5eead4;
+}
+
+.input-value {
+  color: #14b8a6;
+  font-weight: 700;
+}
+
+.input-group input[type="range"] {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: #ccfbf1;
+  outline: none;
+  -webkit-appearance: none;
+  margin-bottom: 10px;
+}
+
+.dark .input-group input[type="range"] {
+  background: #134e4a;
+}
+
+.input-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(20, 184, 166, 0.3);
+}
+
+.input-group input[type="range"]::-webkit-slider-thumb:hover {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(20, 184, 166, 0.4);
+}
+
+.input-group input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(20, 184, 166, 0.3);
+}
+
+.number-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #99f6e4;
+  border-radius: 8px;
+  font-size: 1em;
+  text-align: center;
+  transition: border-color 0.2s;
+  background: white;
+}
+
+.dark .number-input {
+  background: #115e59;
+  border-color: #14b8a6;
+  color: #5eead4;
+}
+
+.number-input:focus {
+  outline: none;
+  border-color: #14b8a6;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+}
+
+/* Summary Cards */
+.emi-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.1);
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #d1fae5;
+}
+
+.dark .summary-card {
+  background: #115e59;
+  border-color: #14b8a6;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.2);
+}
+
+.summary-card.highlight {
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  color: white;
+  border: none;
+}
+
+.summary-card h3 {
+  font-size: 0.9em;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.summary-card.highlight h3 {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.summary-value {
+  font-size: 1.8em;
+  font-weight: 700;
+  margin: 0;
+  color: #0f766e;
+}
+
+.dark .summary-value {
+  color: #5eead4;
+}
+
+.summary-card.highlight .summary-value {
+  color: white;
+}
+
+/* Chart Section */
+.emi-chart {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.1);
+  margin-bottom: 30px;
+  text-align: center;
+  border: 1px solid #d1fae5;
+}
+
+.dark .emi-chart {
+  background: #115e59;
+  border-color: #14b8a6;
+}
+
+.emi-chart h3 {
+  margin-top: 0;
+  color: #0f766e;
+}
+
+.dark .emi-chart h3 {
+  color: #5eead4;
+}
+
+.pie-chart {
+  width: 200px;
+  height: 200px;
+  margin: 30px auto;
+  position: relative;
+  border-radius: 50%;
+  background: conic-gradient(
+    #14b8a6 0% var(--percentage, 50%),
+    #f59e0b var(--percentage, 50%) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(20, 184, 166, 0.25);
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95em;
+}
+
+.dark .legend-item {
+  color: #ecf0f1;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.legend-color.principal {
+  background: #14b8a6;
+  box-shadow: 0 2px 4px rgba(20, 184, 166, 0.3);
+}
+
+.legend-color.interest {
+  background: #f59e0b;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+/* Amortization Schedule */
+.amortization-schedule {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.1);
+  border: 1px solid #d1fae5;
+}
+
+.dark .amortization-schedule {
+  background: #115e59;
+  border-color: #14b8a6;
+}
+
+.amortization-schedule h3 {
+  margin-top: 0;
+  color: #0f766e;
+}
+
+.dark .amortization-schedule h3 {
+  color: #5eead4;
+}
+
+.schedule-table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid #99f6e4;
+}
+
+.dark .schedule-table-container {
+  border-color: #14b8a6;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.schedule-table thead {
+  position: sticky;
+  top: 0;
+  background: #f0fdfa;
+  z-index: 1;
+}
+
+.dark .schedule-table thead {
+  background: #134e4a;
+}
+
+.schedule-table th {
+  padding: 12px;
+  text-align: right;
+  font-weight: 600;
+  color: #0f766e;
+  border-bottom: 2px solid #99f6e4;
+}
+
+.dark .schedule-table th {
+  color: #5eead4;
+  border-bottom-color: #14b8a6;
+}
+
+.schedule-table th:first-child,
+.schedule-table td:first-child {
+  text-align: center;
+}
+
+.schedule-table td {
+  padding: 10px 12px;
+  text-align: right;
+  border-bottom: 1px solid #ccfbf1;
+  color: #0f766e;
+}
+
+.dark .schedule-table td {
+  color: #99f6e4;
+  border-bottom-color: #14b8a6;
+}
+
+.schedule-table tbody tr:hover {
+  background: #f0fdfa;
+}
+
+.dark .schedule-table tbody tr:hover {
+  background: #134e4a;
+}
+
+.principal-cell {
+  color: #14b8a6 !important;
+  font-weight: 600;
+}
+
+.interest-cell {
+  color: #f59e0b !important;
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .emi-calculator {
+    padding: 15px;
+  }
+
+  .emi-calculator h2 {
+    font-size: 1.5em;
+  }
+
+  .emi-inputs {
+    padding: 20px;
+  }
+
+  .emi-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-value {
+    font-size: 1.5em;
+  }
+
+  .emi-chart,
+  .amortization-schedule {
+    padding: 20px;
+  }
+
+  .pie-chart {
+    width: 150px;
+    height: 150px;
+  }
+
+  .chart-legend {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .schedule-table {
+    font-size: 0.8em;
+  }
+
+  .schedule-table th,
+  .schedule-table td {
+    padding: 8px 6px;
+  }
+}
+
+/* Scrollbar Styling */
+.schedule-table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.schedule-table-container::-webkit-scrollbar-track {
+  background: #f0fdfa;
+  border-radius: 4px;
+}
+
+.dark .schedule-table-container::-webkit-scrollbar-track {
+  background: #134e4a;
+}
+
+.schedule-table-container::-webkit-scrollbar-thumb {
+  background: #99f6e4;
+  border-radius: 4px;
+}
+
+.dark .schedule-table-container::-webkit-scrollbar-thumb {
+  background: #14b8a6;
+}
+
+.schedule-table-container::-webkit-scrollbar-thumb:hover {
+  background: #14b8a6;
+}
+
+.dark .schedule-table-container::-webkit-scrollbar-thumb:hover {
+  background: #0d9488;
+}
