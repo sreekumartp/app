@@ -1,9 +1,25 @@
 # Changelog
 
-All notable changes to the Scientific Calculator project will be documented in this file.
+All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+- Namma Metro journey planner for Bengaluru (🚇 icon in the header)
+  - Purple, Green and Yellow line network data (85 unique stations)
+  - Shortest-time route finding with interchange penalties at Majestic and RV Road
+  - Distance-slab fare estimates for tokens and smart cards
+  - Travel time, arrival estimate and step-by-step boarding/alighting directions
+  - Expandable legs listing intermediate stations
+  - Popular journey shortcuts and recently planned trips
+- Tests covering the metro network data, route finder, fares and planner UI
+
+### Changed
+- The app shell now switches between three views (calculator, EMI, metro)
+  instead of toggling a single EMI flag
 
 ## [1.0.0] - 2026-08-05
 

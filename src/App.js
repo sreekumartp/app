@@ -4,7 +4,14 @@ import Display from './components/Display';
 import ButtonGrid from './components/ButtonGrid';
 import History from './components/History';
 import EMICalculator from './components/EMICalculator';
+import MetroPlanner from './components/MetroPlanner';
 import { evaluateExpression } from './utils/calculator';
+
+const MODE_TITLES = {
+  calc: 'Scientific Calculator',
+  emi: 'EMI Calculator',
+  metro: 'Namma Metro Planner',
+};
 
 function App() {
   const [display, setDisplay] = useState('0');
@@ -15,7 +22,7 @@ function App() {
   const [showHistory, setShowHistory] = useState(false);
   const [theme, setTheme] = useState('dark');
   const [error, setError] = useState('');
-  const [showEMI, setShowEMI] = useState(false);
+  const [mode, setMode] = useState('calc');
 
   useEffect(() => {
     // Load history and memory from localStorage
@@ -189,20 +196,29 @@ function App() {
     localStorage.removeItem('calcHistory');
   };
 
+  const isCalculator = mode === 'calc';
+
   return (
-    <div className={`app ${theme}`}>
+    <div className={`app ${theme} ${isCalculator ? '' : 'wide'}`}>
       <div className="calculator">
         <div className="calculator-header">
-          <h1>{showEMI ? 'EMI Calculator' : 'Scientific Calculator'}</h1>
+          <h1>{MODE_TITLES[mode]}</h1>
           <div className="header-controls">
             <button
-              className="icon-button"
-              onClick={() => setShowEMI(!showEMI)}
-              title={showEMI ? 'Switch to Calculator' : 'Switch to EMI Calculator'}
+              className={`icon-button ${mode === 'emi' ? 'active' : ''}`}
+              onClick={() => setMode(mode === 'emi' ? 'calc' : 'emi')}
+              title={mode === 'emi' ? 'Switch to Calculator' : 'Switch to EMI Calculator'}
             >
-              {showEMI ? '🔢' : '💰'}
+              {mode === 'emi' ? '🔢' : '💰'}
             </button>
-            {!showEMI && (
+            <button
+              className={`icon-button ${mode === 'metro' ? 'active' : ''}`}
+              onClick={() => setMode(mode === 'metro' ? 'calc' : 'metro')}
+              title={mode === 'metro' ? 'Switch to Calculator' : 'Switch to Metro Planner'}
+            >
+              {mode === 'metro' ? '🔢' : '🚇'}
+            </button>
+            {isCalculator && (
               <button
                 className="icon-button"
                 onClick={() => setShowHistory(!showHistory)}
@@ -221,9 +237,10 @@ function App() {
           </div>
         </div>
 
-        {showEMI ? (
-          <EMICalculator />
-        ) : (
+        {mode === 'emi' && <EMICalculator />}
+        {mode === 'metro' && <MetroPlanner />}
+
+        {isCalculator && (
           <>
             <Display
               value={display}

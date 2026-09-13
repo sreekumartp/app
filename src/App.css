@@ -114,3 +114,16 @@
     font-size: 18px;
   }
 }
+
+/* Wider shell for the EMI and metro planner views */
+.app.wide {
+  max-width: 1100px;
+}
+
+.icon-button.active {
+  background: rgba(123, 31, 162, 0.12);
+}
+
+.app.dark .icon-button.active {
+  background: rgba(196, 181, 253, 0.2);
+}

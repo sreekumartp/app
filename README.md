@@ -1,6 +1,6 @@
-# Scientific Calculator & EMI Calculator
+# Scientific Calculator, EMI Calculator & Namma Metro Planner
 
-A modern, feature-rich web application built with React that includes both a scientific calculator and an EMI (Equated Monthly Installment) calculator. The scientific calculator supports basic arithmetic operations, advanced scientific functions, memory operations, calculation history, and both light/dark themes. The EMI calculator helps you calculate loan payments with detailed principal and interest breakup.
+A modern, feature-rich web application built with React that includes a scientific calculator, an EMI (Equated Monthly Installment) calculator and a Bengaluru Namma Metro journey planner. The scientific calculator supports basic arithmetic operations, advanced scientific functions, memory operations, calculation history, and both light/dark themes. The EMI calculator helps you calculate loan payments with detailed principal and interest breakup. The metro planner works out the fastest route, fare and travel time between any two Namma Metro stations in Bengaluru.
 
 ## Features
 
@@ -70,6 +70,46 @@ A modern, feature-rich web application built with React that includes both a sci
 - Works seamlessly with both light and dark themes
 - Consistent teal color scheme for professional appearance
 
+## Namma Metro Planner (Bengaluru)
+
+Plan a trip on Bengaluru's Namma Metro: pick a boarding and destination station and
+the planner works out the route, the fare and where to change lines.
+
+### Network Coverage
+| Line | Route | Stations |
+| --- | --- | --- |
+| Purple | Whitefield (Kadugodi) ↔ Challaghatta | 37 |
+| Green | Madavara ↔ Silk Institute | 32 |
+| Yellow | Rashtreeya Vidyalaya Road ↔ Bommasandra | 16 |
+
+Interchanges: **Nadaprabhu Kempegowda Station, Majestic** (Purple ↔ Green) and
+**Rashtreeya Vidyalaya Road** (Green ↔ Yellow).
+
+### Features
+- **Route Planning**: Shortest-time route between any two stations, found with
+  Dijkstra's algorithm over (station, line) pairs — changing lines carries a
+  5-minute penalty, so direct trains win when two routes are close in length
+- **Fare Estimate**: BMRCL-style distance slabs from ₹10 to ₹90, with the
+  discounted smart-card fare shown alongside the token fare
+- **Travel Time**: Riding time plus interchange walking time, with an estimated
+  arrival clock time
+- **Step-by-step Directions**: Which line to board, the direction (terminal
+  station) shown on platform signage, where to change and where to get off
+- **Expandable Legs**: Tap a leg to list every intermediate station
+- **Popular Journeys**: One-tap shortcuts for common trips like MG Road →
+  Electronic City
+- **Recent Journeys**: Your last five planned trips, persisted in local storage
+- **Service Info**: First/last train times and train frequency
+
+### Usage
+1. Click the 🚇 icon in the header to open the planner
+2. Choose a **From** and **To** station (interchange stations are marked ⇄)
+3. Use the ⇅ button to reverse the journey
+4. Click a leg's "N stops" pill to see the stations in between
+
+> Fares, distances and times are close estimates derived from average
+> inter-station distances — check BMRCL for official figures.
+
 ## Installation
 
 ### Prerequisites
@@ -128,10 +168,11 @@ Example: To calculate sin(30°), click: `sin` → `3` → `0` → `)` → `=`
 2. Click any history item to use that result
 3. Click "Clear All" to delete all history
 
-### Switching Between Calculators
-- Click the 💰 icon in the header to switch to EMI Calculator
-- Click the 🔢 icon to return to Scientific Calculator
-- Each calculator maintains its own state
+### Switching Between Views
+- Click the 💰 icon in the header to switch to the EMI Calculator
+- Click the 🚇 icon to switch to the Namma Metro Planner
+- Click the 🔢 icon to return to the Scientific Calculator
+- Each view maintains its own state
 
 ### Keyboard Shortcuts
 - **Numbers**: 0-9
@@ -177,10 +218,15 @@ src/
 │   ├── EMICalculator.js   # EMI calculator component
 │   ├── EMICalculator.css
 │   ├── History.js         # History panel component
-│   └── History.css
+│   ├── History.css
+│   ├── MetroPlanner.js    # Namma Metro journey planner UI
+│   ├── MetroPlanner.css
+│   └── MetroPlanner.test.js
 ├── utils/
 │   ├── calculator.js      # Core calculation engine
-│   └── calculator.test.js # Calculator tests
+│   ├── calculator.test.js # Calculator tests
+│   ├── metro.js           # Metro network data, routing and fares
+│   └── metro.test.js      # Metro planner tests
 ├── App.js                 # Main app component
 ├── App.css
 ├── App.test.js            # App tests
@@ -198,6 +244,8 @@ The application includes comprehensive unit tests for:
 - Error handling
 - Expression validation
 - UI components
+- Metro network data integrity (station counts, interchanges)
+- Metro route finding, interchange detection and fare slabs
 
 Run tests with:
 ```bash
