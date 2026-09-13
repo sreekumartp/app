@@ -1,297 +1,121 @@
-# Scientific Calculator, EMI Calculator & Namma Metro Planner
+# Namma Metro · Bengaluru
 
-A modern, feature-rich web application built with React that includes a scientific calculator, an EMI (Equated Monthly Installment) calculator and a Bengaluru Namma Metro journey planner. The scientific calculator supports basic arithmetic operations, advanced scientific functions, memory operations, calculation history, and both light/dark themes. The EMI calculator helps you calculate loan payments with detailed principal and interest breakup. The metro planner works out the fastest route, fare and travel time between any two Namma Metro stations in Bengaluru.
+A journey planner for Bengaluru's Namma Metro. Pick where you're getting on and
+where you're going, and it works out the route, the fare, how long it takes and
+where to change lines — plus a network map, per-station timetables and saved
+stations for your daily commute.
 
-## Features
+Built with React. No backend, no API keys, no network calls: the whole network
+is modelled in the app, so it works offline once loaded.
 
-### Core Functionality
-- **Basic Operations**: Addition, subtraction, multiplication, division
-- **Scientific Functions**:
-  - Trigonometric: sin, cos, tan, asin, acos, atan
-  - Hyperbolic: sinh, cosh, tanh
-  - Logarithmic: log (base 10), ln (natural log)
-  - Other: square root, absolute value, factorial, power
-- **Mathematical Constants**: π (pi), e
-- **Parentheses Support**: For complex expressions
-- **Order of Operations**: PEMDAS/BODMAS compliant
+## Network coverage
 
-### Advanced Features
-- **Memory Functions**: M+, M-, MR (Recall), MC (Clear)
-- **Calculation History**: Stores up to 50 previous calculations
-- **Angle Modes**: Switch between degrees and radians for trigonometric functions
-- **Keyboard Support**: Full keyboard input support
-- **Themes**: Toggle between light and dark modes
-- **Responsive Design**: Works on desktop, tablet, and mobile devices
-- **Landscape Mode**: Optimized layout for landscape orientation
-- **Error Handling**: Clear error messages for invalid expressions
-- **Local Storage**: Persists history and memory across sessions
-
-### User Experience
-- Smooth animations and transitions
-- Haptic feedback on mobile devices
-- Copy/paste support
-- Multi-line expression display
-- Scientific notation for very large/small numbers
-- Accessibility features
-
-## EMI Calculator
-
-### Features
-- **Loan Amount Input**: Set principal amount from ₹10,000 to ₹1,00,00,000
-- **Interest Rate**: Configure annual interest rate from 0% to 30%
-- **Loan Tenure**: Set tenure from 1 to 360 months (30 years)
-- **Interactive Controls**: Use sliders or manual input for precise values
-- **Real-time Calculation**: EMI updates automatically as you adjust parameters
-
-### EMI Breakdown Display
-- **Monthly EMI**: Highlighted card showing your monthly payment
-- **Principal Amount**: Total loan amount
-- **Total Interest**: Complete interest payable over loan tenure
-- **Total Amount**: Sum of principal and interest
-
-### Visual Analytics
-- **Pie Chart**: Visual representation of principal vs interest ratio
-- **Color-coded Legend**: 
-  - Teal: Principal amount
-  - Amber: Interest amount
-- **Percentage Display**: Shows exact percentage split
-
-### Amortization Schedule
-- **Month-by-month Breakdown**: Detailed table showing:
-  - Month number
-  - EMI amount
-  - Principal component (highlighted in teal)
-  - Interest component (highlighted in amber)
-  - Outstanding balance
-- **Scrollable Table**: Easy navigation through the entire loan period
-- **Sticky Header**: Table header remains visible while scrolling
-
-### Theme Support
-- Works seamlessly with both light and dark themes
-- Consistent teal color scheme for professional appearance
-
-## Namma Metro Planner (Bengaluru)
-
-Plan a trip on Bengaluru's Namma Metro: pick a boarding and destination station and
-the planner works out the route, the fare and where to change lines.
-
-### Network Coverage
 | Line | Route | Stations |
 | --- | --- | --- |
 | Purple | Whitefield (Kadugodi) ↔ Challaghatta | 37 |
 | Green | Madavara ↔ Silk Institute | 32 |
 | Yellow | Rashtreeya Vidyalaya Road ↔ Bommasandra | 16 |
 
-Interchanges: **Nadaprabhu Kempegowda Station, Majestic** (Purple ↔ Green) and
-**Rashtreeya Vidyalaya Road** (Green ↔ Yellow).
+85 unique stations, with two interchanges: **Nadaprabhu Kempegowda Station,
+Majestic** (Purple ↔ Green) and **Rashtreeya Vidyalaya Road** (Green ↔ Yellow).
 
-### Features
-- **Route Planning**: Shortest-time route between any two stations, found with
-  Dijkstra's algorithm over (station, line) pairs — changing lines carries a
-  5-minute penalty, so direct trains win when two routes are close in length
-- **Fare Estimate**: BMRCL-style distance slabs from ₹10 to ₹90, with the
-  discounted smart-card fare shown alongside the token fare
-- **Travel Time**: Riding time plus interchange walking time, with an estimated
-  arrival clock time
-- **Step-by-step Directions**: Which line to board, the direction (terminal
-  station) shown on platform signage, where to change and where to get off
-- **Expandable Legs**: Tap a leg to list every intermediate station
-- **Popular Journeys**: One-tap shortcuts for common trips like MG Road →
-  Electronic City
-- **Recent Journeys**: Your last five planned trips, persisted in local storage
-- **Service Info**: First/last train times and train frequency
+## Features
 
-### Usage
-1. Click the 🚇 icon in the header to open the planner
-2. Choose a **From** and **To** station (interchange stations are marked ⇄)
-3. Use the ⇅ button to reverse the journey
-4. Click a leg's "N stops" pill to see the stations in between
+### Plan
+- **Route finding** — the quickest route between any two stations, using
+  Dijkstra's algorithm over (station, line) pairs. Changing lines costs a
+  5-minute penalty, so a direct train wins when two routes are close in length.
+- **Fare** — token and discounted smart-card price from BMRCL-style distance
+  slabs (₹10–₹90).
+- **Travel time** — riding time plus interchange walking time, with an
+  estimated arrival clock time.
+- **Step-by-step directions** — which line to board, the terminal shown on
+  platform signage ("towards Challaghatta"), where to change, where to get off.
+  Each leg expands to list the stations in between.
+- **Saved commute** — set home and work once; your morning and evening trips
+  are then one tap each.
+- **Recent journeys** — your last four trips, kept in local storage.
 
-> Fares, distances and times are close estimates derived from average
-> inter-station distances — check BMRCL for official figures.
+### Map
+- Schematic of all three lines. It isn't to scale, but the compass directions
+  are real: Purple runs east–west, Green north–south, Yellow south-east from
+  RV Road.
+- A planned route is drawn over the dimmed network, with its endpoints labelled.
+- Tap any station to travel from it, travel to it, or open its details.
+- Station positions are derived rather than hand-placed, so the interchanges
+  land exactly where the lines cross.
 
-## Installation
+### Stations
+- Search all 85 stations, including landmark names — "majestic", "mg road",
+  "silk board", "kr puram" all resolve.
+- Per-station page: lines served, position along each line, distance from the
+  terminal, previous and next stations, and first/last train times in every
+  direction (weekday and Sunday).
+- Save stations you use often.
 
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
+## Accuracy
 
-### Steps
+Distances are modelled from per-line average inter-station gaps rather than a
+surveyed distance table, so **fares, distances and travel times are close
+estimates**. Timetables are derived from terminal departure times and how far
+along the line a station sits — good to within a few minutes, not to the
+second. There is no live data of any kind: no train positions, no delays, no
+crowding. Check BMRCL for official figures.
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd app
-```
+Three lines are in revenue service today. The Blue Line to the airport and the
+Pink Line are still under construction and are not included.
 
-2. Install dependencies:
+## Getting started
+
 ```bash
 npm install
-```
-
-3. Start the development server:
-```bash
 npm start
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+Opens http://localhost:3000 with hot reload.
 
-## Usage
+| Command | What it does |
+| --- | --- |
+| `npm start` | Dev server on :3000 |
+| `npm test` | Jest in watch mode |
+| `CI=true npm test` | Single run, no watch |
+| `npm run build` | Production bundle into `build/` |
 
-### Basic Operations
-1. Click number buttons to enter numbers
-2. Click operation buttons (+, -, ×, ÷) to perform calculations
-3. Click = to see the result
-4. Use AC (All Clear) to clear everything or C to clear current input
-
-### Scientific Functions
-1. Click any function button (sin, cos, log, etc.)
-2. The function name with opening parenthesis will appear
-3. Enter your number
-4. Close the parenthesis with )
-5. Click = to calculate
-
-Example: To calculate sin(30°), click: `sin` → `3` → `0` → `)` → `=`
-
-### Memory Operations
-- **M+**: Add current display value to memory
-- **M-**: Subtract current display value from memory
-- **MR**: Recall value from memory
-- **MC**: Clear memory
-
-### Angle Mode
-- Click the **DEG/RAD** button to toggle between degrees and radians
-- The current mode is displayed in the top-left of the display
-
-### History
-1. Click the 📋 (clipboard) icon to view calculation history
-2. Click any history item to use that result
-3. Click "Clear All" to delete all history
-
-### Switching Between Views
-- Click the 💰 icon in the header to switch to the EMI Calculator
-- Click the 🚇 icon to switch to the Namma Metro Planner
-- Click the 🔢 icon to return to the Scientific Calculator
-- Each view maintains its own state
-
-### Keyboard Shortcuts
-- **Numbers**: 0-9
-- **Operations**: +, -, *, /
-- **Parentheses**: (, )
-- **Decimal**: .
-- **Calculate**: Enter
-- **Clear All**: Escape
-- **Delete**: Backspace
-- **Power**: ^
-- **Percentage**: %
-
-## Available Scripts
-
-### `npm start`
-Runs the app in development mode at [http://localhost:3000](http://localhost:3000).
-
-### `npm test`
-Launches the test runner in interactive watch mode.
-
-### `npm run build`
-Builds the app for production to the `build` folder.
-
-## Technology Stack
-
-- **React 18**: Modern React with hooks
-- **mathjs**: Mathematical expression evaluation
-- **CSS3**: Animations, gradients, and responsive design
-- **Local Storage API**: For persisting history and memory
-- **Vibration API**: For haptic feedback on mobile
-
-## Project Structure
+## Project structure
 
 ```
 src/
 ├── components/
-│   ├── Button.js          # Individual calculator button
-│   ├── Button.css
-│   ├── ButtonGrid.js      # Grid layout for all buttons
-│   ├── ButtonGrid.css
-│   ├── Display.js         # Calculator display component
-│   ├── Display.css
-│   ├── EMICalculator.js   # EMI calculator component
-│   ├── EMICalculator.css
-│   ├── History.js         # History panel component
-│   ├── History.css
-│   ├── MetroPlanner.js    # Namma Metro journey planner UI
-│   ├── MetroPlanner.css
-│   └── MetroPlanner.test.js
+│   ├── JourneyPlanner.js     # Plan tab: pickers, commute, fare, directions
+│   ├── JourneyPlanner.css
+│   ├── NetworkMap.js         # Map tab: SVG schematic + route highlight
+│   ├── NetworkMap.css
+│   ├── StationDirectory.js   # Stations tab: search, station pages, timetables
+│   └── StationDirectory.css
 ├── utils/
-│   ├── calculator.js      # Core calculation engine
-│   ├── calculator.test.js # Calculator tests
-│   ├── metro.js           # Metro network data, routing and fares
-│   └── metro.test.js      # Metro planner tests
-├── App.js                 # Main app component
+│   ├── metro.js              # Network data, routing, fares, timetables, map geometry
+│   ├── metro.test.js
+│   └── useLocalStorage.js    # Persistence that tolerates blocked storage
+├── App.js                    # Shell: header, tabs, shared state
 ├── App.css
-├── App.test.js            # App tests
-├── index.js               # Entry point
-├── index.css
-└── setupTests.js          # Test configuration
+├── App.test.js               # Integration tests through the real app
+├── index.js
+└── index.css                 # Design tokens, both themes
 ```
 
 ## Testing
 
-The application includes comprehensive unit tests for:
-- Basic arithmetic operations
-- Scientific functions
-- Trigonometric calculations
-- Error handling
-- Expression validation
-- UI components
-- Metro network data integrity (station counts, interchanges)
-- Metro route finding, interchange detection and fare slabs
-
-Run tests with:
 ```bash
-npm test
+CI=true npm test
 ```
 
-## Browser Support
+48 tests covering network data integrity (station counts, interchanges,
+no duplicates), route finding and interchange detection, fare slabs, derived
+timetables, map geometry (every station placed, interchanges coincident, all
+points inside the viewBox), and the app's own flows — planning a journey,
+expanding a leg, swapping, saved commutes, map interaction and station pages.
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
+## Themes
 
-## Performance Optimizations
-
-- React.memo for component optimization
-- Callback memoization with useCallback
-- Efficient re-renders
-- Lazy loading for history panel
-- Optimized CSS animations
-
-## Future Enhancements
-
-Potential features for future versions:
-- Export calculation history
-- Customizable themes with color picker
-- Graph plotting capabilities
-- Statistics functions (mean, median, standard deviation)
-- Matrix operations
-- Unit conversions
-- Programmable functions
-- Cloud sync for history
-
-## License
-
-This project is open source and available under the MIT License.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## Support
-
-For issues, questions, or suggestions, please open an issue in the repository.
-
----
-
-Built with ❤️ using React and mathjs
+Light and dark, switched from the header and remembered. The first visit
+follows your system preference.

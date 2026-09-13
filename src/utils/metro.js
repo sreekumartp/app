@@ -13,7 +13,7 @@ export const LINES = {
   purple: {
     id: 'purple',
     name: 'Purple Line',
-    color: '#7b1fa2',
+    color: '#8b39b8',
     // ~43.5 km across 36 gaps
     avgGapKm: 1.21,
     stations: [
@@ -59,7 +59,7 @@ export const LINES = {
   green: {
     id: 'green',
     name: 'Green Line',
-    color: '#2e7d32',
+    color: '#2e9e4f',
     // ~31.5 km across 31 gaps
     avgGapKm: 1.02,
     stations: [
@@ -100,7 +100,7 @@ export const LINES = {
   yellow: {
     id: 'yellow',
     name: 'Yellow Line',
-    color: '#f9a825',
+    color: '#e8a317',
     // ~19.15 km across 15 gaps
     avgGapKm: 1.28,
     stations: [
@@ -143,7 +143,11 @@ const ALIASES = {
   'airport': null, // Blue Line to KIA is still under construction
 };
 
-/** Operating information shown alongside a planned journey. */
+/**
+ * Operating information. Trains start from each terminal at the service start
+ * time and the last one leaves a terminal at lastDeparture; a station's own
+ * first and last train are derived from how far down the line it sits.
+ */
 export const SERVICE_INFO = {
   firstTrainWeekday: '05:00',
   firstTrainSunday: '07:00',
@@ -151,6 +155,92 @@ export const SERVICE_INFO = {
   peakHeadwayMinutes: 5,
   offPeakHeadwayMinutes: 10,
 };
+
+function toMinutes(clock) {
+  const [h, m] = clock.split(':').map(Number);
+  return h * 60 + m;
+}
+
+function toClock(minutes) {
+  const wrapped = ((minutes % 1440) + 1440) % 1440;
+  const h = Math.floor(wrapped / 60);
+  const m = Math.round(wrapped % 60);
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+/**
+ * First and last train at a station, per line and per direction.
+ *
+ * @param {string} name station name
+ * @returns {Array<{line: string, lineName: string, color: string, towards: string,
+ *   first: string, firstSunday: string, last: string}>}
+ */
+export function getStationTimetable(name) {
+  const station = getStation(name);
+  if (!station) return [];
+  const rows = [];
+
+  station.lines.forEach((lineId) => {
+    const line = LINES[lineId];
+    const index = line.stations.indexOf(name);
+    const last = line.stations.length - 1;
+
+    // Two directions: a train from index 0 heading to the far terminal, and
+    // one from the far terminal heading back.
+    [
+      { towards: line.stations[last], offset: index },
+      { towards: line.stations[0], offset: last - index },
+    ].forEach(({ towards, offset }) => {
+      if (name === towards) return; // no service "towards" the platform you are on
+      const ride = Math.round(offset * MINUTES_PER_STOP);
+      rows.push({
+        line: lineId,
+        lineName: line.name,
+        color: line.color,
+        towards,
+        first: toClock(toMinutes(SERVICE_INFO.firstTrainWeekday) + ride),
+        firstSunday: toClock(toMinutes(SERVICE_INFO.firstTrainSunday) + ride),
+        last: toClock(toMinutes(SERVICE_INFO.lastTrainFromTerminal) + ride),
+      });
+    });
+  });
+
+  return rows;
+}
+
+/**
+ * Everything worth showing on a station page: the lines calling there, where it
+ * sits on each, its neighbours, and its timetable.
+ */
+export function getStationDetail(name) {
+  const station = getStation(name);
+  if (!station) return null;
+
+  const lines = station.lines.map((lineId) => {
+    const line = LINES[lineId];
+    const index = line.stations.indexOf(name);
+    const last = line.stations.length - 1;
+    return {
+      line: lineId,
+      lineName: line.name,
+      color: line.color,
+      index,
+      position: index + 1,
+      total: line.stations.length,
+      previous: index > 0 ? line.stations[index - 1] : null,
+      next: index < last ? line.stations[index + 1] : null,
+      terminals: [line.stations[0], line.stations[last]],
+      kmFromStart: +(index * line.avgGapKm).toFixed(1),
+    };
+  });
+
+  return {
+    name,
+    lines,
+    isInterchange: station.lines.length > 1,
+    timetable: getStationTimetable(name),
+  };
+}
 
 /**
  * Every station once, with the lines it sits on.
@@ -384,3 +474,92 @@ export const POPULAR_ROUTES = [
   { from: 'Yeshwanthpur', to: 'Silk Institute', label: 'Yeshwanthpur → Silk Institute' },
   { from: 'Krishnarajapura', to: 'Rashtreeya Vidyalaya Road', label: 'KR Puram → RV Road' },
 ];
+
+/* ------------------------------------------------------------------ *
+ * Schematic map geometry
+ *
+ * A diagram, not a geographic map — but the compass directions are real:
+ * the Purple Line runs east–west, the Green Line north–south, and the
+ * Yellow Line heads south-east from RV Road. Positions are derived rather
+ * than hand-placed, so the two interchanges land exactly where the lines
+ * cross by construction.
+ * ------------------------------------------------------------------ */
+
+const MAP_STEP = { purple: 24, green: 36, yellow: 24 };
+
+function layoutLine(lineId, origin, step) {
+  return LINES[lineId].stations.map((station, i) => ({
+    station,
+    x: origin.x + step.x * i,
+    y: origin.y + step.y * i,
+  }));
+}
+
+function buildMapLayout() {
+  // Purple runs along a horizontal spine. Its station list starts at
+  // Whitefield, which is the EAST end of the line, so the step is negative:
+  // index 0 sits on the right and Challaghatta ends up on the left (west).
+  const purpleSpan = (LINES.purple.stations.length - 1) * MAP_STEP.purple;
+  const purple = layoutLine('purple', { x: 70 + purpleSpan, y: 620 }, { x: -MAP_STEP.purple, y: 0 });
+
+  // Green is vertical and must pass through Majestic, so its spine sits on
+  // Majestic's x and is offset so Majestic lands at its own index.
+  const majestic = purple.find((p) => p.station === INTERCHANGE_MAJESTIC);
+  const majesticOnGreen = LINES.green.stations.indexOf(INTERCHANGE_MAJESTIC);
+  const green = layoutLine(
+    'green',
+    { x: majestic.x, y: majestic.y - majesticOnGreen * MAP_STEP.green },
+    { x: 0, y: MAP_STEP.green }
+  );
+
+  // Yellow starts at RV Road on the Green Line and runs south-east.
+  const rvRoad = green.find((p) => p.station === INTERCHANGE_RV_ROAD);
+  const yellow = layoutLine('yellow', rvRoad, { x: MAP_STEP.yellow, y: MAP_STEP.yellow });
+
+  const all = [...purple, ...green, ...yellow];
+  const pad = 40;
+  const minX = Math.min(...all.map((p) => p.x)) - pad;
+  const minY = Math.min(...all.map((p) => p.y)) - pad;
+  const width = Math.max(...all.map((p) => p.x)) - minX + pad;
+  const height = Math.max(...all.map((p) => p.y)) - minY + pad;
+
+  return {
+    viewBox: `${minX} ${minY} ${width} ${height}`,
+    width,
+    height,
+    lines: { purple, green, yellow },
+  };
+}
+
+export const INTERCHANGE_MAJESTIC = 'Nadaprabhu Kempegowda Station, Majestic';
+export const INTERCHANGE_RV_ROAD = 'Rashtreeya Vidyalaya Road';
+
+export const MAP_LAYOUT = buildMapLayout();
+
+/** Coordinates for one station on one line, for drawing and highlighting. */
+export function getMapPoint(lineId, station) {
+  return MAP_LAYOUT.lines[lineId].find((p) => p.station === station) || null;
+}
+
+/**
+ * The polyline a planned journey traces across the schematic, as one array of
+ * points per leg, so the route can be drawn over the dimmed network.
+ */
+export function getRouteGeometry(journey) {
+  if (!journey) return [];
+  return journey.legs.map((leg) => ({
+    line: leg.line,
+    color: leg.color,
+    points: leg.stations.map((station) => getMapPoint(leg.line, station)).filter(Boolean),
+  }));
+}
+
+/** Trim long official names down for chips, labels and one-line summaries. */
+export function shortName(name) {
+  return name
+    .replace('Nadaprabhu Kempegowda Station, ', '')
+    .replace('Krantivira Sangolli Rayanna Railway Station', 'City Railway Station')
+    .replace('Sri Balagangadharanatha Swamiji Station, ', '')
+    .replace('Sir M. Visvesvaraya Station, ', '')
+    .replace('Rashtreeya Vidyalaya Road', 'RV Road');
+}

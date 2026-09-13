@@ -1,0 +1,163 @@
+.map {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.map-head h2 {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.map-frame {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+.map-svg {
+  display: block;
+  width: 100%;
+  min-width: 320px;
+  height: auto;
+  touch-action: manipulation;
+}
+
+.network.dimmed {
+  opacity: 0.22;
+}
+
+.marker {
+  cursor: pointer;
+}
+
+.marker-hit {
+  fill: transparent;
+}
+
+.marker-dot {
+  fill: var(--surface);
+  stroke-width: 4;
+  transition: r 0.15s ease;
+}
+
+.marker-dot.interchange {
+  stroke: var(--ink);
+  stroke-width: 5;
+}
+
+.marker.dimmed .marker-dot {
+  opacity: 0.28;
+}
+
+.marker.on-route .marker-dot {
+  stroke-width: 5;
+}
+
+.marker:hover .marker-dot {
+  stroke-width: 6;
+}
+
+.map-label {
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 700;
+  fill: var(--ink);
+  paint-order: stroke;
+  stroke: var(--surface);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.map-label.selected {
+  fill: var(--accent);
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 5px;
+  border-radius: 3px;
+}
+
+.legend-swatch.ring {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 3px solid var(--ink);
+}
+
+/* Tap-a-station sheet */
+.map-selection {
+  position: sticky;
+  bottom: 12px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+
+.map-selection-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.map-close {
+  flex: none;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+  padding: 2px 6px;
+}
+
+.map-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.map-actions button {
+  flex: 1 1 auto;
+  padding: 10px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface-2);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.map-actions button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.map-label.endpoint {
+  fill: var(--accent);
+}

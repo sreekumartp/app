@@ -1,271 +1,146 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import './App.css';
-import Display from './components/Display';
-import ButtonGrid from './components/ButtonGrid';
-import History from './components/History';
-import EMICalculator from './components/EMICalculator';
-import MetroPlanner from './components/MetroPlanner';
-import { evaluateExpression } from './utils/calculator';
+import JourneyPlanner from './components/JourneyPlanner';
+import NetworkMap from './components/NetworkMap';
+import StationDirectory from './components/StationDirectory';
+import { planJourney } from './utils/metro';
+import { useLocalStorage } from './utils/useLocalStorage';
 
-const MODE_TITLES = {
-  calc: 'Scientific Calculator',
-  emi: 'EMI Calculator',
-  metro: 'Namma Metro Planner',
-};
+const TABS = [
+  { id: 'plan', label: 'Plan', glyph: '⇄' },
+  { id: 'map', label: 'Map', glyph: '◉' },
+  { id: 'stations', label: 'Stations', glyph: '☰' },
+];
+
+function preferredTheme() {
+  try {
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+  } catch (e) {
+    /* matchMedia unavailable */
+  }
+  return 'light';
+}
 
 function App() {
-  const [display, setDisplay] = useState('0');
-  const [expression, setExpression] = useState('');
-  const [history, setHistory] = useState([]);
-  const [memory, setMemory] = useState(0);
-  const [isDegree, setIsDegree] = useState(true);
-  const [showHistory, setShowHistory] = useState(false);
-  const [theme, setTheme] = useState('dark');
-  const [error, setError] = useState('');
-  const [mode, setMode] = useState('calc');
+  const [tab, setTab] = useState('plan');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [selectedStation, setSelectedStation] = useState(null);
+  const [theme, setTheme] = useLocalStorage('metroTheme', preferredTheme());
+  const [favourites, setFavourites] = useLocalStorage('metroFavourites', {
+    home: '',
+    work: '',
+    starred: [],
+  });
+
+  const journey = useMemo(() => planJourney(from, to), [from, to]);
 
   useEffect(() => {
-    // Load history and memory from localStorage
-    const savedHistory = localStorage.getItem('calcHistory');
-    const savedMemory = localStorage.getItem('calcMemory');
-    if (savedHistory) setHistory(JSON.parse(savedHistory));
-    if (savedMemory) setMemory(parseFloat(savedMemory));
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+
+  const openStation = useCallback((name) => {
+    setSelectedStation(name);
+    setTab('stations');
   }, []);
 
-  useEffect(() => {
-    // Save history to localStorage
-    localStorage.setItem('calcHistory', JSON.stringify(history));
-  }, [history]);
+  const planFrom = useCallback((name) => {
+    setFrom(name);
+    setTab('plan');
+  }, []);
 
-  useEffect(() => {
-    // Save memory to localStorage
-    localStorage.setItem('calcMemory', memory.toString());
-  }, [memory]);
+  const planTo = useCallback((name) => {
+    setTo(name);
+    setTab('plan');
+  }, []);
 
-  const handleInput = useCallback((value) => {
-    setError('');
-
-    if (value === '=') {
-      try {
-        const result = evaluateExpression(expression || display, isDegree);
-        setHistory(prev => [{ expression: expression || display, result, timestamp: Date.now() }, ...prev.slice(0, 49)]);
-        setDisplay(result);
-        setExpression('');
-      } catch (err) {
-        setError(err.message || 'Error');
-        setDisplay('Error');
-      }
-      return;
-    }
-
-    if (value === 'AC') {
-      setDisplay('0');
-      setExpression('');
-      setError('');
-      return;
-    }
-
-    if (value === 'C') {
-      setDisplay('0');
-      setExpression('');
-      return;
-    }
-
-    if (value === 'DEL') {
-      if (expression.length > 0) {
-        const newExpr = expression.slice(0, -1);
-        setExpression(newExpr);
-        setDisplay(newExpr || '0');
-      } else if (display.length > 1) {
-        setDisplay(display.slice(0, -1));
-      } else {
-        setDisplay('0');
-      }
-      return;
-    }
-
-    if (value === 'M+') {
-      const currentValue = parseFloat(display);
-      if (!isNaN(currentValue)) {
-        setMemory(prev => prev + currentValue);
-      }
-      return;
-    }
-
-    if (value === 'M-') {
-      const currentValue = parseFloat(display);
-      if (!isNaN(currentValue)) {
-        setMemory(prev => prev - currentValue);
-      }
-      return;
-    }
-
-    if (value === 'MR') {
-      setDisplay(memory.toString());
-      setExpression('');
-      return;
-    }
-
-    if (value === 'MC') {
-      setMemory(0);
-      return;
-    }
-
-    if (value === 'DEG/RAD') {
-      setIsDegree(prev => !prev);
-      return;
-    }
-
-    // Handle special functions
-    const functions = ['sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sinh', 'cosh', 'tanh', 'log', 'ln', 'sqrt', 'abs', 'factorial'];
-    if (functions.includes(value)) {
-      const newExpr = expression + value + '(';
-      setExpression(newExpr);
-      setDisplay(newExpr);
-      return;
-    }
-
-    // Handle constants
-    if (value === 'π') {
-      const newExpr = expression + 'pi';
-      setExpression(newExpr);
-      setDisplay(newExpr);
-      return;
-    }
-
-    if (value === 'e') {
-      const newExpr = expression + 'e';
-      setExpression(newExpr);
-      setDisplay(newExpr);
-      return;
-    }
-
-    // Handle operators and numbers
-    if (display === 'Error' || (display === '0' && !['(', ')'].includes(value))) {
-      if (['+', '-', '×', '÷', '^', '%'].includes(value)) {
-        const op = value === '×' ? '*' : value === '÷' ? '/' : value;
-        const newExpr = expression + op;
-        setExpression(newExpr);
-        setDisplay(newExpr);
-      } else {
-        const val = value;
-        setExpression(val);
-        setDisplay(val);
-      }
-    } else {
-      const op = value === '×' ? '*' : value === '÷' ? '/' : value;
-      const newExpr = expression + op;
-      setExpression(newExpr);
-      setDisplay(newExpr);
-    }
-  }, [display, expression, isDegree, memory]);
-
-  // Keyboard support
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      const key = e.key;
-      const keyMap = {
-        'Enter': '=',
-        'Escape': 'AC',
-        'Backspace': 'DEL',
-        '*': '×',
-        '/': '÷',
-      };
-
-      if (keyMap[key]) {
-        e.preventDefault();
-        handleInput(keyMap[key]);
-      } else if (/[0-9+\-().^%]/.test(key)) {
-        e.preventDefault();
-        handleInput(key);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [handleInput]);
-
-  const handleHistorySelect = (item) => {
-    setDisplay(item.result);
-    setExpression('');
-    setShowHistory(false);
-  };
-
-  const clearHistory = () => {
-    setHistory([]);
-    localStorage.removeItem('calcHistory');
-  };
-
-  const isCalculator = mode === 'calc';
+  const toggleStar = useCallback(
+    (name) => {
+      setFavourites((prev) => {
+        const starred = prev.starred.includes(name)
+          ? prev.starred.filter((s) => s !== name)
+          : [...prev.starred, name];
+        return { ...prev, starred };
+      });
+    },
+    [setFavourites]
+  );
 
   return (
-    <div className={`app ${theme} ${isCalculator ? '' : 'wide'}`}>
-      <div className="calculator">
-        <div className="calculator-header">
-          <h1>{MODE_TITLES[mode]}</h1>
-          <div className="header-controls">
-            <button
-              className={`icon-button ${mode === 'emi' ? 'active' : ''}`}
-              onClick={() => setMode(mode === 'emi' ? 'calc' : 'emi')}
-              title={mode === 'emi' ? 'Switch to Calculator' : 'Switch to EMI Calculator'}
-            >
-              {mode === 'emi' ? '🔢' : '💰'}
-            </button>
-            <button
-              className={`icon-button ${mode === 'metro' ? 'active' : ''}`}
-              onClick={() => setMode(mode === 'metro' ? 'calc' : 'metro')}
-              title={mode === 'metro' ? 'Switch to Calculator' : 'Switch to Metro Planner'}
-            >
-              {mode === 'metro' ? '🔢' : '🚇'}
-            </button>
-            {isCalculator && (
-              <button
-                className="icon-button"
-                onClick={() => setShowHistory(!showHistory)}
-                title="History"
-              >
-                📋
-              </button>
-            )}
-            <button
-              className="icon-button"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              title="Toggle Theme"
-            >
-              {theme === 'dark' ? '☀️' : '🌙'}
-            </button>
+    <div className="app">
+      <header className="app-header">
+        <div className="app-identity">
+          <span className="app-mark" aria-hidden="true">
+            <span className="app-mark-bar purple" />
+            <span className="app-mark-bar green" />
+            <span className="app-mark-bar yellow" />
+          </span>
+          <div>
+            <h1>Namma Metro</h1>
+            <p className="app-sub">Bengaluru · Purple, Green &amp; Yellow lines</p>
           </div>
         </div>
+        <button
+          className="theme-toggle"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+        >
+          {theme === 'dark' ? '☀' : '☾'}
+        </button>
+      </header>
 
-        {mode === 'emi' && <EMICalculator />}
-        {mode === 'metro' && <MetroPlanner />}
-
-        {isCalculator && (
-          <>
-            <Display
-              value={display}
-              expression={expression}
-              isDegree={isDegree}
-              memory={memory}
-              error={error}
-            />
-
-            <ButtonGrid
-              onInput={handleInput}
-              isDegree={isDegree}
-            />
-
-            {showHistory && (
-              <History
-                history={history}
-                onSelect={handleHistorySelect}
-                onClear={clearHistory}
-                onClose={() => setShowHistory(false)}
-              />
-            )}
-          </>
+      <main className="app-main">
+        {tab === 'plan' && (
+          <JourneyPlanner
+            from={from}
+            to={to}
+            journey={journey}
+            onFromChange={setFrom}
+            onToChange={setTo}
+            favourites={favourites}
+            onFavouritesChange={setFavourites}
+            onOpenStation={openStation}
+            onShowOnMap={() => setTab('map')}
+          />
         )}
-      </div>
+
+        {tab === 'map' && (
+          <NetworkMap
+            journey={journey}
+            onPlanFrom={planFrom}
+            onPlanTo={planTo}
+            onOpenStation={openStation}
+          />
+        )}
+
+        {tab === 'stations' && (
+          <StationDirectory
+            selected={selectedStation}
+            onSelect={setSelectedStation}
+            favourites={favourites}
+            onToggleStar={toggleStar}
+            onPlanFrom={planFrom}
+            onPlanTo={planTo}
+          />
+        )}
+      </main>
+
+      <nav className="app-tabs" aria-label="Sections">
+        {TABS.map((item) => (
+          <button
+            key={item.id}
+            className={`app-tab ${tab === item.id ? 'active' : ''}`}
+            onClick={() => setTab(item.id)}
+            aria-current={tab === item.id ? 'page' : undefined}
+          >
+            <span className="app-tab-glyph" aria-hidden="true">
+              {item.glyph}
+            </span>
+            {item.label}
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }

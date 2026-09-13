@@ -5,7 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] - 2026-09-13
+
+The app is now a Bengaluru Namma Metro travel app. The scientific and EMI
+calculators have been removed from the shell; they remain in git history.
+
+### Added
+- **Map tab** — schematic of all three lines with real compass orientation,
+  the planned route drawn over the dimmed network, and tap-a-station actions.
+  Station coordinates are derived so the interchanges land exactly where the
+  lines cross.
+- **Stations tab** — searchable directory of all 85 stations with per-station
+  pages: lines served, position along each line, distance from the terminal,
+  neighbouring stations, and first/last train times per direction for weekdays
+  and Sundays.
+- **Saved commute** — set home and work once for one-tap morning and evening
+  trips; save individual stations for quick access.
+- Three-tab app shell (Plan / Map / Stations) with a mobile-first bottom bar.
+- Design tokens with a full light and dark palette, following the system
+  preference on first visit.
+- `useLocalStorage` — persistence that degrades gracefully where storage is
+  blocked rather than breaking the app.
+
+### Changed
+- Journey planner rebuilt as a controlled component sharing state with the map
+  and station pages, so a route planned in one tab is reflected in the others.
+- Line colours adjusted to stay legible on both light and dark grounds.
+- Purple Line map orientation corrected — Whitefield is east, Challaghatta west.
+
+### Removed
+- Scientific calculator, EMI calculator and their components, utilities and
+  tests. The `mathjs` dependency is no longer needed.
+
+## [1.1.0] - Namma Metro planner (unreleased)
 
 ### Added
 - Namma Metro journey planner for Bengaluru (🚇 icon in the header)

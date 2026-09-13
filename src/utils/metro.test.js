@@ -1,11 +1,20 @@
 import {
   LINES,
+  LINE_IDS,
+  MAP_LAYOUT,
   getAllStations,
   getInterchanges,
+  getMapPoint,
+  getRouteGeometry,
+  getStationDetail,
+  getStationTimetable,
   findStations,
   calculateFare,
   planJourney,
+  shortName,
   POPULAR_ROUTES,
+  INTERCHANGE_MAJESTIC,
+  INTERCHANGE_RV_ROAD,
 } from './metro';
 
 describe('Namma Metro network data', () => {
@@ -151,5 +160,110 @@ describe('journey planning', () => {
       const journey = planJourney(from, 'Bommasandra');
       if (from !== 'Bommasandra') expect(journey).not.toBeNull();
     });
+  });
+});
+
+describe('station timetables', () => {
+  test('a terminal is only served in one direction', () => {
+    const rows = getStationTimetable('Whitefield (Kadugodi)');
+    expect(rows).toHaveLength(1);
+    expect(rows[0].towards).toBe('Challaghatta');
+    expect(rows[0].first).toBe('05:00');
+  });
+
+  test('trains reach a mid-line station later than the terminal', () => {
+    const [towardsChallaghatta] = getStationTimetable('Indiranagar');
+    expect(towardsChallaghatta.first > '05:00').toBe(true);
+    expect(towardsChallaghatta.firstSunday > '07:00').toBe(true);
+    expect(towardsChallaghatta.last > '23:00').toBe(true);
+  });
+
+  test('an interchange is served in four directions', () => {
+    expect(getStationTimetable(INTERCHANGE_MAJESTIC)).toHaveLength(4);
+  });
+
+  test('times are well-formed clock values', () => {
+    getAllStations().forEach((station) => {
+      getStationTimetable(station.name).forEach((row) => {
+        expect(row.first).toMatch(/^[0-2]\d:[0-5]\d$/);
+        expect(row.last).toMatch(/^[0-2]\d:[0-5]\d$/);
+      });
+    });
+  });
+});
+
+describe('station detail', () => {
+  test('reports position and neighbours on each line', () => {
+    const detail = getStationDetail('Indiranagar');
+    expect(detail.lines).toHaveLength(1);
+    expect(detail.isInterchange).toBe(false);
+    expect(detail.lines[0].previous).toBe('Swami Vivekananda Road');
+    expect(detail.lines[0].next).toBe('Halasuru');
+  });
+
+  test('terminals have no neighbour on one side', () => {
+    const detail = getStationDetail('Bommasandra');
+    expect(detail.lines[0].next).toBeNull();
+    expect(detail.lines[0].previous).toBe('Hebbagodi');
+  });
+
+  test('an interchange reports both lines', () => {
+    const detail = getStationDetail(INTERCHANGE_MAJESTIC);
+    expect(detail.isInterchange).toBe(true);
+    expect(detail.lines.map((l) => l.line)).toEqual(['purple', 'green']);
+  });
+
+  test('unknown stations return null', () => {
+    expect(getStationDetail('Nowhere')).toBeNull();
+  });
+});
+
+describe('map layout', () => {
+  test('every station is placed', () => {
+    LINE_IDS.forEach((id) => {
+      expect(MAP_LAYOUT.lines[id]).toHaveLength(LINES[id].stations.length);
+    });
+  });
+
+  test('interchanges sit at exactly one point on both their lines', () => {
+    expect(getMapPoint('purple', INTERCHANGE_MAJESTIC)).toEqual(
+      getMapPoint('green', INTERCHANGE_MAJESTIC)
+    );
+    expect(getMapPoint('green', INTERCHANGE_RV_ROAD)).toEqual(
+      getMapPoint('yellow', INTERCHANGE_RV_ROAD)
+    );
+  });
+
+  test('all points fall inside the viewBox', () => {
+    const [minX, minY, width, height] = MAP_LAYOUT.viewBox.split(' ').map(Number);
+    LINE_IDS.forEach((id) => {
+      MAP_LAYOUT.lines[id].forEach((p) => {
+        expect(p.x).toBeGreaterThanOrEqual(minX);
+        expect(p.y).toBeGreaterThanOrEqual(minY);
+        expect(p.x).toBeLessThanOrEqual(minX + width);
+        expect(p.y).toBeLessThanOrEqual(minY + height);
+      });
+    });
+  });
+
+  test('route geometry traces one polyline per leg', () => {
+    const journey = planJourney('Mahatma Gandhi Road', 'Electronic City');
+    const geometry = getRouteGeometry(journey);
+    expect(geometry).toHaveLength(3);
+    geometry.forEach((leg, i) => {
+      expect(leg.points).toHaveLength(journey.legs[i].stations.length);
+    });
+  });
+
+  test('no route means nothing to draw', () => {
+    expect(getRouteGeometry(null)).toEqual([]);
+  });
+});
+
+describe('shortName', () => {
+  test('trims the long official names', () => {
+    expect(shortName(INTERCHANGE_MAJESTIC)).toBe('Majestic');
+    expect(shortName(INTERCHANGE_RV_ROAD)).toBe('RV Road');
+    expect(shortName('Indiranagar')).toBe('Indiranagar');
   });
 });

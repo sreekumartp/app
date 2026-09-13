@@ -1,0 +1,363 @@
+.planner {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Station pickers */
+.picker {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+
+.picker-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.picker-field label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.picker-field select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.picker-swap {
+  flex: none;
+  width: 40px;
+  height: 42px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--accent);
+  font-size: 17px;
+}
+
+.picker-swap:hover {
+  background: var(--accent-soft);
+}
+
+/* Saved commute */
+.commute {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.commute-button {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  background: var(--surface);
+  text-align: left;
+}
+
+.commute-button:hover {
+  border-color: var(--accent);
+}
+
+.commute-route {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Shortcuts */
+.shortcuts h2 {
+  margin-bottom: 8px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 8px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+  background: var(--surface);
+  font-size: 13px;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.commute-setup {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 13px;
+  padding: 14px;
+}
+
+.commute-setup h2 {
+  margin-bottom: 6px;
+}
+
+.commute-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.commute-row label {
+  flex: none;
+  width: 54px;
+  font-weight: 500;
+}
+
+.commute-row select {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 11px;
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+/* Journey summary — the fare is the headline, the rest supports it */
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.summary-fare {
+  flex: 1 1 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--accent);
+  color: #fff;
+}
+
+.summary-fare .eyebrow {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+:root[data-theme='dark'] .summary-fare {
+  color: #17111e;
+}
+
+:root[data-theme='dark'] .summary-fare .eyebrow,
+:root[data-theme='dark'] .summary-fare-note {
+  color: rgba(23, 17, 30, 0.75);
+}
+
+.summary-fare-value {
+  font-family: var(--display);
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.summary-fare-note {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.summary-facts {
+  flex: 2 1 280px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.summary-facts > div {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.summary-facts dd {
+  font-family: var(--display);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.summary-facts span {
+  font-size: 11px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.map-link {
+  align-self: flex-start;
+  padding: 9px 14px;
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+  background: var(--surface);
+  font-size: 13px;
+}
+
+.map-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Step by step route */
+.route {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leg-line {
+  border-left: 4px solid var(--leg);
+  padding-left: 14px;
+}
+
+.leg-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 6px;
+}
+
+.leg-direction {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.stop {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 7px 0;
+  border: none;
+  background: transparent;
+  text-align: left;
+}
+
+.stop-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-weight: 500;
+}
+
+.stop-dot {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  border: 3px solid var(--leg);
+  border-radius: 50%;
+  background: var(--ground);
+}
+
+.stop-dot.filled {
+  background: var(--leg);
+}
+
+.leg-toggle {
+  margin: 2px 0 2px 24px;
+  padding: 4px 11px;
+  border: 1px dashed var(--hairline);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.leg-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.leg-stations {
+  margin: 4px 0 4px 24px;
+  padding-left: 18px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.leg-stations li {
+  padding: 2px 0;
+}
+
+.leg-stations button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+}
+
+.leg-stations button:hover {
+  color: var(--accent);
+}
+
+.change {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 11px 14px;
+  border-radius: 11px;
+  background: var(--surface-2);
+  border: 1px dashed var(--hairline);
+  font-size: 13px;
+}
+
+.service-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border-radius: 11px;
+}
+
+@media (max-width: 560px) {
+  .picker {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .picker-swap {
+    align-self: center;
+    width: 46px;
+  }
+
+  .summary-facts {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .summary-facts dd {
+    font-size: 18px;
+  }
+}
