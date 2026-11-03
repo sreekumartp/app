@@ -1,5 +1,7 @@
 # Scientific Calculator, EMI Calculator & Namma Metro Planner
 
+> **Also in this repo:** [`anchor/`](anchor/README.md) — *Anchor*, an Android-first screen-time and focus app (Kotlin + Jetpack Compose) built from the Screen-Time & Focus App product specification.
+
 A modern, feature-rich web application built with React that includes a scientific calculator, an EMI (Equated Monthly Installment) calculator and a Bengaluru Namma Metro journey planner. The scientific calculator supports basic arithmetic operations, advanced scientific functions, memory operations, calculation history, and both light/dark themes. The EMI calculator helps you calculate loan payments with detailed principal and interest breakup. The metro planner works out the fastest route, fare and travel time between any two Namma Metro stations in Bengaluru.
 
 ## Features
