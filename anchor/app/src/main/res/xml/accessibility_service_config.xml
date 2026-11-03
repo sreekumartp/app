@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Observe-only configuration. Only window-state, scroll and content-change events are delivered,
+  throttled to one per 100 ms (notificationTimeout). The service performs Back/Home only for rules
+  the user set; ML-driven interventions act through Anchor's own overlay instead.
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeViewScrolled|typeWindowContentChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagReportViewIds"
+    android:canRetrieveWindowContent="true"
+    android:canPerformGestures="false"
+    android:notificationTimeout="100"
+    android:description="@string/accessibility_service_description" />

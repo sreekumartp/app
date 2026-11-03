@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Anchor</string>
+    <string name="accessibility_service_label">Anchor surface blocker</string>
+    <string name="accessibility_service_description">Lets Anchor see which app and screen is open so it can block the surfaces you chose (like YouTube Shorts or Instagram Reels) while the rest of the app stays usable, and notice rapid scrolling so it can dim the screen. It reads screen structure only to match your own rules. Nothing it reads is stored or leaves your phone.</string>
+    <string name="notification_channel_guard">Protection status</string>
+    <string name="notification_channel_focus">Focus sessions</string>
+</resources>

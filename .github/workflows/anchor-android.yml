@@ -1,0 +1,37 @@
+name: Anchor Android
+
+on:
+  push:
+    paths: ["anchor/**", ".github/workflows/anchor-android.yml"]
+  pull_request:
+    paths: ["anchor/**", ".github/workflows/anchor-android.yml"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: anchor
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Core unit tests
+        run: ./gradlew :core:test
+      - name: Build debug APK
+        run: ./gradlew :app:assembleDebug :app:lintDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anchor-debug-apk
+          path: anchor/app/build/outputs/apk/debug/*.apk
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: anchor-reports
+          path: |
+            anchor/core/build/reports/tests
+            anchor/app/build/reports/lint-results-debug.html
