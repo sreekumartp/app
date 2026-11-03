@@ -64,6 +64,7 @@ class AnchorAccessibilityService : AccessibilityService() {
     }
 
     private fun checkSurfaces(pkg: String, force: Boolean) {
+        if (GuardBus.blockScreenPackage == pkg) return // the block screen already covers it
         val wanted = GuardBus.blockedSurfaces.value[pkg] ?: return
         if (!matcher.hasRulesFor(pkg)) return
         val now = SystemClock.uptimeMillis()

@@ -13,7 +13,7 @@ class DoomscrollDetector(
     private val rapidDwellMs: Long = 6_000,
     /** Swipes past the trigger over which the dim ramps to [maxDim]. */
     private val dimRampSwipes: Int = 20,
-    private val maxDim: Float = 0.7f,
+    private val maxDim: Float = 0.6f,
 ) {
     data class State(
         val packageName: String?,

@@ -19,7 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Insights
 import androidx.compose.material.icons.outlined.MoreHoriz
-import androidx.compose.material.icons.outlined.Rule
+import androidx.compose.material.icons.automirrored.outlined.Rule
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -69,7 +69,7 @@ import kotlin.math.roundToInt
 private enum class Tab(val label: String, val icon: ImageVector) {
     TODAY("Today", Icons.Outlined.Insights),
     FOCUS("Focus", Icons.Outlined.Timer),
-    RULES("Rules", Icons.Outlined.Rule),
+    RULES("Rules", Icons.AutoMirrored.Outlined.Rule),
     EXAM("Exam", Icons.Outlined.CalendarMonth),
     MORE("More", Icons.Outlined.MoreHoriz),
 }

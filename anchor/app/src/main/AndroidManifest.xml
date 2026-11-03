@@ -60,6 +60,12 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTop" />
 
+        <!-- Let the zxing scanner follow the device orientation (setOrientationLocked(false)). -->
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation" />
+
         <service
             android:name=".guard.GuardService"
             android:exported="false"

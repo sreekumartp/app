@@ -92,7 +92,7 @@ private fun ExamOverview(
     val target = ExamPlanner.targetFor(exam, today)
     val days = rememberWeekUsage()
     val usedLeisure = (days[LocalDate.now()]?.totalMs(config.taggedPackages) ?: 0) / 60_000
-    val focusToday = g.secure.stats()[today]?.focusMinutes ?: 0
+    val focusToday = remember(days) { g.secure.stats()[today]?.focusMinutes ?: 0 }
     var pickMock by remember { mutableStateOf(false) }
 
     TabColumn(padding) {

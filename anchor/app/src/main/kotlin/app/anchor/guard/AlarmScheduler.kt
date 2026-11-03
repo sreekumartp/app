@@ -9,6 +9,9 @@ import app.anchor.core.exam.ExamPlanner
 import app.anchor.core.policy.ScheduleEvaluator
 import app.anchor.data.Permissions
 import app.anchor.graph
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
 
@@ -21,12 +24,17 @@ object AlarmScheduler {
 
     fun reschedule(context: Context) {
         val g = context.graph
-        val config = g.config.value ?: return
+        val config = g.config.value
+        if (config == null) {
+            // Cold process (boot, clock change): wait for DataStore, then schedule.
+            g.scope.launch { g.config.filterNotNull().first(); reschedule(context) }
+            return
+        }
         val state = g.guard.state.value
         val now = System.currentTimeMillis()
         val zone = ZoneId.systemDefault()
 
-        val candidates = buildList {
+        val candidates = buildList<Long> {
             ScheduleEvaluator.nextBoundary(config.schedules, now, zone)?.let(::add)
             state.focus?.plannedEndMs()?.let(::add)
             state.instantBlockUntilMs?.let(::add)

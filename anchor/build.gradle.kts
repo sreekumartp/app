@@ -1,8 +1,3 @@
-// The Android Gradle Plugin is applied only in :app, so the pure-Kotlin :core module can be
-// built and tested on any JVM (for example with -PcoreOnly on a machine without the Android SDK).
-plugins {
-    alias(libs.plugins.kotlin.jvm) apply false
-    alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.kotlin.compose) apply false
-    alias(libs.plugins.kotlin.serialization) apply false
-}
+// No plugins on the root classpath: :app loads the Android and Kotlin plugins together (so
+// Kotlin's Android support can see AGP's classes), and the pure-Kotlin :core builds and tests on
+// any JVM without Google Maven or an Android SDK (use -PcoreOnly).

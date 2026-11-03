@@ -75,6 +75,7 @@ class OverlayController(private val context: Context, private val actions: Overl
     private val canDraw get() = Settings.canDrawOverlays(context)
 
     fun showMain(o: MainOverlay) {
+        if (!canDraw) return
         // Friction already on screen for this app: keep the user's progress through it.
         val cur = mainState.value
         if (cur is MainOverlay.Friction && o is MainOverlay.Friction && cur.pkg == o.pkg) return
@@ -99,7 +100,7 @@ class OverlayController(private val context: Context, private val actions: Overl
                 val p = params(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, touchable = false).apply {
                     gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
                     y = (48 * context.resources.displayMetrics.density).toInt()
-                    alpha = MAX_PASS_THROUGH_ALPHA
+                    alpha = PILL_ALPHA
                 }
                 add(it, p)
             }
@@ -177,7 +178,10 @@ class OverlayController(private val context: Context, private val actions: Overl
     }
 
     private companion object {
-        const val MAX_PASS_THROUGH_ALPHA = 0.7f
+        // Android 12+ passes touches through overlays only while their combined opacity is
+        // ≤ 0.8. The dim and the pill can overlap: 1 - (1 - 0.6)(1 - 0.5) = 0.8.
+        const val MAX_PASS_THROUGH_ALPHA = 0.6f
+        const val PILL_ALPHA = 0.5f
     }
 }
 

@@ -1,6 +1,7 @@
 package app.anchor.guard
 
 import android.accessibilityservice.AccessibilityService
+import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -62,6 +63,9 @@ class GuardService : LifecycleService(), OverlayActions {
     private var lastSurfacePublish = 0L
     private val launchHistory = ArrayDeque<Pair<String, Long>>()
     private val sessionLengths = HashMap<String, ArrayDeque<Long>>()
+    private var home: String? = null
+    private var hasUsageAccess = false
+    private var usageFetchInFlight = false
 
     /** One launch of a tagged app, kept so the open can be self-labelled when it ends (IN-01). */
     private data class LaunchRecord(val pkg: String, val startMs: Long, val features: LaunchFeatures?, var frictionShown: Boolean = false)
@@ -77,16 +81,26 @@ class GuardService : LifecycleService(), OverlayActions {
                     doom.reset()
                     overlay.hideAll()
                 }
-                Intent.ACTION_SCREEN_ON -> screenOnSinceMs = now
+                Intent.ACTION_SCREEN_ON -> {
+                    screenOnSinceMs = now
+                    // No keyguard (or a smart-lock unlock): USER_PRESENT may never arrive.
+                    val locked = getSystemService(KeyguardManager::class.java)?.isKeyguardLocked ?: true
+                    if (!locked) redetectForeground()
+                }
                 Intent.ACTION_USER_PRESENT -> {
                     lastUnlockMs = now
-                    // The app under the lock screen comes back without a window change event.
-                    lifecycleScope.launch {
-                        val pkg = GuardBus.accessibility?.activePackage() ?: withContext(Dispatchers.IO) { g.usage.currentForeground() }
-                        pkg?.let { onForeground(it, System.currentTimeMillis()) }
-                    }
+                    redetectForeground()
                 }
             }
+        }
+    }
+
+    /** The app under the lock screen comes back without a window change event. */
+    private fun redetectForeground() {
+        lifecycleScope.launch {
+            val pkg = GuardBus.accessibility?.activePackage()
+                ?: withContext(Dispatchers.IO) { g.usage.currentForeground(lookbackMs = 6 * HOUR) }
+            pkg?.let { onForeground(it, System.currentTimeMillis()) }
         }
     }
 
@@ -94,8 +108,13 @@ class GuardService : LifecycleService(), OverlayActions {
         super.onCreate()
         running = true
         overlay = OverlayController(this, this)
+        home = g.apps.homePackage()
+        hasUsageAccess = Permissions.hasUsageAccess(this)
         engine = buildEngine()
-        goForeground()
+        if (!goForeground()) {
+            stopSelf()
+            return
+        }
 
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_OFF)
@@ -114,7 +133,8 @@ class GuardService : LifecycleService(), OverlayActions {
                 config = c
                 doom.triggerSwipes = c.interventions.doomscrollSwipes
                 if (!c.onboarded) {
-                    stopSelf()
+                    // Re-read from disk: the cached flow can lag right after onboarding finishes.
+                    if (!g.configRepo.current().onboarded) stopSelf()
                     return@collect
                 }
                 publishSurfaces(System.currentTimeMillis())
@@ -152,7 +172,7 @@ class GuardService : LifecycleService(), OverlayActions {
 
     private fun buildEngine(): PolicyEngine {
         val always = mutableSetOf(packageName, "com.android.systemui", "com.android.phone", "com.android.server.telecom", "com.google.android.dialer", "com.android.dialer")
-        g.apps.homePackage()?.let(always::add)
+        home?.let(always::add)
         runCatching { getSystemService(TelecomManager::class.java)?.defaultDialerPackage }.getOrNull()?.let(always::add)
         val strictGuarded = setOf(
             "com.android.settings", "com.google.android.packageinstaller", "com.android.packageinstaller",
@@ -161,13 +181,18 @@ class GuardService : LifecycleService(), OverlayActions {
         return PolicyEngine(alwaysAllowed = always - strictGuarded, strictGuarded = strictGuarded)
     }
 
-    private fun goForeground() {
+    private fun goForeground(): Boolean = try {
         val n = Notifications.guard(this, g.guard.state.value, config.apps.size, System.currentTimeMillis())
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             ServiceCompat.startForeground(this, Notifications.GUARD_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
         } else {
             startForeground(Notifications.GUARD_ID, n)
         }
+        true
+    } catch (e: Exception) {
+        // A background start that raced the Android 12+ restrictions.
+        Log.w("Anchor", "startForeground refused", e)
+        false
     }
 
     private fun updateNotification() {
@@ -190,6 +215,7 @@ class GuardService : LifecycleService(), OverlayActions {
         while (launchHistory.isNotEmpty() && now - launchHistory.first().second > HOUR) launchHistory.removeFirst()
 
         val tagged = pkg in config.taggedPackages
+        // Decide on cached usage first (NFR-01 latency); the refresh re-evaluates when it lands.
         if (tagged) refreshUsage(now, force = true)
         val features = if (tagged) features(pkg, now) else null
         launch = LaunchRecord(pkg, now, features)
@@ -199,7 +225,7 @@ class GuardService : LifecycleService(), OverlayActions {
 
     private fun onScroll(pkg: String, now: Long) {
         if (pkg != current || !config.interventions.doomscrollEnabled) return
-        if (pkg == packageName || pkg == g.apps.homePackage()) return
+        if (pkg == packageName || pkg == home) return
         val st = doom.onScroll(pkg, now)
         if (!st.triggered) return
         overlay.setDim(st.dimLevel)
@@ -234,7 +260,7 @@ class GuardService : LifecycleService(), OverlayActions {
         return LaunchFeatures(
             secondsSinceUnlock = lastUnlockMs?.let { (now - it) / 1000 } ?: 3_600,
             previousWasTagged = previous in config.taggedPackages,
-            previousWasLauncher = previous == null || previous == g.apps.homePackage(),
+            previousWasLauncher = previous == null || previous == home,
             launchesOfThisAppLastHour = launchHistory.count { it.first == pkg } - 1,
             hourOfDay = cal.get(Calendar.HOUR_OF_DAY),
             charging = battery?.isCharging == true,
@@ -253,8 +279,11 @@ class GuardService : LifecycleService(), OverlayActions {
         val state = g.guard.state.value
         val decision = engine.decide(config, state, LaunchContext(pkg, now, zone, usageToday, score))
         val shown = overlay.main
+        GuardBus.blockScreenPackage = (decision as? Decision.Block)?.let { pkg }
         when (decision) {
             is Decision.Block -> {
+                // A blocked open says nothing about habit; don't self-label it as a short session.
+                launch?.takeIf { it.pkg == pkg }?.frictionShown = true
                 overlay.clearDim()
                 overlay.hideFuse()
                 overlay.showMain(
@@ -295,10 +324,13 @@ class GuardService : LifecycleService(), OverlayActions {
                 g.secure.heartbeatMs = now
                 lastHeartbeat = now
             }
-            if (now - lastSurfacePublish > 10_000) publishSurfaces(now)
+            if (now - lastSurfacePublish > 10_000) {
+                publishSurfaces(now)
+                hasUsageAccess = Permissions.hasUsageAccess(this)
+            }
 
             // Fallback when the accessibility service is not running: poll usage events.
-            if (GuardBus.accessibility == null && Permissions.hasUsageAccess(this)) {
+            if (GuardBus.accessibility == null && hasUsageAccess) {
                 withContext(Dispatchers.IO) { g.usage.currentForeground() }?.let { onForeground(it, now) }
             }
 
@@ -307,16 +339,29 @@ class GuardService : LifecycleService(), OverlayActions {
                 refreshUsage(now, force = false)
                 reevaluate()
             }
-            doom.onTick(now)
+            // Dwelling on one item ends the streak, and the dim lifts with it.
+            if (!doom.onTick(now).triggered) overlay.clearDim()
             delay(1_000)
         }
     }
 
+    /** Reads today's usage off the main thread, then re-evaluates with the fresh numbers. */
     private fun refreshUsage(now: Long, force: Boolean) {
+        if (usageFetchInFlight || !hasUsageAccess) return
         if (!force && now - usageFetchedAt < 10_000) return
-        if (!Permissions.hasUsageAccess(this)) return
-        usageToday = runCatching { g.usage.todayUsageMs(zone) }.getOrElse { usageToday }
+        usageFetchInFlight = true
         usageFetchedAt = now
+        lifecycleScope.launch {
+            try {
+                val fresh = withContext(Dispatchers.IO) { runCatching { g.usage.todayUsageMs(zone) }.getOrNull() }
+                if (fresh != null && fresh != usageToday) {
+                    usageToday = fresh
+                    reevaluate()
+                }
+            } finally {
+                usageFetchInFlight = false
+            }
+        }
     }
 
     private fun publishSurfaces(now: Long) {

@@ -20,6 +20,10 @@ object GuardBus {
     /** Surfaces to gate per package, published by the guard service for the accessibility service. */
     val blockedSurfaces = MutableStateFlow<Map<String, Set<Surface>>>(emptyMap())
 
+    /** Package currently covered by a block screen; the accessibility service leaves it alone. */
+    @Volatile
+    var blockScreenPackage: String? = null
+
     @Volatile
     var accessibility: AnchorAccessibilityService? = null
 

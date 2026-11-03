@@ -44,9 +44,9 @@ class UsageRepository(private val context: Context) {
     }
 
     /** Fallback foreground detection when the accessibility service is off. */
-    fun currentForeground(): String? {
+    fun currentForeground(lookbackMs: Long = 15_000): String? {
         val now = System.currentTimeMillis()
-        val events = usm?.queryEvents(now - 15_000, now) ?: return null
+        val events = usm?.queryEvents(now - lookbackMs, now) ?: return null
         val e = UsageEvents.Event()
         var last: String? = null
         while (events.hasNextEvent()) {

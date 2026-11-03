@@ -66,6 +66,7 @@ import app.anchor.ui.AppIcon
 import app.anchor.ui.Format
 import app.anchor.ui.InfoCard
 import app.anchor.ui.rememberResumeCount
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -144,6 +145,7 @@ fun OnboardingFlow(config: AnchorConfig) {
                 onFinish = {
                     scope.launch {
                         g.configRepo.update { it.copy(onboarded = true) }
+                        g.config.first { it?.onboarded == true }
                         GuardService.start(context)
                     }
                 },
