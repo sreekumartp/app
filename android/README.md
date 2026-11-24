@@ -16,7 +16,7 @@ An offline Android app for The K.I.S.S model for mastering AI, a knowledge map o
   its natural forms; 50 key topics have hand-written markers for every form. You can also type your own
   definition of success for any topic; it replaces the suggestion on that topic's ladder. Pick your own success goal
   in the header. Mark your rung per topic; the overview shows your
-  funnel against the 99 / 0.5 / 0.4 / 0.1 baseline and suggests what to convert next.
+  funnel and suggests what to convert next.
 - **Role learning paths.** A Roles view covers 20 AI jobs in five families (build products, research,
   platform & infra, trust & safety, bridge roles). Each role has 5–6 ordered phases; every phase lists
   topics in study order, a teach-back (Knowledge), a capstone project (Skill) and a milestone (Success).
