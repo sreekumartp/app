@@ -25,7 +25,7 @@ html,body{margin:0}body{font-size:14px;-webkit-tap-highlight-color:transparent}i
   --font-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
   --d-math:#2F5FD0; --d-prob:#7A4BD6; --d-opt:#BE2C84; --d-sys:#5D6B80; --d-ml:#2C8540;
   --d-dl:#D2620C; --d-nlp:#08848F; --d-cv:#C53434; --d-gen:#A57E06; --d-rl:#7D5636;
-  --d-llm:#DD3F74; --d-agent:#4F7A0E; --d-safe:#3B47A6;
+  --d-llm:#DD3F74; --d-agent:#4F7A0E; --d-safe:#3B47A6; --d-app:#86198F;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --r-i:#7EA6FF; --r-k:#B794FF; --r-s:#4ADE9B; --r-x:#FBAF5D; --on-r:#0E1320;
@@ -33,7 +33,7 @@ html,body{margin:0}body{font-size:14px;-webkit-tap-highlight-color:transparent}i
   --line:#2B3754; --edge:#3D4A68; --accent:#86A7FF; --on-c:#0E1320; --stripe:#131A2B;
   --d-math:#86A7FF; --d-prob:#B596FF; --d-opt:#F27DC2; --d-sys:#A3B0C4; --d-ml:#6CCB7E;
   --d-dl:#FF9F55; --d-nlp:#4FD0DA; --d-cv:#FF7F7F; --d-gen:#E6C04D; --d-rl:#CFA27C;
-  --d-llm:#FF85AE; --d-agent:#A7D45A; --d-safe:#9AA6FF; color-scheme:dark;
+  --d-llm:#FF85AE; --d-agent:#A7D45A; --d-safe:#9AA6FF; --d-app:#E879F9; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
   --r-i:#7EA6FF; --r-k:#B794FF; --r-s:#4ADE9B; --r-x:#FBAF5D; --on-r:#0E1320;
@@ -41,7 +41,7 @@ html,body{margin:0}body{font-size:14px;-webkit-tap-highlight-color:transparent}i
   --line:#2B3754; --edge:#3D4A68; --accent:#86A7FF; --on-c:#0E1320; --stripe:#131A2B;
   --d-math:#86A7FF; --d-prob:#B596FF; --d-opt:#F27DC2; --d-sys:#A3B0C4; --d-ml:#6CCB7E;
   --d-dl:#FF9F55; --d-nlp:#4FD0DA; --d-cv:#FF7F7F; --d-gen:#E6C04D; --d-rl:#CFA27C;
-  --d-llm:#FF85AE; --d-agent:#A7D45A; --d-safe:#9AA6FF; color-scheme:dark;
+  --d-llm:#FF85AE; --d-agent:#A7D45A; --d-safe:#9AA6FF; --d-app:#E879F9; color-scheme:dark;
 }
 html,body{height:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:14px;line-height:1.5}
@@ -237,6 +237,8 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .phk dt{display:flex;align-items:center;gap:6px;font-weight:600;color:var(--muted)}
 .phk dd{margin:0}
 @media (max-width:420px){.phk div{grid-template-columns:1fr;gap:2px}}
+.lvchip{font-family:var(--font-mono);font-size:.66rem;color:var(--muted);margin-left:2px}
+.lvl.applied{border-top:2px solid var(--d-app)}
 .openbtn{margin-top:14px;width:100%;padding:9px 12px;border:1px solid var(--fg);border-radius:8px;background:var(--fg);color:var(--bg);font-weight:600;cursor:pointer}
 /* Popup */
 .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(8,12,24,.5);padding-block:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -437,7 +439,7 @@ const DOMAINS = [
   ["math","Mathematics"],["prob","Probability & Statistics"],["opt","Optimization"],["sys","Computing & Systems"],
   ["ml","Classical ML"],["dl","Deep Learning"],["nlp","Sequences & Language"],["cv","Vision & Multimodal"],
   ["gen","Generative Models"],["rl","Reinforcement Learning"],["llm","LLMs & Foundation Models"],
-  ["agent","Agents & Tools"],["safe","Safety, Alignment & Interpretability"]
+  ["agent","Agents & Tools"],["safe","Safety, Alignment & Interpretability"],["app","Applied AI"]
 ];
 // [id, label, domain, level, prerequisites, description, key idea]
 const RAW = [
@@ -675,7 +677,24 @@ const RAW = [
 ["cotmon","Chain-of-Thought Monitoring","safe",7,"reasoning,mechinterp","Reading a model's reasoning to catch misbehaviour, and testing whether that reasoning faithfully reflects what it does.",""],
 ["scalableov","Scalable Oversight & Control","safe",7,"alignment,agents","Supervising systems that may exceed us: debate, weak-to-strong generalization and AI control protocols.",""],
 ["agentsafety","Agent Safety & Sandboxing","safe",7,"agents,redteam","Permissions, sandboxes, prompt-injection defenses and human approval for agents that act in the world.",""],
-["frontierevals","Frontier Risk Evaluations","safe",7,"llmevals,governance","Testing for dangerous capabilities such as cyberoffense, bio-risk uplift, autonomy and sabotage before release.",""]
+["frontierevals","Frontier Risk Evaluations","safe",7,"llmevals,governance","Testing for dangerous capabilities such as cyberoffense, bio-risk uplift, autonomy and sabotage before release.",""],
+// ---------- Applied AI ----------
+["robotics", "Robotics Fundamentals", "app", 4, "matrices,mdp,cnn,gd", "How robots sense, plan and act: kinematics, dynamics, control and perception. The base for robot learning.", ""],
+["sim2real", "Simulation & Sim-to-Real", "app", 5, "robotics,ppo", "Train policies in simulators, then transfer them to real hardware with domain randomisation and system identification.", ""],
+["diffpolicy", "Diffusion Policy & Robot Imitation", "app", 6, "ddpm,offlinerl,robotics", "Learn robot behaviour from demonstrations by generating action sequences with diffusion models.", ""],
+["autodrive", "Autonomous Driving", "app", 6, "detection,sim2real,modelrl", "Perception, prediction and planning for self-driving vehicles, from modular stacks to end-to-end and VLA models.", ""],
+["medai", "Medical Imaging & Healthcare AI", "app", 5, "detection,uncertainty,fairness", "Models that read scans, flag disease and support clinicians, under strict demands for safety, privacy and fairness.", ""],
+["drugdisc", "Drug Discovery & Protein Design", "app", 6, "geodl,ddpm", "Generative and geometric models that propose molecules, dock them to targets and design new proteins.", ""],
+["sciml", "Physics-Informed ML & Neural Operators", "app", 5, "mlp,fourier,autodiff", "Neural networks that respect physical laws: physics-informed networks, neural ODEs and neural operators for PDEs.", ""],
+["weather", "Weather & Climate Forecasting", "app", 6, "sciml,geodl,timeseries", "ML models that forecast weather and climate faster than numerical simulation, now competitive with operational systems.", ""],
+["finance", "AI in Finance", "app", 5, "timeseries,boosting,anomaly", "Forecasting, risk, fraud detection and document understanding in banking, trading and insurance.", ""],
+["searchads", "Search, Ranking & Ads", "app", 5, "recsys,sentemb,bandits", "The large ranking systems behind search engines, feeds and advertising, and how they are measured.", ""],
+["docai", "Document AI & OCR", "app", 6, "vlm,detection,rag", "Reading invoices, forms, contracts and scans: OCR, layout understanding and extraction into structured data.", ""],
+["industrial", "Industrial Vision & Predictive Maintenance", "app", 5, "detection,anomaly,timeseries", "Defect inspection on production lines and failure prediction from sensor data in factories and plants.", ""],
+["cyberai", "AI for Cybersecurity", "app", 5, "anomaly,gnn,adversarial", "Detecting intrusions, malware and fraud with ML, and defending ML systems themselves.", ""],
+["gameai", "Game AI & Procedural Generation", "app", 5, "mcts,ppo,gan", "Agents that play games and models that generate levels, assets and characters.", ""],
+["edtech", "AI Tutors & Education", "app", 7, "agents,rag,llmevals", "LLM tutors and learning tools that adapt to the learner, and how to measure that students actually learn.", ""],
+["enterpriseai", "Enterprise AI Assistants", "app", 7, "rag,agents,governance", "Assistants and agents deployed inside companies: grounded in internal data, permissioned and governed.", ""]
 ];
 
 /* ---------- Syllabus: topics to cover per node ---------- */
@@ -906,7 +925,23 @@ saes:"Dictionary learning; Sparse autoencoders on activations; Interpreting feat
 cotmon:"Monitoring reasoning traces; CoT faithfulness; Obfuscation risks; Monitorability as a property; Steganography concerns",
 scalableov:"Debate; Recursive reward modeling; Weak-to-strong generalization; AI control protocols; Trusted monitoring",
 agentsafety:"Least-privilege permissions; Sandboxing; Prompt-injection defenses; Human-in-the-loop approval; Audit logging",
-frontierevals:"Dangerous-capability evals; Cyber & bio uplift; Autonomy & self-replication; Sabotage & scheming evals; Elicitation; Safety cases"
+frontierevals:"Dangerous-capability evals; Cyber & bio uplift; Autonomy & self-replication; Sabotage & scheming evals; Elicitation; Safety cases",
+robotics:"Rigid-body transforms; Forward & inverse kinematics; PID & feedback control; Motion planning; Sensors & perception; ROS basics",
+sim2real:"Physics simulators (MuJoCo, Isaac); Domain randomisation; System identification; Reality gap; Safe real-world testing",
+diffpolicy:"Teleoperation & demonstrations; Behaviour cloning failure modes; Diffusion policy; Action chunking; Evaluation on real robots",
+autodrive:"Sensor fusion (camera, lidar, radar); 3D detection & tracking; Motion prediction; Planning & control; Simulation (CARLA); End-to-end driving",
+medai:"Medical imaging modalities; Segmentation & detection; Label scarcity & weak labels; Calibration & uncertainty; Bias across patient groups; Regulation & clinical validation",
+drugdisc:"Molecular representations; Property prediction; Docking; Generative molecule design; Protein structure & design; Wet-lab feedback loops",
+sciml:"Physics-informed neural networks; Neural ODEs; Fourier neural operators; Surrogate models; Inverse problems; Uncertainty in simulations",
+weather:"Reanalysis data (ERA5); Graph and transformer forecasters; Probabilistic ensembles; Extreme events; Evaluation against physics models",
+finance:"Financial time series; Credit risk scoring; Fraud & AML detection; Backtesting pitfalls; Explainability for regulators; LLMs for financial documents",
+searchads:"Retrieval & ranking stages; Learning to rank; Click models & position bias; Online experiments; Ads auctions & CTR prediction",
+docai:"OCR pipelines; Layout-aware models; Table & form extraction; VLMs for documents; Validation & human review",
+industrial:"Visual defect detection; Few-defect anomaly detection; Sensor time series; Remaining-useful-life prediction; Edge deployment",
+cyberai:"Intrusion & anomaly detection; Malware classification; Graph-based threat detection; Adversarial evasion; LLMs for security operations",
+gameai:"Game-playing agents; Self-play; Procedural content generation; NPC behaviour with LLMs; Evaluation of fun and difficulty",
+edtech:"Tutoring dialogue design; Hints vs answers; Knowledge tracing; Grounding in course material; Measuring learning gains",
+enterpriseai:"Use-case selection & ROI; Data access & permissions; RAG over internal knowledge; Agent workflows; Evaluation & monitoring; Change management"
 };
 
 /* ---------- Resource library: [title, url, type, source] ---------- */
@@ -1015,6 +1050,11 @@ const LIB = {
 "muonblog":["Muon: An optimizer for hidden layers","https://kellerjordan.github.io/posts/muon/","article","Keller Jordan"],
 "nanogpt":["nanoGPT","https://github.com/karpathy/nanoGPT","tool","Andrej Karpathy"],
 "glove":["GloVe project page","https://nlp.stanford.edu/projects/glove/","article","Stanford NLP"],
+"mrobotics":["Modern Robotics (book and videos)","http://hades.mech.northwestern.edu/index.php/Modern_Robotics","book","Lynch & Park"],
+"tedrake":["Robotic Manipulation","https://manipulation.mit.edu/","course","MIT (Russ Tedrake)"],
+"lerobot":["LeRobot","https://github.com/huggingface/lerobot","tool","Hugging Face"],
+"vizrobot":["Modern Robot Learning Bootcamp","https://robotlearningmastery.vizuara.ai/","course","Vizuara"],
+"vizvla":["Vision-Language-Action Bootcamp (autonomous driving)","https://vla.vizuara.ai/","course","Vizuara"],
 "gpt2":["Language Models are Unsupervised Multitask Learners (GPT-2)","https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf","paper","OpenAI, 2019"]
 };
 
@@ -1246,7 +1286,23 @@ saes:"monosem|scalemono|attrib|ax:2406.04093 Scaling and Evaluating Sparse Autoe
 cotmon:"ax:2305.04388 Language Models Don't Always Say What They Think",
 scalableov:"ax:1805.00899 AI Safety via Debate|ax:2312.09390 Weak-to-Strong Generalization|ax:2312.06942 AI Control|ax:2211.03540 Measuring Progress on Scalable Oversight",
 agentsafety:"ax:2406.13352 AgentDojo|ax:2302.12173 Indirect Prompt Injection",
-frontierevals:"ax:2305.15324 Model Evaluation for Extreme Risks|ax:2401.05566 Sleeper Agents|ax:2412.14093 Alignment Faking in LLMs"
+frontierevals:"ax:2305.15324 Model Evaluation for Extreme Risks|ax:2401.05566 Sleeper Agents|ax:2412.14093 Alignment Faking in LLMs",
+robotics:"mrobotics|tedrake|lerobot|vizrobot",
+sim2real:"ax:1703.06907 Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World|tedrake",
+diffpolicy:"ax:2303.04137 Diffusion Policy: Visuomotor Policy Learning via Action Diffusion|lerobot|vizrobot",
+autodrive:"ax:1711.03938 CARLA: An Open Urban Driving Simulator|ax:2212.10156 Planning-oriented Autonomous Driving (UniAD)|vizvla",
+medai:"ax:1711.05225 CheXNet: Radiologist-Level Pneumonia Detection on Chest X-Rays|ax:1505.04597 U-Net",
+drugdisc:"ax:2210.01776 DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking",
+sciml:"ax:1711.10561 Physics Informed Deep Learning (Part I)|ax:1806.07366 Neural Ordinary Differential Equations|ax:2010.08895 Fourier Neural Operator for Parametric PDEs",
+weather:"ax:2212.12794 GraphCast: Learning Skillful Medium-Range Global Weather Forecasting",
+finance:"",
+searchads:"ax:1606.07792 Wide & Deep Learning for Recommender Systems",
+docai:"ax:1912.13318 LayoutLM: Pre-training of Text and Layout for Document Image Understanding|ax:2111.15664 OCR-free Document Understanding Transformer (Donut)",
+industrial:"ax:2106.08265 Towards Total Recall in Industrial Anomaly Detection (PatchCore)",
+cyberai:"",
+gameai:"ax:1912.06680 Dota 2 with Large Scale Deep Reinforcement Learning",
+edtech:"",
+enterpriseai:"bea"
 };
 function resourcesFor(n){
   const out = [];
@@ -1511,7 +1567,23 @@ saes:"Train an SAE on a small model's activations and label its features|Interpr
 cotmon:"Build a CoT monitor that flags unsafe reasoning|AI-safety tooling roles",
 scalableov:"Run a weak-to-strong or debate experiment|Alignment research roles",
 agentsafety:"Sandbox an agent and test it against prompt injection|AI-security engineering",
-frontierevals:"Design a dangerous-capability eval with graded tasks|Evals roles at labs and AI safety institutes"
+frontierevals:"Design a dangerous-capability eval with graded tasks|Evals roles at labs and AI safety institutes",
+robotics:"Make a simulated arm reach targets with inverse kinematics and a PID loop|Robotics engineer roles; automation projects",
+sim2real:"Train a policy in simulation and transfer it with domain randomisation|Robotics and autonomy teams",
+diffpolicy:"Train a diffusion policy from demonstrations on a low-cost arm|Robot learning startups; research labs",
+autodrive:"Drive a car around a CARLA town with a learned planner|Autonomous vehicle and ADAS companies",
+medai:"Build a chest X-ray classifier with calibrated uncertainty|Health-tech companies and hospital AI teams",
+drugdisc:"Train a property predictor and generate candidate molecules|Biotech and pharma AI roles",
+sciml:"Solve a PDE with a physics-informed network and compare it with a numerical solver|Engineering simulation and scientific computing roles",
+weather:"Train a small forecaster on reanalysis data and evaluate it|Climate-tech, energy and insurance",
+finance:"Build a fraud detector with honest backtesting and explanations|Banks, fintech and insurers",
+searchads:"Build a two-stage retrieve-and-rank system with offline metrics|Search, ads and marketplace companies",
+docai:"Extract structured fields from real invoices with validation|Automation for finance, legal and operations",
+industrial:"Build a defect detector from mostly good samples|Manufacturing and industrial IoT",
+cyberai:"Build an intrusion detector on network logs|Security operations and threat-detection teams",
+gameai:"Train a self-play agent or a level generator for a simple game|Game studios and interactive media",
+edtech:"Build a tutor grounded in a course that gives hints, not answers|Ed-tech products and course platforms",
+enterpriseai:"Ship an internal assistant with permissions and an eval set|AI consultancies and enterprise AI teams"
 };
 const STAGE_LETTER = {i:"I",k:"K",s:"S","$":"S"};
 const rc = k => "r-" + (k==="$" ? "x" : k);
@@ -1588,6 +1660,7 @@ scalableov:"Alignment researchers ask you to design oversight experiments|A pape
 };
 const HAND_KEYS = ["sme","paper","technique","adoption","influence"];
 const FORM_OVERRIDE = {
+  robotics:["adoption", "sme"], sim2real:["adoption", "technique"], diffpolicy:["adoption", "paper"], autodrive:["adoption", "paper"], medai:["adoption", "influence"], drugdisc:["paper", "technique"], sciml:["paper", "technique"], weather:["paper", "adoption"], finance:["adoption", "sme"], searchads:["adoption", "sme"], docai:["adoption", "sme"], industrial:["adoption", "sme"], cyberai:["adoption", "sme"], gameai:["adoption", "technique"], edtech:["adoption", "influence"], enterpriseai:["adoption", "influence"],
   programming:["sme","adoption"], dataeng:["adoption","sme"], viz:["influence","adoption"], mlworkflow:["sme","adoption"],
   datacuration:["adoption","technique"], llmevals:["technique","influence"], mcp:["adoption","influence"],
   codingagents:["adoption","technique"], fairness:["influence","sme"], causal:["sme","paper"], learnth:["paper","influence"],
@@ -1659,7 +1732,7 @@ const ROLES = [
   targets:"ldm dit flowmatch vqvae videogen peft gan"},
  {id:"rl-robotics", name:"RL & Robotics Engineer", fam:"build", depth:"s", success:["adoption","paper"],
   does:"Trains agents and robot policies through interaction and demonstrations.",
-  targets:"ppo dqn mcts modelrl offlinerl embodied worldmodels"},
+  targets:"ppo dqn mcts modelrl offlinerl robotics sim2real diffpolicy embodied autodrive worldmodels"},
  {id:"research-scientist", name:"Research Scientist", fam:"research", depth:"s", success:["paper","technique"],
   does:"Invents and publishes new methods and explains why they work.",
   targets:"dlth learnth scaling transformer ddpm flowmatch ssm moe rlhf reasoning"},
@@ -1668,7 +1741,7 @@ const ROLES = [
   targets:"pretrain disttrain flashattn moe scaling rlhf dpo rlvr muon lowprec"},
  {id:"ai-scientist", name:"AI for Science Researcher", fam:"research", depth:"s", success:["paper","technique"],
   does:"Applies ML to biology, chemistry, physics and other sciences.",
-  targets:"gnn geodl uncertainty gp aiscience causal"},
+  targets:"gnn geodl uncertainty gp aiscience causal sciml drugdisc weather"},
  {id:"mlops", name:"MLOps / ML Platform Engineer", fam:"platform", depth:"s", success:["sme","adoption"],
   does:"Builds the pipelines, serving and monitoring that every model runs on.",
   targets:"mlworkflow mlops dataeng disttrain kvcache quant vecdb"},
@@ -1745,7 +1818,8 @@ const PHASES = {
  ["Neural network basics","mlbasics metrics mlp backprop frameworks","Explain backprop and overfitting","Train an MLP image classifier",""],
  ["Convolutional vision","cnn cnnarch transfer detection","Explain receptive fields and anchor-free detection","Train a detector on a custom dataset","A model used on a real inspection or retail task"],
  ["Transformers for vision","vit sslvision clip sam","Explain how CLIP enables zero-shot classification","Build zero-shot visual search with CLIP or segmentation with SAM",""],
- ["Multimodal and deployment","vlm ldm quant mlops","Explain the trade-offs of edge vs cloud vision","Deploy a quantised vision model with monitoring","Your system runs in production, or a paper at a CV workshop"]],
+ ["Multimodal and deployment","vlm ldm quant mlops","Explain the trade-offs of edge vs cloud vision","Deploy a quantised vision model with monitoring","Your system runs in production, or a paper at a CV workshop"],
+ ["Applied vision","medai industrial docai autodrive","Explain how a vision system is validated in a regulated setting","Ship a medical, industrial or document vision system with honest evaluation","A deployed system domain experts rely on"]],
 "nlp-speech":[
  ["Classic text","programming dataeng probbasics ngram tfidf","Explain perplexity and TF-IDF","Build a BM25 search engine",""],
  ["Neural sequences","wordemb rnn lstm seq2seq tokenization","Explain why RNNs struggle with long text","Train a BPE tokenizer and a small seq2seq model",""],
@@ -1763,7 +1837,8 @@ const PHASES = {
  ["Decision making","mdp bellman bandits qlearning","Explain the Bellman equation","Solve gridworld with value iteration and Q-learning",""],
  ["Deep RL","mlp backprop frameworks dqn polgrad ppo","Explain policy gradients vs Q-learning","Train PPO on a custom environment",""],
  ["Planning and offline data","mcts modelrl offlinerl","Explain model-based vs model-free RL","Build an MCTS game bot or train from logged data","A bot or policy used by others"],
- ["Embodied AI","vlm embodied worldmodels rlvr","Explain vision-language-action models","Fine-tune a robot policy in simulation","A demo on hardware, or a CoRL-style paper"]],
+ ["Robotics foundations","robotics sim2real","Explain kinematics, control and the sim-to-real gap","Control a simulated arm, then transfer a policy with domain randomisation",""],
+ ["Embodied AI","vlm diffpolicy embodied autodrive worldmodels rlvr","Explain diffusion policy and vision-language-action models","Train a diffusion policy from demonstrations, or drive in CARLA","A demo on real hardware, or a CoRL-style paper"]],
 "research-scientist":[
  ["Mathematical toolkit","multivar gradient eigen svd mle infotheory kl","Derive maximum likelihood and cross-entropy at a whiteboard","Implement the derivations in NumPy and verify them numerically",""],
  ["Learning and optimisation theory","learnth biasvar convex gd sgd adam","Explain generalisation bounds and their limits","Reproduce an optimisation result from a paper",""],
@@ -1783,7 +1858,8 @@ const PHASES = {
  ["Careful ML","mlbasics cvval uncertainty gp causal","Explain why random splits can mislead in science","Build a model with calibrated uncertainty",""],
  ["Deep learning","mlp backprop frameworks gnn","Explain message passing on molecular graphs","Train a GNN on molecules or materials",""],
  ["Structure-aware models","transformer geodl selfsup","Explain equivariance and why symmetry matters","Train an equivariant model on 3D structures","A collaboration paper with domain scientists"],
- ["AI-driven discovery","aiscience agents reasoning","Explain how AI is changing your field","Build an AI-assisted analysis or discovery loop","A finding or tool other scientists use"]],
+ ["Physics-aware models","sciml weather","Explain physics-informed networks and neural operators","Solve a PDE with a physics-informed network and benchmark it",""],
+ ["AI-driven discovery","aiscience drugdisc agents reasoning","Explain how AI is changing your field","Build an AI-assisted analysis or discovery loop","A finding or tool other scientists use"]],
 "mlops":[
  ["Engineering foundations","programming complexity datastruct dataeng","Explain idempotent, testable pipelines","Build a tested ETL pipeline",""],
  ["ML lifecycle","mlbasics cvval metrics mlworkflow","Explain reproducibility and experiment tracking","Set up experiment tracking and model versioning",""],
@@ -1838,7 +1914,7 @@ const PHASES = {
  ["LLM fundamentals","gpt incontext transformer","Explain LLM capabilities and limits to executives","Prototype a use case with prompting",""],
  ["Solution patterns","rag vecdb tooluse peft sft","Explain build vs buy vs fine-tune","Design a reference architecture for an enterprise assistant",""],
  ["Operating AI","llmevals kvcache quant mlops","Explain the cost, latency and quality budget","Estimate the total cost of a deployment","A client or team adopts your architecture"],
- ["Risk and agents","agents mcp governance privacy agentsafety","Explain compliance and agent risks","Write a rollout plan with governance","Recognised as the trusted adviser on AI adoption"]],
+ ["Risk and agents","agents mcp governance privacy agentsafety enterpriseai","Explain compliance and agent risks","Write a rollout plan with governance","Recognised as the trusted adviser on AI adoption"]],
 "eval-engineer":[
  ["Statistics","programming probbasics descstats hyptest","Explain statistical significance for model comparisons","Compare two models with confidence intervals",""],
  ["Evaluation design","metrics cvval biasvar","Explain contamination and overfitting to benchmarks","Design a held-out eval set",""],
@@ -1957,6 +2033,9 @@ function renderList(){
       <div style="min-width:0"><div class="lkiss">${KISS_STAGES.map((st,j)=>`<div><span class="rk2 ${rc(st.k)}">${STAGE_LETTER[st.k]}</span><b>${kname(st.k)}</b><p>${esc(LEVEL_KISS[i][j])}</p></div>`).join("")}</div>
       <div class="items">${items.map(itemHTML).join("")}</div></div></section>`;
   }).join("");
+  const applied = nodes.filter(n=>n.d==="app").sort((a,b)=>a.lv-b.lv||a.label.localeCompare(b.label));
+  el.insertAdjacentHTML("beforeend", `<section class="lvl applied"><div><div class="num">Applied AI · ${applied.length} topics</div><h2>Applied AI</h2><p>Where AI meets a field: robotics, driving, health, science, finance, industry and more. Each sits at the level its prerequisites put it.</p></div>
+    <div class="items">${applied.map(n=>itemHTML(n).replace("</button>",`<small class="lvchip">L${n.lv}</small></button>`)).join("")}</div></section>`);
   el.addEventListener("click", ev=>{ const b=ev.target.closest("[data-id]"); if(b) select(b.dataset.id,{pop:true}); });
 }
 const itemHTML = n => `<button class="item" data-id="${n.id}" style="--c:var(--d-${n.d})"><span class="dot"></span>${esc(n.label)}${stageBadge(n.id)}</button>`;

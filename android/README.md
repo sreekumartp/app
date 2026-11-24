@@ -1,6 +1,6 @@
 # The K.I.S.S model for mastering AI (Android)
 
-An offline Android app for The K.I.S.S model for mastering AI, a knowledge map of AI and ML: 227 topics in eight levels, from arithmetic to
+An offline Android app for The K.I.S.S model for mastering AI, a knowledge map of AI and ML: 243 topics in eight levels, including an Applied AI section (robotics, autonomous driving, healthcare, science, finance, industry and more), from arithmetic to
 2024–26 frontier research, with prerequisite paths, a syllabus and learning resources for every topic.
 
 ## What the app does
