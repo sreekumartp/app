@@ -72,3 +72,11 @@ syllabi in `SYL`, roles in `ROLES` and `PHASES`, resources in `LIB` and `RES`, a
 
 Third-party: d3 (ISC, see `assets/d3-LICENSE.txt`); Instrument Sans, Bricolage Grotesque and JetBrains
 Mono (SIL Open Font License, see `assets/fonts/OFL-*.txt`).
+
+## Web version on GitHub Pages
+
+`.github/workflows/pages.yml` publishes the same offline page (`app/src/main/assets/`) to GitHub Pages
+whenever it changes on `main`, or when run by hand from the Actions tab. One-time setup: in the
+repository's **Settings → Pages**, set **Source** to **GitHub Actions**. The site is then served at
+`https://<owner>.github.io/<repo>/`.
+
