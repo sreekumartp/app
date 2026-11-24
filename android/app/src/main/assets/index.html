@@ -17,6 +17,7 @@
 html,body{margin:0}body{font-size:14px;-webkit-tap-highlight-color:transparent}img{max-width:100%}[hidden]{display:none!important}
 /* Layout: a header band, then a two-pane workspace: the left-to-right level map (or curriculum list) and a study panel. */
 :root{
+  --r-i:#2563EB; --r-k:#7C3AED; --r-s:#059669; --r-x:#C2410C; --on-r:#FFFFFF;
   --bg:#F2F4F8; --surface:#FFFFFF; --surface-2:#E9EDF4; --fg:#172033; --muted:#566278;
   --line:#D3DAE6; --edge:#A9B4C6; --accent:#2F5FD0; --on-c:#FFFFFF; --stripe:#E8ECF3;
   --font-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
@@ -27,6 +28,7 @@ html,body{margin:0}body{font-size:14px;-webkit-tap-highlight-color:transparent}i
   --d-llm:#DD3F74; --d-agent:#4F7A0E; --d-safe:#3B47A6;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --r-i:#7EA6FF; --r-k:#B794FF; --r-s:#4ADE9B; --r-x:#FBAF5D; --on-r:#0E1320;
   --bg:#0E1320; --surface:#161E30; --surface-2:#1D2740; --fg:#E5E9F2; --muted:#98A3B8;
   --line:#2B3754; --edge:#3D4A68; --accent:#86A7FF; --on-c:#0E1320; --stripe:#131A2B;
   --d-math:#86A7FF; --d-prob:#B596FF; --d-opt:#F27DC2; --d-sys:#A3B0C4; --d-ml:#6CCB7E;
@@ -34,6 +36,7 @@ html,body{margin:0}body{font-size:14px;-webkit-tap-highlight-color:transparent}i
   --d-llm:#FF85AE; --d-agent:#A7D45A; --d-safe:#9AA6FF; color-scheme:dark;
 }}
 :root[data-theme="dark"]{
+  --r-i:#7EA6FF; --r-k:#B794FF; --r-s:#4ADE9B; --r-x:#FBAF5D; --on-r:#0E1320;
   --bg:#0E1320; --surface:#161E30; --surface-2:#1D2740; --fg:#E5E9F2; --muted:#98A3B8;
   --line:#2B3754; --edge:#3D4A68; --accent:#86A7FF; --on-c:#0E1320; --stripe:#131A2B;
   --d-math:#86A7FF; --d-prob:#B596FF; --d-opt:#F27DC2; --d-sys:#A3B0C4; --d-ml:#6CCB7E;
@@ -149,7 +152,6 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .rung .rt2{font-size:.86rem;line-height:1.45}
 .rung .rb{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
 .rung.reached{background:color-mix(in srgb,var(--c) 10%,var(--surface));border-color:color-mix(in srgb,var(--c) 50%,var(--line))}
-.rung.reached .rk2{background:var(--c);color:var(--on-c)}
 .rung.current{border-color:var(--c);border-width:2px;padding:9px 11px}
 .keytag{font-size:.7rem;font-weight:600;padding:1px 8px;border-radius:999px;border:1px solid var(--c);color:var(--fg)}
 .sform{display:inline-block;margin-right:6px;padding:1px 7px;border-radius:999px;background:var(--surface-2);font-size:.72rem;font-weight:600}
@@ -164,7 +166,7 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .mysucc{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding:12px 14px;border:2px dashed var(--c);border-radius:10px;background:color-mix(in srgb,var(--c) 10%,var(--surface))}
 .mysucc.filled{border-style:solid;background:color-mix(in srgb,var(--c) 16%,var(--surface))}
 .mysucc label{display:flex;align-items:center;gap:8px;font-size:.92rem;font-weight:700;color:var(--fg)}
-.mysucc label .rk2{background:var(--c);color:var(--on-c)}
+
 .mssaved{display:none;margin-left:auto;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--c);color:var(--on-c)}
 .mysucc.filled .mssaved{display:inline-block}
 .mysucc textarea{width:100%;resize:vertical;min-height:56px;padding:9px 11px;border:1px solid color-mix(in srgb,var(--c) 45%,var(--line));border-radius:8px;background:var(--surface);color:var(--fg);font:inherit;font-size:.92rem;line-height:1.45}
@@ -172,6 +174,14 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .mshint{font-size:.74rem;color:var(--muted)}
 .sform.mine{background:var(--c);color:var(--on-c)}
 .ladclear{align-self:flex-start;border:0;background:none;color:var(--muted);font-size:.78rem;text-decoration:underline;cursor:pointer;padding:2px 0}
+.r-i{--rc:var(--r-i)}.r-k{--rc:var(--r-k)}.r-s{--rc:var(--r-s)}.r-x{--rc:var(--r-x)}
+.rk2.r-i,.rk2.r-k,.rk2.r-s,.rk2.r-x,.stg.r-i,.stg.r-k,.stg.r-s,.stg.r-x{background:var(--rc);color:var(--on-r)}
+.kl{color:var(--rc);font-weight:800}
+.kiss{letter-spacing:.01em}
+.kiss .kl{font-weight:800}
+.wseg button.r-i b,.wseg button.r-k b,.wseg button.r-s b,.wseg button.r-x b{color:var(--rc)}
+.wseg button[aria-pressed="true"].r-i,.wseg button[aria-pressed="true"].r-k,.wseg button[aria-pressed="true"].r-s,.wseg button[aria-pressed="true"].r-x{background:var(--rc);color:var(--on-r)}
+.wseg button[aria-pressed="true"] b{color:var(--on-r)!important}
 .stg{font-family:var(--font-mono);font-size:.62rem;font-weight:700;padding:0 5px;border-radius:4px;background:var(--fg);color:var(--bg);margin-left:2px}
 .item.sel .stg{background:var(--on-c);color:var(--c)}
 .funnel{display:flex;flex-direction:column;gap:8px}
@@ -361,11 +371,11 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
     <div class="toprow">
       <div class="brand">
         <div class="phonebar">
-          <span class="ptitle">The K.I.S.S model for mastering AI</span>
+          <span class="ptitle" id="pttl">The K.I.S.S model for mastering AI</span>
           <button class="iconbtn" id="pSearch" aria-label="Search topics">⌕</button>
           <button class="iconbtn" id="pSettings" aria-label="Settings">⚙</button>
         </div>
-        <h1>The K.I.S.S model for mastering AI</h1>
+        <h1 id="ttl">The K.I.S.S model for mastering AI</h1>
         <p class="sub" id="sub">From arithmetic to reasoning models and agents. Pick any topic to trace everything it builds on.</p>
       </div>
       <div class="controls">
@@ -401,7 +411,7 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
     <aside id="panel" aria-live="polite"></aside>
   </main>
   <nav class="bnav" id="bnav" aria-label="Sections">
-    <button data-view="home"><span class="bi">★</span>Home</button>
+    <button data-view="home"><span class="bi">⌂</span>Home</button>
     <button data-view="graph"><span class="bi">◎</span>Map</button>
     <button data-view="list"><span class="bi">≡</span>Curriculum</button>
     <button data-view="roles"><span class="bi">◆</span>Roles</button>
@@ -1503,7 +1513,11 @@ scalableov:"Run a weak-to-strong or debate experiment|Alignment research roles",
 agentsafety:"Sandbox an agent and test it against prompt injection|AI-security engineering",
 frontierevals:"Design a dangerous-capability eval with graded tasks|Evals roles at labs and AI safety institutes"
 };
-const STAGE_LETTER = {i:"I",k:"K",s:"S","$":"★"};
+const STAGE_LETTER = {i:"I",k:"K",s:"S","$":"S"};
+const rc = k => "r-" + (k==="$" ? "x" : k);
+// Rung name with its K.I.S.S letter highlighted in the rung's colour.
+const kname = k => { const st=KISS_STAGES.find(x=>x.k===k); return `<span class="kl ${rc(k)}">${st.name[0]}</span>${st.name.slice(1)}`; };
+const KISS_TITLE = `The <span class="kiss"><span class="kl r-k">K</span>.<span class="kl r-i">I</span>.<span class="kl r-s">S</span>.<span class="kl r-x">S</span></span> model for mastering AI`;
 const SUCCESS_FORMS = [
   {k:"sme", name:"SME recognition", def:"People seek you out as the expert; you are asked to review, advise or speak.",
    tpl:(n)=>`Colleagues bring you their ${n.label} problems, and you are asked to review, advise or speak on it.`},
@@ -1940,7 +1954,7 @@ function renderList(){
   el.innerHTML = LEVELS.map(([name,blurb],i)=>{
     const items = nodes.filter(n=>n.lv===i).sort((a,b)=>dIndex[a.d]-dIndex[b.d]||a.label.localeCompare(b.label));
     return `<section class="lvl"><div><div class="num">Level ${i} · ${items.length} topics</div><h2>${esc(name)}</h2><p>${esc(blurb)}</p></div>
-      <div style="min-width:0"><div class="lkiss">${KISS_STAGES.map((st,j)=>`<div><span class="rk2">${STAGE_LETTER[st.k]}</span><b>${st.name}</b><p>${esc(LEVEL_KISS[i][j])}</p></div>`).join("")}</div>
+      <div style="min-width:0"><div class="lkiss">${KISS_STAGES.map((st,j)=>`<div><span class="rk2 ${rc(st.k)}">${STAGE_LETTER[st.k]}</span><b>${kname(st.k)}</b><p>${esc(LEVEL_KISS[i][j])}</p></div>`).join("")}</div>
       <div class="items">${items.map(itemHTML).join("")}</div></div></section>`;
   }).join("");
   el.addEventListener("click", ev=>{ const b=ev.target.closest("[data-id]"); if(b) select(b.dataset.id,{pop:true}); });
@@ -2008,7 +2022,7 @@ function funnelHTML(){
   return `<h3>Your K.I.S.S funnel</h3>
     <p class="none" style="margin-bottom:10px">Information is awareness, knowledge is being able to teach it, skill is being able to build with it, and success is when others recognise, use or build on it. Push topics up the ladder.</p>
     <div class="funnel">${KISS_STAGES.map((st,i)=>`<div class="frow">
-      <span class="fl"><span class="rk2">${STAGE_LETTER[st.k]}</span>${i===3&&g&&FORM[g]?esc(FORM[g].name):st.name}</span>
+      <span class="fl"><span class="rk2 ${rc(st.k)}">${STAGE_LETTER[st.k]}</span><span>${i===3&&g&&FORM[g]?esc(FORM[g].name):kname(st.k)}</span></span>
       <span class="ftrack"><span class="fyou" style="width:${reached[i]/nodes.length*100}%"></span></span>
       <span class="fn">${reached[i]}<small>/${nodes.length}</small></span></div>`).join("")}
     </div>
@@ -2064,7 +2078,7 @@ function openModal(id, keep=false){
       <div class="wl">Where am I?</div>
       <div class="wseg">
         <button data-stage="" aria-pressed="${cur<0}"><b>–</b>Not yet</button>
-        ${KISS_STAGES.map((st,i)=>`<button data-stage="${st.k}" aria-pressed="${i===cur}"><b>${STAGE_LETTER[st.k]}</b>${({i:"Aware",k:"Teach",s:"Build","$":"Success"})[st.k]}</button>`).join("")}
+        ${KISS_STAGES.map((st,i)=>`<button class="${rc(st.k)}" data-stage="${st.k}" aria-pressed="${i===cur}"><b>${STAGE_LETTER[st.k]}</b>${({i:"Aware",k:"Teach",s:"Build","$":"Success"})[st.k]}</button>`).join("")}
       </div>
     </div>
     <div class="tabs" role="tablist">${TABS.map(([k,l])=>`<button role="tab" data-tab="${k}" aria-selected="${modalTab===k}">${l}</button>`).join("")}</div>
@@ -2108,12 +2122,12 @@ function ladderHTML(n){
   return `<section class="ladder" aria-label="K.I.S.S ladder">
     <div class="ladhead"><h3>What each rung means for this topic</h3><span class="ladnote">Tap a rung to mark it</span></div>
     ${KISS_STAGES.map((st,i)=>`<button class="rung${i<=cur?" reached":""}${i===cur?" current":""}" data-stage="${st.k}" aria-pressed="${i===cur}">
-      <span class="rl"><span class="rk2">${STAGE_LETTER[st.k]}</span><span><b>${st.name}</b><small>${st.verb}</small></span></span>
+      <span class="rl"><span class="rk2 ${rc(st.k)}">${STAGE_LETTER[st.k]}</span><span><b>${kname(st.k)}</b><small>${st.verb}</small></span></span>
       <span class="rt2">${i===3?`<span class="sform${successFor(n).custom?" mine":""}">${esc(successFor(n).name)}${successFor(n).fits?"":" (less natural here)"}</span>`:""}${esc(lines[i])}</span>
     </button>`).join("")}
     ${cur>=0?`<button class="ladclear" data-stage="">Clear my rung</button>`:""}
     <div class="mysucc${getMySucc(n.id).trim()?" filled":""}">
-      <label for="ms-${n.id}"><span class="rk2">★</span>My definition of success for this topic<span class="mssaved">Saved</span></label>
+      <label for="ms-${n.id}"><span class="rk2 r-x">S</span>My definition of success for this topic<span class="mssaved">Saved</span></label>
       <textarea id="ms-${n.id}" data-mysucc rows="3" maxlength="500" placeholder="For example: present our results at the team all-hands, or get a pull request merged upstream">${esc(getMySucc(n.id))}</textarea>
       <span class="mshint">Saved on this device. When filled in, it replaces the suggestion on the Success rung.</span>
     </div>
@@ -2123,11 +2137,11 @@ function ladderHTML(n){
     </details>
   </section>`;
 }
-function stageBadge(id){ const st=getStage(id); return st?`<span class="stg" title="${KISS_STAGES[STAGE_IDX[st]].name}">${STAGE_LETTER[st]}</span>`:""; }
+function stageBadge(id){ const st=getStage(id); return st?`<span class="stg ${rc(st)}" title="${KISS_STAGES[STAGE_IDX[st]].name}">${STAGE_LETTER[st]}</span>`:""; }
 function refreshStages(){
   document.querySelectorAll(".item[data-id]").forEach(b=>{ const old=b.querySelector(".stg"); if(old) old.remove(); const h=stageBadge(b.dataset.id); if(h) b.insertAdjacentHTML("beforeend",h); });
   if(nodeSel){
-    nodeSel.select("circle").attr("r", n=>getStage(n.id)?6.5:3.6);
+    nodeSel.select("circle").attr("r", n=>getStage(n.id)?6.5:3.6).style("fill", n=>{ const st=getStage(n.id); return st ? `var(--${rc(st)})` : null; });
     nodeSel.select("text.sl").text(n=>{ const st=getStage(n.id); return st ? STAGE_LETTER[st] : ""; });
   }
   if(!state.sel) renderPanel();
@@ -2276,9 +2290,9 @@ function homeHTML(){
   } else {
     cont = `<div class="card"><h2>Pick a role to get a learning path</h2><p class="none">20 AI roles, each with ordered phases, a capstone per phase and a check of your gaps.</p><div class="btnrow"><button class="btn primary" data-goto="roles">Choose a role</button></div></div>`;
   }
-  const intro = introSeen() ? "" : `<div class="card intro"><h2>How the K.I.S.S model works</h2>
+  const intro = introSeen() ? "" : `<div class="card intro"><h2>How the ${KISS_TITLE.replace("The ","").replace(" model for mastering AI","")} model works</h2>
     <p class="none">Every topic has four rungs. Move topics up the ladder.</p>
-    <div class="introgrid">${KISS_STAGES.map(st=>`<div><span class="rk2">${STAGE_LETTER[st.k]}</span><span><b>${st.name}</b>${esc(st.def)}</span></div>`).join("")}</div>
+    <div class="introgrid">${KISS_STAGES.map(st=>`<div><span class="rk2 ${rc(st.k)}">${STAGE_LETTER[st.k]}</span><span><b>${kname(st.k)}</b>${esc(st.def)}</span></div>`).join("")}</div>
     <p class="none">Open any topic and tap <b>Where am I?</b> to mark your rung. Your funnel below fills up as you go.</p>
     <div class="btnrow"><button class="btn primary" data-intro>Got it</button></div></div>`;
   const starts = ["gd","backprop","transformer","rag","reasoning","agents"].map(id=>byId.get(id));
@@ -2417,9 +2431,9 @@ function roleHTML(role){
       ${st==="done"?`<p class="none">Covered by your background or your marked rungs.</p>`:`
       <div class="links">${ids.map(id=>known.has(id)?itemHTML(byId.get(id)).replace('class="item"','class="item known" title="Already covered"'):itemHTML(byId.get(id))).join("")}</div>
       <dl class="phk">
-        <div><dt><span class="rk2">K</span>Teach-back</dt><dd>${esc(ph[2])}</dd></div>
-        <div><dt><span class="rk2">S</span>Capstone</dt><dd>${esc(ph[3])}</dd></div>
-        ${ph[4]?`<div><dt><span class="rk2">★</span>Milestone</dt><dd>${esc(ph[4])}</dd></div>`:""}
+        <div><dt><span class="rk2 r-k">K</span>Teach-back</dt><dd>${esc(ph[2])}</dd></div>
+        <div><dt><span class="rk2 r-s">S</span>Capstone</dt><dd>${esc(ph[3])}</dd></div>
+        ${ph[4]?`<div><dt><span class="rk2 r-x">S</span>Milestone</dt><dd>${esc(ph[4])}</dd></div>`:""}
       </dl>`}
     </li>`).join("")}</ol>
     ${next.length?`<h3>Close these gaps next</h3><div class="links">${next.map(n=>`<button class="item" data-id="${n.id}" style="--c:var(--d-${n.d})"><span class="dot"></span>${esc(n.label)}<span class="need">needs ${STAGE_LETTER[need.get(n)]}</span></button>`).join("")}</div>`:`<p class="none">You meet every required rung for this role.</p>`}
@@ -2454,6 +2468,10 @@ document.getElementById("roles").addEventListener("click", ev=>{
   if(isPhone()){ roleDetail=c.dataset.role; selectRole(c.dataset.role); renderRoles(); document.getElementById("roles").scrollTop=0; return; }
   setView("graph"); selectRole(c.dataset.role);
 });
+
+/* ---------- Title with highlighted K.I.S.S letters ---------- */
+document.getElementById("ttl").innerHTML = KISS_TITLE;
+document.getElementById("pttl").innerHTML = KISS_TITLE;
 
 /* ---------- Android bridge ---------- */
 function shareTopic(id){
