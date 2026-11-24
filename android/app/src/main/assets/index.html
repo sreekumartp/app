@@ -77,6 +77,8 @@ main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 390px}
 .hint{position:absolute;left:12px;bottom:12px;font-size:.75rem;color:var(--muted);background:color-mix(in srgb,var(--surface) 85%,transparent);padding:4px 8px;border-radius:6px;border:1px solid var(--line)}
 /* SVG */
 .colband{fill:var(--stripe)}
+.colband.appband{fill:color-mix(in srgb,var(--d-app) 10%,var(--bg))}
+.colname.appname{fill:var(--d-app)}
 .colnum{font-family:var(--font-mono);font-size:11px;fill:var(--muted);letter-spacing:.08em}
 .colname{font-family:var(--font-display);font-weight:700;font-size:17px;fill:var(--fg)}
 .edge{fill:none;stroke:var(--edge);stroke-width:1;opacity:.55;transition:opacity .2s}
@@ -237,6 +239,7 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .phk dt{display:flex;align-items:center;gap:6px;font-weight:600;color:var(--muted)}
 .phk dd{margin:0}
 @media (max-width:420px){.phk div{grid-template-columns:1fr;gap:2px}}
+.levelbar .appjump{border-color:var(--d-app);color:var(--d-app)}
 .lvchip{font-family:var(--font-mono);font-size:.66rem;color:var(--muted);margin-left:2px}
 .lvl.applied{border-top:2px solid var(--d-app)}
 .openbtn{margin-top:14px;width:100%;padding:9px 12px;border:1px solid var(--fg);border-radius:8px;background:var(--fg);color:var(--bg);font-weight:600;cursor:pointer}
@@ -1966,7 +1969,8 @@ const measure = document.createElement("canvas").getContext("2d");
 function layout(){
   measure.font = '500 11.5px "Instrument Sans", system-ui, sans-serif';
   nodes.forEach(n=> n.w = Math.ceil(measure.measureText(n.label).width) + 30);
-  const cols = LEVELS.map((_,i)=>nodes.filter(n=>n.lv===i));
+  nodes.forEach(n=> n.col = n.d==="app" ? LEVELS.length : n.lv);
+  const cols = Array.from({length:LEVELS.length+1},(_,i)=>nodes.filter(n=>n.col===i));
   const maxLen = Math.max(...cols.map(c=>c.length));
   const band = n => (dIndex[n.d]/(DOMAINS.length-1) - .5) * maxLen * ROWH * .9;
   const place = c => { const off=(c.length-1)*ROWH/2; c.forEach((n,i)=>n.y=i*ROWH-off); };
@@ -1977,7 +1981,7 @@ function layout(){
     for(let l=cols.length-2;l>=0;l--){ cols[l].forEach(n=>{ const b=n.kids.length?mean(n.kids):n.y; n.t=.55*b+.2*n.y+.25*band(n); }); cols[l].sort((a,b)=>a.t-b.t); place(cols[l]); }
   }
   for(let l=1;l<cols.length;l++){ cols[l].forEach(n=>{ const b=n.pre.length?mean(n.pre):n.y; n.t=.62*b+.38*band(n); }); cols[l].sort((a,b)=>a.t-b.t); place(cols[l]); }
-  nodes.forEach(n=> n.x = n.lv*COLW);
+  nodes.forEach(n=> n.x = n.col*COLW);
   return maxLen;
 }
 
@@ -1989,15 +1993,16 @@ function renderGraph(){
   maxLen = layout();
   const top = -(maxLen-1)*ROWH/2 - 70, H = maxLen*ROWH + 100;
   const gc = root.append("g");
-  LEVELS.forEach(([name],i)=>{
-    gc.append("rect").attr("class","colband").attr("x",i*COLW-16).attr("y",top-10).attr("width",COLW-18).attr("height",H).attr("rx",14).style("opacity", i%2?0:1);
-    gc.append("text").attr("class","colnum").attr("x",i*COLW).attr("y",top+16).text(`LEVEL ${i}`);
-    gc.append("text").attr("class","colname").attr("x",i*COLW).attr("y",top+38).text(name);
+  [...LEVELS.map(([name],i)=>[`LEVEL ${i}`,name]), ["APPLIED AI · LEVELS 4–7","Applied AI"]].forEach(([num,name],i)=>{
+    const applied = i===LEVELS.length;
+    gc.append("rect").attr("class", applied?"colband appband":"colband").attr("x",i*COLW-16).attr("y",top-10).attr("width",COLW-18).attr("height",H).attr("rx",14).style("opacity", applied?1:(i%2?0:1));
+    gc.append("text").attr("class","colnum").attr("x",i*COLW).attr("y",top+16).text(num);
+    gc.append("text").attr("class", applied?"colname appname":"colname").attr("x",i*COLW).attr("y",top+38).text(name);
   });
   edgeSel = root.append("g").selectAll("path").data(edges).join("path").attr("class","edge")
     .attr("d", e=>{
       const x1=e.s.x+e.s.w, y1=e.s.y, x2=e.t.x, y2=e.t.y;
-      if(e.s.lv===e.t.lv){ const sx=e.s.x, k=Math.min(60,20+Math.abs(y2-y1)*.25); return `M${sx},${y1} C${sx-k},${y1} ${x2-k},${y2} ${x2},${y2}`; }
+      if(e.s.col===e.t.col){ const sx=e.s.x, k=Math.min(60,20+Math.abs(y2-y1)*.25); return `M${sx},${y1} C${sx-k},${y1} ${x2-k},${y2} ${x2},${y2}`; }
       const dx=Math.min(110,(x2-x1)/2); return `M${x1},${y1} C${x1+dx},${y1} ${x2-dx},${y2} ${x2},${y2}`;
     });
   nodeSel = root.append("g").selectAll("g").data(nodes).join("g").attr("class","node")
@@ -2028,7 +2033,7 @@ function focusNode(n, anim=true){ const r=svg.node().getBoundingClientRect(); if
 function renderList(){
   const el = document.getElementById("list");
   el.innerHTML = LEVELS.map(([name,blurb],i)=>{
-    const items = nodes.filter(n=>n.lv===i).sort((a,b)=>dIndex[a.d]-dIndex[b.d]||a.label.localeCompare(b.label));
+    const items = nodes.filter(n=>n.lv===i && n.d!=="app").sort((a,b)=>dIndex[a.d]-dIndex[b.d]||a.label.localeCompare(b.label));
     return `<section class="lvl"><div><div class="num">Level ${i} · ${items.length} topics</div><h2>${esc(name)}</h2><p>${esc(blurb)}</p></div>
       <div style="min-width:0"><div class="lkiss">${KISS_STAGES.map((st,j)=>`<div><span class="rk2 ${rc(st.k)}">${STAGE_LETTER[st.k]}</span><b>${kname(st.k)}</b><p>${esc(LEVEL_KISS[i][j])}</p></div>`).join("")}</div>
       <div class="items">${items.map(itemHTML).join("")}</div></div></section>`;
@@ -2333,11 +2338,11 @@ const PHONE_K = .9;
 function jumpLevel(i, anim=true){
   const r=svg.node().getBoundingClientRect(); const cur=d3.zoomTransform(svg.node());
   const k=Math.max(cur.k, isPhone()?PHONE_K:.6);
-  const col=nodes.filter(n=>n.lv===i); const cy=(Math.min(...col.map(n=>n.y))+Math.max(...col.map(n=>n.y)))/2;
+  const col=nodes.filter(n=>n.col===i); const cy=(Math.min(...col.map(n=>n.y))+Math.max(...col.map(n=>n.y)))/2;
   const t=d3.zoomIdentity.translate(14 - k*(i*COLW-16), r.height/2 + 20 - k*cy).scale(k);
   (anim?svg.transition().duration(500):svg).call(zoom.transform,t);
 }
-document.getElementById("levelbar").innerHTML = LEVELS.map(([name],i)=>`<button data-lv="${i}" title="${esc(name)}">L${i} · ${esc(name.split(" ")[0].replace("&",""))}</button>`).join("");
+document.getElementById("levelbar").innerHTML = LEVELS.map(([name],i)=>`<button data-lv="${i}" title="${esc(name)}">L${i} · ${esc(name.split(" ")[0].replace("&",""))}</button>`).join("") + `<button data-lv="${LEVELS.length}" class="appjump">Applied AI</button>`;
 document.getElementById("levelbar").addEventListener("click", ev=>{ const b=ev.target.closest("[data-lv]"); if(b) jumpLevel(+b.dataset.lv); });
 function updateMapbar(){
   const bar=document.getElementById("mapbar"); if(!bar) return;
