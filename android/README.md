@@ -1,6 +1,6 @@
-# AI & ML Atlas for Android
+# The K.I.S.S model for mastering AI (Android)
 
-An offline Android app for the AI & ML Knowledge Atlas: 227 topics in eight levels, from arithmetic to
+An offline Android app for The K.I.S.S model for mastering AI, a knowledge map of AI and ML: 227 topics in eight levels, from arithmetic to
 2024–26 frontier research, with prerequisite paths, a syllabus and learning resources for every topic.
 
 ## What the app does
