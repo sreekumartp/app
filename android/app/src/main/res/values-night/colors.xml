@@ -1,0 +1,6 @@
+<resources>
+    <color name="atlas_bg">#0E1320</color>
+    <color name="atlas_surface">#161E30</color>
+    <color name="atlas_ink">#E5E9F2</color>
+    <color name="atlas_accent">#86A7FF</color>
+</resources>

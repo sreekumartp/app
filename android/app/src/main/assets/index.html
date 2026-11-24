@@ -1,0 +1,1375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI & ML Knowledge Atlas</title>
+<style>
+@font-face{font-family:"Instrument Sans";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/instrument-sans-latin-400-normal.woff2") format("woff2");}
+@font-face{font-family:"Instrument Sans";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/instrument-sans-latin-500-normal.woff2") format("woff2");}
+@font-face{font-family:"Instrument Sans";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/instrument-sans-latin-600-normal.woff2") format("woff2");}
+@font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/bricolage-grotesque-latin-500-normal.woff2") format("woff2");}
+@font-face{font-family:"Bricolage Grotesque";font-style:normal;font-weight:700;font-display:swap;src:url("fonts/bricolage-grotesque-latin-700-normal.woff2") format("woff2");}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/jetbrains-mono-greek-400-normal.woff2") format("woff2");unicode-range:U+0370-03FF;}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/jetbrains-mono-greek-500-normal.woff2") format("woff2");unicode-range:U+0370-03FF;}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2");}
+@font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2");}
+html,body{margin:0}body{font-size:14px;-webkit-tap-highlight-color:transparent}img{max-width:100%}[hidden]{display:none!important}
+/* Layout: a header band, then a two-pane workspace: the left-to-right level map (or curriculum list) and a study panel. */
+:root{
+  --bg:#F2F4F8; --surface:#FFFFFF; --surface-2:#E9EDF4; --fg:#172033; --muted:#566278;
+  --line:#D3DAE6; --edge:#A9B4C6; --accent:#2F5FD0; --on-c:#FFFFFF; --stripe:#E8ECF3;
+  --font-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --font-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --d-math:#2F5FD0; --d-prob:#7A4BD6; --d-opt:#BE2C84; --d-sys:#5D6B80; --d-ml:#2C8540;
+  --d-dl:#D2620C; --d-nlp:#08848F; --d-cv:#C53434; --d-gen:#A57E06; --d-rl:#7D5636;
+  --d-llm:#DD3F74; --d-agent:#4F7A0E; --d-safe:#3B47A6;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0E1320; --surface:#161E30; --surface-2:#1D2740; --fg:#E5E9F2; --muted:#98A3B8;
+  --line:#2B3754; --edge:#3D4A68; --accent:#86A7FF; --on-c:#0E1320; --stripe:#131A2B;
+  --d-math:#86A7FF; --d-prob:#B596FF; --d-opt:#F27DC2; --d-sys:#A3B0C4; --d-ml:#6CCB7E;
+  --d-dl:#FF9F55; --d-nlp:#4FD0DA; --d-cv:#FF7F7F; --d-gen:#E6C04D; --d-rl:#CFA27C;
+  --d-llm:#FF85AE; --d-agent:#A7D45A; --d-safe:#9AA6FF; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0E1320; --surface:#161E30; --surface-2:#1D2740; --fg:#E5E9F2; --muted:#98A3B8;
+  --line:#2B3754; --edge:#3D4A68; --accent:#86A7FF; --on-c:#0E1320; --stripe:#131A2B;
+  --d-math:#86A7FF; --d-prob:#B596FF; --d-opt:#F27DC2; --d-sys:#A3B0C4; --d-ml:#6CCB7E;
+  --d-dl:#FF9F55; --d-nlp:#4FD0DA; --d-cv:#FF7F7F; --d-gen:#E6C04D; --d-rl:#CFA27C;
+  --d-llm:#FF85AE; --d-agent:#A7D45A; --d-safe:#9AA6FF; color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:14px;line-height:1.5}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{height:100%;display:flex;flex-direction:column}
+header{padding-block:14px 10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;gap:10px}
+.toprow{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.brand{flex:1 1 320px;min-width:0}
+h1{font-family:var(--font-display);font-weight:700;font-size:1.45rem;letter-spacing:-.01em;margin:0;line-height:1.15;text-wrap:balance}
+.sub{color:var(--muted);margin:2px 0 0;font-size:.9rem}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.search{position:relative}
+.search input{width:min(280px,78vw);padding:7px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:inherit}
+.search ul{position:absolute;z-index:20;top:calc(100% + 4px);left:0;right:0;min-width:260px;margin:0;padding:4px;list-style:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(10,20,40,.16);max-height:320px;overflow:auto}
+.search li button{display:flex;width:100%;gap:8px;align-items:center;padding:6px 8px;border:0;background:none;border-radius:6px;text-align:left;cursor:pointer}
+.search li button:hover,.search li button.kb{background:var(--surface-2)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:7px 12px;cursor:pointer;font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.legend{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.chip{flex:none;display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 8px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:.78rem;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed="true"]{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,var(--surface))}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 390px}
+.pane{position:relative;min-width:0;min-height:0;overflow:hidden}
+#map{width:100%;height:100%;display:block;touch-action:none;cursor:grab;background:var(--bg)}
+#map:active{cursor:grabbing}
+.zoombtns{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:6px}
+.zoombtns button{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;font-weight:600}
+.hint{position:absolute;left:12px;bottom:12px;font-size:.75rem;color:var(--muted);background:color-mix(in srgb,var(--surface) 85%,transparent);padding:4px 8px;border-radius:6px;border:1px solid var(--line)}
+/* SVG */
+.colband{fill:var(--stripe)}
+.colnum{font-family:var(--font-mono);font-size:11px;fill:var(--muted);letter-spacing:.08em}
+.colname{font-family:var(--font-display);font-weight:700;font-size:17px;fill:var(--fg)}
+.edge{fill:none;stroke:var(--edge);stroke-width:1;opacity:.55;transition:opacity .2s}
+.edge.on{stroke:var(--c);opacity:.85;stroke-width:1.5}
+.edge.hov{stroke:var(--fg);opacity:.95;stroke-width:1.8}
+.edge.dim{opacity:.05}
+.node{cursor:pointer;transition:opacity .2s}
+.node rect{fill:var(--surface);stroke:color-mix(in srgb,var(--c) 40%,var(--line));stroke-width:1}
+.node circle{fill:var(--c)}
+.node text{font-family:var(--font-body);font-size:11.5px;font-weight:500;fill:var(--fg)}
+.node:hover rect,.node:focus-visible rect{stroke:var(--c);stroke-width:2}
+.node:focus{outline:none}
+.node.on rect{fill:color-mix(in srgb,var(--c) 18%,var(--surface));stroke:var(--c)}
+.node.sel rect{fill:var(--c);stroke:var(--c);stroke-width:2}
+.node.sel text{fill:var(--on-c);font-weight:600}
+.node.sel circle{fill:var(--on-c)}
+.node.dim{opacity:.16}
+/* Curriculum */
+#list{height:100%;overflow:auto;padding:18px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+.lvl{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 20px;padding-block:16px;border-bottom:1px solid var(--line)}
+.lvl h2{font-family:var(--font-display);font-size:1.05rem;margin:0;line-height:1.2}
+.lvl .num{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.lvl p{margin:4px 0 0;color:var(--muted);font-size:.82rem}
+.items{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+.item{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 8px;border:1px solid color-mix(in srgb,var(--c) 40%,var(--line));border-radius:999px;background:var(--surface);cursor:pointer;font-size:.82rem;transition:opacity .2s}
+.item.on{background:color-mix(in srgb,var(--c) 18%,var(--surface));border-color:var(--c)}
+.item.sel{background:var(--c);color:var(--on-c);border-color:var(--c)}
+.item.sel .dot{background:var(--on-c)}
+.item.dim{opacity:.3}
+/* Panel */
+aside{border-left:1px solid var(--line);background:var(--surface);overflow:auto;padding-block:18px 32px;padding-left:20px;padding-right:max(20px,env(safe-area-inset-right,0px));min-width:0}
+.meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:.78rem;color:var(--muted)}
+.meta .dchip{display:inline-flex;align-items:center;gap:6px;color:var(--fg);font-weight:500}
+.lvtag{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+aside h2{font-family:var(--font-display);font-size:1.5rem;line-height:1.15;margin:8px 0 8px;text-wrap:balance}
+aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:22px 0 8px;font-weight:600}
+.desc{margin:0;font-size:.95rem;max-width:62ch}
+.formula{margin-top:12px;font-family:var(--font-mono);font-size:.85rem;background:var(--surface-2);border-radius:8px;padding:10px 12px;overflow-x:auto;white-space:pre}
+.links{display:flex;flex-wrap:wrap;gap:6px}
+.links .item{font-size:.8rem}
+.none{color:var(--muted);font-size:.85rem;margin:0}
+.modes{display:flex;gap:6px;margin-top:16px}
+.modes button{flex:1;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;font-size:.82rem;font-weight:500}
+.modes button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.profile{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:10px}
+.profile div{display:flex;flex-direction:column;align-items:center;gap:3px}
+.profile .bar{width:100%;height:36px;background:var(--surface-2);border-radius:4px;position:relative;overflow:hidden}
+.profile .bar span{position:absolute;left:0;right:0;bottom:0;background:var(--accent);border-radius:4px 4px 0 0}
+.profile small{font-family:var(--font-mono);font-size:.66rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.path{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.path .lh{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stats div{background:var(--surface-2);border-radius:8px;padding:10px}
+.stats b{display:block;font-family:var(--font-display);font-size:1.4rem;font-variant-numeric:tabular-nums}
+.stats span{font-size:.75rem;color:var(--muted)}
+.howto{margin:0;padding-left:18px;font-size:.88rem}
+.howto li{margin-bottom:4px}
+.foot{margin-top:24px;font-size:.75rem;color:var(--muted)}
+.openbtn{margin-top:14px;width:100%;padding:9px 12px;border:1px solid var(--fg);border-radius:8px;background:var(--fg);color:var(--bg);font-weight:600;cursor:pointer}
+/* Popup */
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(8,12,24,.5);padding-block:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sheet{position:relative;width:100%;max-width:860px;max-height:100%;overflow:auto;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 60px rgba(8,12,24,.35);padding:22px 24px 26px}
+.sheet h2{font-family:var(--font-display);font-size:1.7rem;line-height:1.15;margin:6px 40px 6px 0;text-wrap:balance}
+.sheet .meta{padding-right:44px}
+.sheet h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 10px;font-weight:600}
+.xbtn{position:absolute;top:14px;right:14px;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;font-size:1.1rem;line-height:1}
+.scope{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px}
+.scope span{font-size:.78rem;padding:4px 10px;border-radius:999px;background:var(--surface-2);font-variant-numeric:tabular-nums}
+.scope b{font-weight:600}
+.mgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;margin-top:20px}
+.subs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;counter-reset:s}
+.subs li{counter-increment:s}
+.subs label{display:grid;grid-template-columns:22px 18px minmax(0,1fr);align-items:start;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:.9rem}
+.subs label:hover{background:var(--surface-2)}
+.subs label::before{content:counter(s,decimal-leading-zero);font-family:var(--font-mono);font-size:.7rem;color:var(--muted);padding-top:3px}
+.subs input{margin:3px 0 0;accent-color:var(--c)}
+.subs input:checked + span{color:var(--muted);text-decoration:line-through}
+.prog{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.prog .track{flex:1;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.prog .fill{height:100%;background:var(--c);border-radius:3px}
+.reslist{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+a.res{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:inherit;background:var(--surface)}
+a.res:hover{border-color:var(--c);background:color-mix(in srgb,var(--c) 7%,var(--surface))}
+a.res .rt{font-weight:600;font-size:.88rem;line-height:1.3}
+a.res .rs{grid-column:1;font-size:.74rem;color:var(--muted)}
+a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--font-mono);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+.searchlinks{display:flex;flex-wrap:wrap;gap:6px}
+.searchlinks a{font-size:.8rem;padding:5px 10px;border:1px solid var(--line);border-radius:999px;color:var(--fg);text-decoration:none}
+.searchlinks a:hover{border-color:var(--c)}
+.mfoot{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.mfoot button{padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;font-weight:500;font-size:.85rem}
+.mfoot button.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+@media (max-width:700px){
+  .modal{align-items:flex-end;padding-left:0;padding-right:0;padding-bottom:0}
+  .sheet{border-radius:16px 16px 0 0;max-height:92vh;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+  .mgrid{grid-template-columns:1fr}
+}
+@media (max-width:860px){
+  .app{height:auto}
+  main{display:block}
+  .pane{height:64vh;border-bottom:1px solid var(--line)}
+  aside{border-left:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .lvl{grid-template-columns:1fr}
+  .hint{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <div class="toprow">
+      <div class="brand">
+        <h1>AI &amp; ML Knowledge Atlas</h1>
+        <p class="sub" id="sub">From arithmetic to reasoning models and agents. Pick any topic to trace everything it builds on.</p>
+      </div>
+      <div class="controls">
+        <div class="search">
+          <input id="q" type="search" placeholder="Search topics, e.g. attention" autocomplete="off" aria-label="Search topics">
+          <ul id="qres" hidden></ul>
+        </div>
+        <div class="seg" role="group" aria-label="View">
+          <button id="vGraph" aria-pressed="true">Map</button>
+          <button id="vList" aria-pressed="false">Curriculum</button>
+        </div>
+      </div>
+    </div>
+    <div class="legend" id="legend" aria-label="Domains"></div>
+  </header>
+  <main>
+    <div class="pane" id="pane">
+      <svg id="map" aria-label="Knowledge graph of AI and ML topics"></svg>
+      <div id="list" hidden></div>
+      <div class="zoombtns" id="zoombtns">
+        <button id="zin" aria-label="Zoom in">+</button>
+        <button id="zout" aria-label="Zoom out">−</button>
+        <button id="zfit" aria-label="Fit whole map" title="Fit whole map">⤢</button>
+      </div>
+      <div class="hint" id="hint">Drag to pan · scroll or pinch to zoom · click a topic</div>
+    </div>
+    <aside id="panel" aria-live="polite"></aside>
+  </main>
+</div>
+<div class="modal" id="modal" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="mTitle"></div>
+</div>
+
+<script src="d3.min.js"></script>
+<script>
+const LEVELS = [
+  ["Arithmetic & Pre-algebra","Number sense and the notation everything else is written in."],
+  ["Core Mathematics","Algebra, calculus, linear algebra and probability: the four pillars."],
+  ["Advanced Math & Computing","The math ML actually runs on, plus the computing skills to use it."],
+  ["Classical Machine Learning","Learning from data with models you can inspect and reason about."],
+  ["Deep Learning Foundations","Neural networks, how they are trained, and the first deep architectures."],
+  ["Modern Architectures","Attention, Transformers, diffusion and the scaling era."],
+  ["Foundation Models & LLMs","Pretraining, post-training and deploying large foundation models."],
+  ["Frontier (2024–26)","Reasoning models, agents, new architectures and safety research."]
+];
+const DOMAINS = [
+  ["math","Mathematics"],["prob","Probability & Statistics"],["opt","Optimization"],["sys","Computing & Systems"],
+  ["ml","Classical ML"],["dl","Deep Learning"],["nlp","Sequences & Language"],["cv","Vision & Multimodal"],
+  ["gen","Generative Models"],["rl","Reinforcement Learning"],["llm","LLMs & Foundation Models"],
+  ["agent","Agents & Tools"],["safe","Safety, Alignment & Interpretability"]
+];
+// [id, label, domain, level, prerequisites, description, key idea]
+const RAW = [
+// ---------- Level 0 ----------
+["numbers","Number Systems","math",0,"","Natural, integer, rational, real and complex numbers, and place-value notation in different bases.",""],
+["arith","Arithmetic Operations","math",0,"numbers","Addition, subtraction, multiplication and division, and the order in which they apply. Every neural network forward pass is billions of multiply–adds.","a·(b + c) = a·b + a·c"],
+["fractions","Fractions, Decimals & Percents","math",0,"arith","Parts of a whole, conversions between forms, and reasoning with percentages. Probabilities are fractions between 0 and 1.",""],
+["exponents","Exponents & Roots","math",0,"arith","Repeated multiplication, powers, roots and scientific notation. Growth curves, scaling laws and learning-rate decay are all exponential or power-law.","aᵐ · aⁿ = aᵐ⁺ⁿ    a⁻ⁿ = 1/aⁿ"],
+["logs","Logarithms","math",0,"exponents","The inverse of exponentiation. Turns products into sums, which is why ML optimizes log-likelihoods and why information is measured in bits.","log(xy) = log x + log y"],
+["ratios","Ratios & Proportions","math",0,"fractions","Comparing quantities, rates and unit conversion. The intuition behind normalization and weighted averages.",""],
+["sets","Sets & Logic","math",0,"","Sets, unions and intersections, Boolean logic, quantifiers, and proof techniques such as induction and contradiction.","A ∩ B,  A ∪ B,  ∀x ∃y"],
+["binary","Binary & Floating Point","sys",0,"numbers","Bits, two's complement integers and IEEE-754 floats. Explains overflow, rounding error and why FP32, BF16, FP8 and FP4 formats matter for training.","value = (−1)ˢ × 1.m × 2ᵉ⁻ᵇⁱᵃˢ"],
+["sumnot","Summation & Product Notation","math",0,"arith","Compact notation for adding or multiplying many terms. Nearly every loss function is written as a sum over examples.","Σᵢ₌₁ⁿ xᵢ     Πᵢ₌₁ⁿ pᵢ"],
+["counting","Counting & Combinatorics","math",0,"arith","Permutations, combinations and the multiplication principle. The basis for counting outcomes in probability.","C(n,k) = n! / (k!(n−k)!)"],
+["coord","Coordinate Geometry","math",0,"numbers","Points, lines, slopes and distances on the Cartesian plane. The first picture of data as points in space.","d = √((x₂−x₁)² + (y₂−y₁)²)"],
+["trig","Trigonometry","math",0,"coord","Sine, cosine and angles. Reappears in Fourier analysis and in the sinusoidal and rotary position encodings of Transformers.","sin²θ + cos²θ = 1"],
+// ---------- Level 1 ----------
+["algebra","Algebra & Equations","math",1,"arith,exponents","Variables, expressions, and solving linear and quadratic equations and inequalities.",""],
+["functions","Functions & Graphs","math",1,"algebra,coord","Mappings from inputs to outputs, composition and inverses. A trained model is a function with learned parameters.","f(g(x)),  f⁻¹(f(x)) = x"],
+["polynomials","Polynomials","math",1,"algebra","Sums of powers of a variable, their roots and behaviour. Polynomial regression is the first taste of model capacity.",""],
+["seqseries","Sequences & Series","math",1,"sumnot,functions","Convergence, geometric series and Taylor expansions. Geometric series give the discounted return in RL.","Σ γᵗ = 1/(1−γ) for |γ| < 1"],
+["limits","Limits & Continuity","math",1,"functions","What a function approaches as its input approaches a point. The foundation for derivatives.",""],
+["deriv","Derivatives","math",1,"limits","Instantaneous rate of change and slope of a curve. Tells you which way to nudge a parameter to reduce a loss.","f′(x) = lim_{h→0} (f(x+h) − f(x)) / h"],
+["chainrule","Chain Rule","math",1,"deriv","How to differentiate a composition of functions. Backpropagation is the chain rule applied systematically through a network.","d/dx f(g(x)) = f′(g(x)) · g′(x)"],
+["integrals","Integrals","math",1,"deriv","Accumulated area and the inverse of differentiation. Needed for continuous probability, expectations and normalizing constants.","∫ₐᵇ f(x) dx"],
+["vectors","Vectors","math",1,"coord","Ordered lists of numbers with magnitude and direction; addition, scaling and the dot product. Embeddings are vectors.","a · b = Σ aᵢbᵢ = |a||b|cos θ"],
+["matrices","Matrices","math",1,"vectors","Rectangular arrays, matrix multiplication, transpose and inverse. A neural network layer is a matrix multiply plus a nonlinearity.","(AB)ᵢⱼ = Σₖ AᵢₖBₖⱼ"],
+["lineq","Systems of Linear Equations","math",1,"matrices,algebra","Solving Ax = b with Gaussian elimination; rank, singularity and the number of solutions.","Ax = b"],
+["probbasics","Probability Basics","prob",1,"counting,sets,fractions","Sample spaces, events and Kolmogorov's axioms. The language for reasoning under uncertainty.","P(A ∪ B) = P(A) + P(B) − P(A ∩ B)"],
+["condprob","Conditional Probability","prob",1,"probbasics","Probability given that something else happened, and what independence means. Language models predict conditional probabilities of the next token.","P(A | B) = P(A ∩ B) / P(B)"],
+["bayes","Bayes' Theorem","prob",1,"condprob","How to update beliefs when evidence arrives. The basis of Bayesian inference, spam filters and diagnostic reasoning.","P(H | E) = P(E | H) · P(H) / P(E)"],
+["descstats","Descriptive Statistics","prob",1,"arith,sumnot","Mean, median, variance, standard deviation, quantiles and correlation. The first look at any dataset.","σ² = (1/n) Σ (xᵢ − x̄)²"],
+["randvar","Random Variables & Distributions","prob",1,"probbasics,functions","PMFs, PDFs and CDFs; Bernoulli, binomial, Poisson, uniform and Gaussian distributions.","N(x; μ, σ²) = e^{−(x−μ)²/2σ²} / √(2πσ²)"],
+["expect","Expectation & Variance","prob",1,"randvar,sumnot","The average value of a random variable and its spread. Losses are expectations over the data distribution.","E[X] = Σ x·p(x)    Var X = E[X²] − E[X]²"],
+["graphs","Graph Theory Basics","math",1,"sets","Nodes, edges, paths, trees and DAGs. Computational graphs, knowledge graphs and GNNs are all built on them.",""],
+["programming","Programming Fundamentals","sys",1,"sets","Variables, control flow, functions and debugging, usually in Python. The practical entry point to everything else.",""],
+["complexity","Algorithms & Big-O","sys",1,"programming,logs","Sorting, searching and recursion, with time and memory complexity. Explains why attention's O(n²) cost matters.","O(n log n),  O(n²)"],
+["datastruct","Data Structures","sys",1,"programming","Arrays, hash maps, trees, heaps and graphs, and when to use each.",""],
+// ---------- Level 2 ----------
+["multivar","Multivariable Calculus","math",2,"deriv,vectors","Functions of many variables, partial derivatives and multiple integrals. Models have millions to trillions of variables.","∂f/∂xᵢ"],
+["gradient","Gradients, Jacobians & Hessians","math",2,"multivar,matrices,chainrule","The gradient points uphill; the Jacobian collects first derivatives of vector functions; the Hessian holds curvature.","∇f = (∂f/∂x₁, …, ∂f/∂xₙ)"],
+["matcalc","Matrix Calculus","math",2,"gradient","Derivatives with respect to vectors and matrices, the notation used for deriving backprop updates.","∂(xᵀAx)/∂x = (A + Aᵀ)x"],
+["vecspaces","Vector Spaces & Rank","math",2,"lineq","Span, basis, linear independence, subspaces, projections and rank.","rank(A) = dim col(A)"],
+["normsip","Norms & Similarity","math",2,"vectors","L1, L2 and infinity norms, inner products, cosine similarity and distance metrics. How we measure closeness of embeddings.","cos(a,b) = a·b / (‖a‖‖b‖)"],
+["eigen","Eigenvalues & Eigenvectors","math",2,"vecspaces","Directions a matrix only stretches. Govern stability, PCA, PageRank and gradient explosion in deep networks.","Av = λv"],
+["svd","Singular Value Decomposition","math",2,"eigen","Factorizes any matrix into rotations and scalings. Gives the best low-rank approximation, the idea behind LoRA and compression.","A = UΣVᵀ"],
+["matdecomp","Matrix Decompositions","math",2,"lineq,vecspaces","LU, QR and Cholesky factorizations for solving systems stably and efficiently.","A = LU = QR = LLᵀ"],
+["tensors","Tensors & Broadcasting","sys",2,"matrices,programming","N-dimensional arrays, shapes, broadcasting and einsum notation, the data type of deep learning.","einsum('bhqd,bhkd->bhqk', Q, K)"],
+["numstab","Numerical Stability","sys",2,"binary,matdecomp","Conditioning, cancellation and overflow. Tricks such as log-sum-exp keep softmax and losses from blowing up.","log Σ eˣⁱ = m + log Σ eˣⁱ⁻ᵐ"],
+["fourier","Fourier Analysis","math",2,"trig,integrals,seqseries","Decomposing signals into frequencies. Used in audio, image processing, convolution theorems and state space models.","f̂(ω) = ∫ f(t) e^{−iωt} dt"],
+["convex","Convexity","opt",2,"multivar","Convex sets and functions have a single global minimum, which makes optimization tractable. Most deep learning losses are not convex.","f(λx + (1−λ)y) ≤ λf(x) + (1−λ)f(y)"],
+["gd","Gradient Descent","opt",2,"gradient","Repeatedly step against the gradient to minimize a loss. The engine of nearly all model training.","θ ← θ − η ∇L(θ)"],
+["constrained","Lagrange Multipliers & KKT","opt",2,"gradient,convex","Optimizing subject to constraints, duality and the KKT conditions. Used to derive SVMs and maximum-entropy models.","∇f = λ∇g"],
+["newton","Second-Order Methods","opt",2,"gradient","Newton's method and quasi-Newton methods such as L-BFGS use curvature to take better steps.","θ ← θ − H⁻¹∇L"],
+["jointdist","Joint & Marginal Distributions","prob",2,"randvar,condprob,integrals","Distributions over several variables, marginalization and conditioning. The probabilistic view of features and labels.","p(x) = ∫ p(x, y) dy"],
+["gaussian","Multivariate Gaussian","prob",2,"jointdist,eigen","The bell curve in many dimensions, defined by a mean vector and covariance matrix. Central to PCA, GPs, VAEs and diffusion.","N(μ, Σ)"],
+["clt","Law of Large Numbers & CLT","prob",2,"expect","Averages converge to expectations, and sums of many variables become Gaussian. Why mini-batch gradients work.","√n (x̄ − μ) → N(0, σ²)"],
+["mle","Maximum Likelihood","prob",2,"jointdist,logs,deriv","Choose parameters that make the observed data most probable. Minimizing cross-entropy is maximum likelihood.","θ* = argmax Σᵢ log p(xᵢ | θ)"],
+["bayesinf","Bayesian Inference & MAP","prob",2,"bayes,mle","Priors, posteriors, conjugacy and maximum a posteriori estimation. A Gaussian prior on weights is L2 regularization.","p(θ | D) ∝ p(D | θ) p(θ)"],
+["hyptest","Hypothesis Tests & Intervals","prob",2,"clt,descstats","p-values, confidence intervals, bootstrapping and A/B tests. Needed to tell whether a benchmark gain is real.",""],
+["sampling","Sampling & Monte Carlo","prob",2,"expect,clt","Estimating expectations with random samples; importance sampling and MCMC methods like Metropolis–Hastings and Gibbs.","E[f] ≈ (1/N) Σ f(xᵢ)"],
+["infotheory","Entropy & Information Theory","prob",2,"logs,expect","Entropy measures uncertainty in bits; mutual information measures shared information. Compression and prediction are linked.","H(p) = −Σ p(x) log p(x)"],
+["kl","Cross-Entropy & KL Divergence","prob",2,"infotheory","Cross-entropy is the standard classification and language-modeling loss; KL divergence measures how far one distribution is from another.","D_KL(p‖q) = Σ p log(p/q)"],
+["markov","Markov Chains","prob",2,"condprob,matrices","Processes where the next state depends only on the current one; transition matrices and stationary distributions.","π = πP"],
+["stochproc","Stochastic Processes & SDEs","prob",2,"markov,integrals","Brownian motion, Langevin dynamics and stochastic differential equations. The mathematics under diffusion models.","dx = f(x,t)dt + g(t)dW"],
+["autodiff","Automatic Differentiation","sys",2,"chainrule,graphs,gradient","Computing exact derivatives of programs by recording a computational graph. Reverse mode is backpropagation.",""],
+["dataeng","Data Wrangling","sys",2,"tensors,datastruct","Loading, cleaning, joining and reshaping data with NumPy, pandas and SQL. Usually most of the work in a real project.",""],
+["viz","Visualization & EDA","sys",2,"descstats,dataeng","Exploratory data analysis with histograms, scatter plots and summary tables before any modeling.",""],
+["dynprog","Dynamic Programming","sys",2,"complexity","Solving problems by reusing solutions to subproblems. Powers Viterbi decoding, edit distance and value iteration.",""],
+["parallel","Parallel Computing & GPUs","sys",2,"complexity,tensors","SIMD, threads, CUDA kernels and memory hierarchy. Deep learning became practical when it moved to GPUs.",""],
+// ---------- Level 3 ----------
+["mlbasics","What Is Machine Learning","ml",3,"functions,descstats","Learning a function from data instead of writing rules by hand. Supervised, unsupervised and reinforcement settings; data, model, loss and optimizer.",""],
+["linreg","Linear Regression","ml",3,"mlbasics,lineq,gd,mle","Fit a line or hyperplane by minimizing squared error. Has a closed-form solution and is the template for every later model.","ŷ = wᵀx + b    w* = (XᵀX)⁻¹Xᵀy"],
+["logreg","Logistic Regression","ml",3,"linreg,kl","Linear model plus a sigmoid for classification, trained with cross-entropy. A single artificial neuron.","p(y=1|x) = σ(wᵀx),  σ(z) = 1/(1+e⁻ᶻ)"],
+["losses","Loss Functions","ml",3,"mlbasics,kl","Mean squared error, cross-entropy, hinge and Huber losses, and how the choice encodes what you care about.",""],
+["biasvar","Bias–Variance & Generalization","ml",3,"mlbasics,expect","Underfitting versus overfitting, model capacity and why test error matters more than training error.","E[(y−ŷ)²] = bias² + variance + noise"],
+["regularization","Regularization (L1/L2)","ml",3,"biasvar,normsip,bayesinf","Penalizing large weights to reduce overfitting. Ridge shrinks weights; lasso drives some to exactly zero.","L + λ‖w‖₂²   or   L + λ‖w‖₁"],
+["cvval","Validation & Cross-Validation","ml",3,"biasvar","Train, validation and test splits, k-fold cross-validation and avoiding data leakage.",""],
+["metrics","Evaluation Metrics","ml",3,"mlbasics,descstats","Accuracy, precision, recall, F1, ROC-AUC, calibration and regression metrics, and which to use when classes are imbalanced.","F1 = 2PR / (P + R)"],
+["features","Feature Engineering","ml",3,"dataeng,mlbasics","Scaling, encoding categories, handling missing values and building informative inputs.",""],
+["knn","k-Nearest Neighbors","ml",3,"normsip,mlbasics","Predict from the closest training examples. Simple, and a good introduction to the curse of dimensionality.",""],
+["naivebayes","Naive Bayes","ml",3,"bayes,mlbasics","A fast probabilistic classifier that assumes features are independent given the class. Classic for text.","p(y|x) ∝ p(y) Πᵢ p(xᵢ|y)"],
+["trees","Decision Trees","ml",3,"infotheory,mlbasics","Recursive splits chosen by information gain or Gini impurity. Interpretable and the base of ensembles.",""],
+["forests","Bagging & Random Forests","ml",3,"trees,biasvar","Average many trees trained on bootstrap samples and random feature subsets to cut variance.",""],
+["boosting","Gradient Boosting","ml",3,"trees,gd","XGBoost, LightGBM and CatBoost fit trees to the residual errors of earlier trees. Still the strongest default for tabular data.",""],
+["svm","SVMs & Kernel Methods","ml",3,"constrained,normsip","Maximum-margin classifiers and the kernel trick for nonlinear boundaries without explicit features.","k(x, x′) = φ(x)·φ(x′)"],
+["kmeans","k-Means Clustering","ml",3,"normsip,mlbasics","Group points around k centroids by alternating assignment and update steps.",""],
+["gmm","Gaussian Mixtures & EM","ml",3,"gaussian,mle,kmeans","Soft clustering with a mixture of Gaussians, fit by the expectation–maximization algorithm.",""],
+["pca","PCA & Dimensionality Reduction","ml",3,"svd,gaussian","Project data onto directions of maximum variance. Nonlinear cousins t-SNE and UMAP are used to visualize embeddings.",""],
+["clustering","Hierarchical & Density Clustering","ml",3,"kmeans","Agglomerative clustering, DBSCAN and HDBSCAN find clusters of arbitrary shape and number.",""],
+["anomaly","Anomaly Detection","ml",3,"gaussian,kmeans","Finding rare or unusual points with density estimates, isolation forests and reconstruction error.",""],
+["pgm","Probabilistic Graphical Models","ml",3,"graphs,jointdist,bayes","Bayesian networks, Markov random fields and CRFs represent dependencies between variables as graphs.",""],
+["hmm","Hidden Markov Models","ml",3,"markov,dynprog,gmm","Sequences generated by hidden states; the forward–backward and Viterbi algorithms. Classic speech recognition.",""],
+["timeseries","Time-Series Forecasting","ml",3,"linreg,stochproc","Trend, seasonality, ARIMA and exponential smoothing, and how to validate forecasts without peeking at the future.",""],
+["recsys","Recommender Systems","ml",3,"svd,knn","Collaborative filtering and matrix factorization predict what users will like from what similar users liked.","R ≈ UVᵀ"],
+["gp","Gaussian Processes & BayesOpt","ml",3,"gaussian,svm,bayesinf","Distributions over functions with calibrated uncertainty. Bayesian optimization uses them to tune hyperparameters.",""],
+["learnth","Statistical Learning Theory","ml",3,"biasvar,clt","PAC learning, VC dimension and generalization bounds: when can learning from samples work at all?",""],
+["causal","Causal Inference","prob",3,"pgm,hyptest","Correlation versus causation, interventions, do-calculus and counterfactuals.","P(y | do(x))"],
+["mlworkflow","ML Workflow & Experiments","sys",3,"cvval,dataeng","Pipelines, experiment tracking, reproducibility and version control for data and models.",""],
+["ngram","N-gram Language Models","nlp",3,"markov,mle,counting","Predict the next word from the previous n−1 words with smoothed counts. Introduces perplexity.","PPL = exp(−(1/N) Σ log p(wᵢ | context))"],
+["tfidf","Bag-of-Words & TF-IDF","nlp",3,"normsip,dataeng","Represent documents by weighted word counts. Still a strong baseline for search (BM25).","tfidf = tf · log(N / df)"],
+["imgproc","Classical Image Processing","cv",3,"fourier,matrices","Filters, edge detection, and hand-crafted features such as SIFT and HOG.",""],
+["mdp","Markov Decision Processes","rl",3,"markov,expect,dynprog","The formal model of sequential decisions: states, actions, transitions, rewards and a discount factor.","(S, A, P, R, γ)"],
+["bellman","Bellman Equations","rl",3,"mdp","Value of a state equals immediate reward plus discounted value of what comes next. Solved by value and policy iteration.","V(s) = maxₐ [R(s,a) + γ Σ P(s′|s,a) V(s′)]"],
+["bandits","Multi-Armed Bandits","rl",3,"expect,hyptest","Balancing exploration and exploitation with ε-greedy, UCB and Thompson sampling.",""],
+["fairness","Fairness & Bias","safe",3,"metrics","Measuring and mitigating unequal model behaviour across groups: demographic parity, equalized odds, dataset bias.",""],
+// ---------- Level 4 ----------
+["perceptron","Perceptron & Neurons","dl",4,"logreg","A weighted sum followed by a threshold or activation. The unit from which neural networks are built.",""],
+["mlp","Multilayer Perceptron","dl",4,"perceptron,matrices","Stacked layers of neurons with nonlinearities. Can approximate any continuous function given enough width.","h = σ(Wx + b)"],
+["activations","Activation Functions","dl",4,"mlp","Sigmoid, tanh, ReLU, GELU and gated variants like SwiGLU, which modern LLMs use in their feed-forward layers.","ReLU(x) = max(0, x)"],
+["backprop","Backpropagation","dl",4,"mlp,autodiff,matcalc","Compute the gradient of the loss for every weight in one backward pass using the chain rule.","δˡ = (Wˡ⁺¹)ᵀ δˡ⁺¹ ⊙ σ′(zˡ)"],
+["sgd","SGD, Momentum & Mini-batches","opt",4,"gd,backprop","Estimate the gradient from a small batch and add momentum to smooth noisy steps.","v ← βv + ∇L;  θ ← θ − ηv"],
+["adam","Adam & AdamW","opt",4,"sgd","Per-parameter step sizes from running averages of gradients and squared gradients. AdamW decouples weight decay and is the LLM default.","θ ← θ − η m̂ / (√v̂ + ε)"],
+["lrsched","Learning-Rate Schedules","opt",4,"sgd","Warmup, cosine decay and warmup–stable–decay schedules, and why the learning rate is the most important hyperparameter.",""],
+["init","Weight Initialization","dl",4,"mlp,expect","Xavier and He initialization keep activations and gradients at a sensible scale at the start of training.","Var(W) = 2 / fan_in"],
+["normalization","Batch, Layer & RMS Norm","dl",4,"mlp,descstats","Rescale activations to stabilize training. Transformers use LayerNorm or RMSNorm, usually before each sublayer.","RMSNorm(x) = x / √(mean(x²) + ε) · g"],
+["dropout","Dropout & Deep Regularization","dl",4,"regularization,mlp","Randomly zeroing units, weight decay, data augmentation and early stopping.",""],
+["vanishing","Vanishing & Exploding Gradients","dl",4,"backprop,eigen","Repeated multiplication through many layers shrinks or blows up gradients, which made deep networks hard to train.",""],
+["resnet","Residual Connections","dl",4,"vanishing","Add the input of a block to its output so gradients flow directly. Made 100+ layer networks trainable and is in every Transformer.","y = x + F(x)"],
+["frameworks","PyTorch & JAX","sys",4,"autodiff,tensors,parallel","Deep learning frameworks that provide tensors, autodiff, GPU kernels and compilation.",""],
+["gputrain","GPU Training & Mixed Precision","sys",4,"parallel,frameworks,binary","Training in FP16 or BF16 with FP32 master weights, loss scaling, and keeping GPUs busy.",""],
+["cnn","Convolutional Neural Networks","cv",4,"mlp,imgproc","Shared local filters slide across images, giving translation equivariance. LeNet, then AlexNet in 2012 started the deep learning boom.","(I * K)(i,j) = Σₘ Σₙ I(i+m, j+n) K(m,n)"],
+["cnnarch","Modern CNNs","cv",4,"cnn,resnet,normalization","VGG, Inception, ResNet, EfficientNet and ConvNeXt: deeper, wider and more efficient designs.",""],
+["detection","Detection & Segmentation","cv",4,"cnnarch","Locating and outlining objects: R-CNN family, YOLO, U-Net and Mask R-CNN.",""],
+["transfer","Transfer Learning","dl",4,"cnnarch","Start from a model pretrained on a large dataset and fine-tune it for your task. The pattern behind foundation models.",""],
+["selfsup","Self-Supervised Learning","dl",4,"transfer,autoenc","Create labels from the data itself: predict masked parts or the next token, or contrast views. Removes the need for human labels.",""],
+["contrastive","Contrastive & Metric Learning","dl",4,"normsip,mlp","Pull matching pairs together and push others apart in embedding space with triplet or InfoNCE losses.","L = −log e^{s⁺/τ} / Σ e^{sᵢ/τ}"],
+["wordemb","Word Embeddings","nlp",4,"tfidf,mlp,svd","word2vec and GloVe learn dense vectors in which meaning becomes geometry.","king − man + woman ≈ queen"],
+["rnn","Recurrent Neural Networks","nlp",4,"mlp,backprop","Process sequences one step at a time with a hidden state, trained by backpropagation through time.","hₜ = tanh(W hₜ₋₁ + U xₜ)"],
+["lstm","LSTM & GRU","nlp",4,"rnn,vanishing","Gated recurrent cells that keep information over long spans and ease vanishing gradients.",""],
+["seq2seq","Seq2Seq & Encoder–Decoder","nlp",4,"lstm","An encoder reads the input sequence and a decoder writes the output. First strong neural machine translation.",""],
+["tokenization","Tokenization","nlp",4,"ngram,datastruct","Byte-pair encoding, WordPiece and SentencePiece split text into subword tokens. Shapes cost, multilinguality and arithmetic ability.",""],
+["autoenc","Autoencoders","gen",4,"mlp,pca","Compress input to a bottleneck and reconstruct it. Learns representations without labels.",""],
+["vae","Variational Autoencoders","gen",4,"autoenc,kl,sampling","A probabilistic autoencoder trained on the evidence lower bound, giving a smooth latent space you can sample from.","ELBO = E_q[log p(x|z)] − D_KL(q(z|x) ‖ p(z))"],
+["gan","Generative Adversarial Networks","gen",4,"mlp,kl","A generator and discriminator trained against each other. Produced the first photorealistic faces.","min_G max_D E[log D(x)] + E[log(1 − D(G(z)))]"],
+["ebm","Energy-Based Models","gen",4,"pgm,sampling","Assign low energy to likely data and sample with MCMC. A unifying view of many generative models.","p(x) ∝ e^{−E(x)}"],
+["flows","Normalizing Flows","gen",4,"vae,matcalc","Invertible networks that give exact likelihoods via the change-of-variables formula.","log p(x) = log p(z) + log |det ∂z/∂x|"],
+["gnn","Graph Neural Networks","dl",4,"graphs,mlp","Message passing over nodes and edges: GCN, GraphSAGE and GAT. Used for molecules, social networks and recommendations.",""],
+["uncertainty","Uncertainty Quantification","prob",4,"bayesinf,dropout","Bayesian neural nets, deep ensembles, MC dropout and conformal prediction tell you when a model does not know.",""],
+["hpo","Hyperparameter Tuning","opt",4,"gp,lrsched","Grid, random and Bayesian search, early stopping methods like Hyperband, and transfer rules such as μP.",""],
+["qlearning","Q-Learning & TD Learning","rl",4,"bellman","Learn action values from experience by bootstrapping on your own estimates.","Q ← Q + α[r + γ maxₐ′ Q(s′,a′) − Q]"],
+["dqn","Deep Q-Networks","rl",4,"qlearning,cnn","Q-learning with a neural network, experience replay and a target network. Learned Atari games from pixels.",""],
+["polgrad","Policy Gradients","rl",4,"mdp,gradient,sampling","Directly optimize a policy by raising the probability of actions that led to high return (REINFORCE).","∇J = E[∇ log π(a|s) · Gₜ]"],
+["ppo","Actor–Critic & PPO","rl",4,"polgrad,qlearning","A learned critic reduces variance; PPO clips each update for stability. PPO was the algorithm used in early RLHF.","L = E[min(rA, clip(r, 1±ε)A)]"],
+["mcts","Search & MCTS","rl",4,"ppo,cnn,bandits","Monte Carlo tree search guided by policy and value networks. AlphaGo and AlphaZero combined learning with search.",""],
+["xai","Explainability Methods","safe",4,"boosting,backprop","SHAP, LIME, saliency maps and integrated gradients attribute predictions to input features.",""],
+["adversarial","Adversarial Robustness","safe",4,"backprop,normsip","Tiny crafted perturbations can flip predictions. FGSM and PGD attacks and adversarial training.","x′ = x + ε · sign(∇ₓL)"],
+// ---------- Level 5 ----------
+["attention","Attention Mechanism","nlp",5,"seq2seq,normsip","Let the decoder look back at all encoder states and weight them by relevance, instead of squeezing everything into one vector.",""],
+["selfattn","Self-Attention & Multi-Head","nlp",5,"attention,matrices","Every token attends to every other token using queries, keys and values, in several heads in parallel.","Attn(Q,K,V) = softmax(QKᵀ / √d) V"],
+["posenc","Positional Encodings","nlp",5,"selfattn,trig","Attention has no sense of order, so position is added: sinusoidal, learned, ALiBi, and rotary embeddings (RoPE).","RoPE: rotate (q,k) pairs by angle mθᵢ"],
+["transformer","The Transformer","nlp",5,"selfattn,posenc,resnet,normalization","Attention plus feed-forward blocks with residuals and normalization (2017). The architecture behind almost every modern foundation model.","x ← x + Attn(Norm(x))\nx ← x + FFN(Norm(x))"],
+["bert","BERT & Encoder Models","nlp",5,"transformer,selfsup","Bidirectional encoders pretrained with masked-language modeling. Still widely used for classification, retrieval and reranking.",""],
+["gpt","GPT & Decoder-Only LMs","nlp",5,"transformer,ngram","A causal Transformer trained to predict the next token. Scaled up, this one objective produced general-purpose language models.","p(x) = Πₜ p(xₜ | x<ₜ)"],
+["t5","Encoder–Decoder Transformers","nlp",5,"transformer","T5 and BART cast every task as text-to-text with a full encoder and decoder.",""],
+["speech","Speech Recognition & TTS","nlp",5,"transformer,seq2seq,fourier","Spectrograms in, text out (Whisper-style ASR), and neural text-to-speech with vocoders and audio codecs.",""],
+["sentemb","Sentence Embeddings & Search","nlp",5,"bert,contrastive","Contrastively trained encoders map text to vectors for semantic search, clustering and retrieval.",""],
+["vit","Vision Transformers","cv",5,"transformer,cnn","Split an image into patches, treat them as tokens and apply a Transformer. Matches or beats CNNs at scale.",""],
+["clip","CLIP & Vision–Language","cv",5,"vit,contrastive,gpt","Train image and text encoders together on image–caption pairs so both land in one embedding space. Enables zero-shot classification.",""],
+["sslvision","Self-Supervised Vision","cv",5,"vit,selfsup","DINO, MAE and related methods learn strong visual features without labels.",""],
+["sam","Promptable Segmentation","cv",5,"vit,detection","Segment Anything-style models segment any object from a click, box or text prompt.",""],
+["ddpm","Diffusion Models","gen",5,"vae,stochproc,ebm","Learn to reverse a gradual noising process; generation is iterative denoising. Related to score matching and Langevin sampling.","L = E‖ε − ε_θ(xₜ, t)‖²"],
+["ldm","Latent Diffusion & Text-to-Image","gen",5,"ddpm,clip,autoenc","Run diffusion in a compressed latent space, conditioned on text, with classifier-free guidance. The basis of Stable Diffusion.",""],
+["flowmatch","Flow Matching & Rectified Flow","gen",5,"ddpm,flows","Learn a velocity field that transports noise to data along near-straight paths. Simpler training and fewer sampling steps than classic diffusion.","L = E‖v_θ(xₜ, t) − (x₁ − x₀)‖²"],
+["dit","Diffusion Transformers","gen",5,"ddpm,vit","Replace the U-Net denoiser with a Transformer over latent patches. Scales well and underlies modern image and video generators.",""],
+["vqvae","Discrete Tokenizers (VQ-VAE)","gen",5,"vae","Quantize images and audio into discrete codes so a Transformer can model them like text tokens.",""],
+["ssm","State Space Models","dl",5,"rnn,fourier,parallel","S4 and Mamba process sequences in linear time with a structured recurrent state that trains in parallel.","hₜ = Āhₜ₋₁ + B̄xₜ,  yₜ = Chₜ"],
+["moe","Mixture of Experts","dl",5,"transformer","A router sends each token to a few expert sub-networks, so parameter count grows without growing compute per token.","y = Σ_{i∈topk} gᵢ(x) Eᵢ(x)"],
+["dlth","Deep Learning Theory","ml",5,"learnth,backprop","Neural tangent kernels, double descent, grokking, the lottery ticket hypothesis and why overparameterized nets generalize.",""],
+["geodl","Geometric DL & AI for Science","dl",5,"gnn,transformer","Equivariant networks respect symmetries such as rotation. AlphaFold 2 predicted protein structures at near-experimental accuracy.",""],
+["modelrl","Model-Based RL","rl",5,"ppo,vae,mcts","Learn a model of the environment and plan or imagine inside it: MuZero, the Dreamer family.",""],
+["offlinerl","Offline RL & Imitation","rl",5,"ppo","Learn policies from fixed datasets of behaviour: behavior cloning, conservative Q-learning, Decision Transformer.",""],
+["scaling","Scaling Laws","llm",5,"gpt,biasvar","Loss falls as a smooth power law in parameters, data and compute. Chinchilla showed models should be trained on far more tokens than before.","L(N, D) ≈ E + A/N^α + B/D^β"],
+["datacuration","Web-Scale Data Curation","llm",5,"dataeng,tokenization,ngram","Crawling, deduplication, quality filtering and mixture design for trillions of tokens. Data quality often matters more than architecture.",""],
+["disttrain","Distributed Training","sys",5,"gputrain,transformer","Data, tensor, pipeline and expert parallelism, FSDP and ZeRO sharding to train across thousands of accelerators.",""],
+["flashattn","Efficient Attention","sys",5,"selfattn,parallel","FlashAttention computes exact attention in tiles that fit in fast on-chip memory; sparse, sliding-window and linear attention reduce cost further.",""],
+["vecdb","Vector Search & ANN","sys",5,"sentemb,datastruct","Approximate nearest-neighbor indexes such as HNSW, IVF and product quantization search billions of embeddings in milliseconds.",""],
+["mlops","MLOps & Deployment","sys",5,"mlworkflow,frameworks","Serving, monitoring, drift detection, CI for models and safe rollouts.",""],
+["nas","AutoML & Architecture Search","opt",5,"hpo,cnnarch","Search over architectures and pipelines automatically.",""],
+["privacy","Federated Learning & Privacy","safe",5,"sgd,probbasics","Train on decentralized data and add calibrated noise for differential privacy (DP-SGD).","ε-differential privacy"],
+// ---------- Level 6 ----------
+["pretrain","LLM Pretraining","llm",6,"gpt,scaling,disttrain,datacuration","Next-token prediction on trillions of tokens with a carefully tuned recipe: architecture, optimizer, schedule, mixtures and stability tricks.",""],
+["incontext","In-Context Learning & Prompting","llm",6,"pretrain","Large models learn tasks from examples and instructions in the prompt alone. Includes few-shot and chain-of-thought prompting.",""],
+["sft","Instruction Tuning (SFT)","llm",6,"pretrain,transfer","Fine-tune a base model on instruction–response pairs so it follows requests and holds conversations.",""],
+["rlhf","RLHF & Reward Models","llm",6,"sft,ppo,kl","Train a reward model from human preference comparisons, then optimize the policy against it with a KL penalty to the reference model.","max E[r(x,y)] − β D_KL(π ‖ π_ref)"],
+["dpo","DPO & Preference Optimization","llm",6,"rlhf","Optimize directly on preference pairs without a separate reward model or RL loop. Variants include IPO, KTO and SimPO.","L = −log σ(β log π(y_w)/π_ref(y_w) − β log π(y_l)/π_ref(y_l))"],
+["peft","LoRA & Parameter-Efficient Tuning","llm",6,"sft,svd","Freeze the base model and train small low-rank adapters. QLoRA does it on a 4-bit quantized base.","W′ = W + BA,  rank(BA) = r ≪ d"],
+["decoding","Decoding & Sampling","llm",6,"gpt,sampling","Greedy, beam search, temperature, top-k, top-p and min-p sampling, and constrained decoding for structured output.","p ∝ exp(logit / T)"],
+["longctx","Long Context","llm",6,"posenc,flashattn,pretrain","RoPE scaling, context-length extension and ring attention let models read hundreds of thousands to millions of tokens.",""],
+["distill","Knowledge Distillation","llm",6,"kl,pretrain","Train a smaller student to match a larger teacher's outputs. How many small, fast models are made.",""],
+["synthetic","Synthetic Data","llm",6,"sft,distill","Models generating training data for models: rewritten pretraining text, instruction data and verified solutions.",""],
+["codemodels","Code LLMs","llm",6,"pretrain,sft","Models trained heavily on source code, evaluated on tests that execute. Code turned out to improve reasoning in general.",""],
+["llmevals","LLM Evaluation","llm",6,"metrics,hyptest,pretrain","Benchmarks, contamination, LLM-as-judge, human preference arenas and statistical care when comparing models.",""],
+["rag","Retrieval-Augmented Generation","llm",6,"vecdb,incontext","Fetch relevant documents and place them in the prompt so answers are grounded and current. Hybrid search and reranking improve it.",""],
+["tooluse","Tool Use & Function Calling","agent",6,"sft,incontext","Models emit structured calls to calculators, search, code interpreters and APIs, then read the results.",""],
+["vlm","Vision-Language Models","cv",6,"clip,pretrain","Feed image tokens from a vision encoder into an LLM so it can read charts, documents and photos.",""],
+["audiollm","Speech & Audio LMs","nlp",6,"speech,vqvae,gpt","Models that listen and speak directly with audio tokens, enabling low-latency voice conversation.",""],
+["videogen","Video Generation","gen",6,"dit,flowmatch","Diffusion or flow Transformers over spacetime patches generate long, coherent video from text or images.",""],
+["embodied","Robot Learning & VLA Models","rl",6,"vlm,offlinerl","Vision-language-action models map camera images and instructions to robot actions, trained on large robot datasets.",""],
+["kvcache","KV Cache & LLM Serving","sys",6,"gpt,flashattn","Cache keys and values of past tokens; paged memory and continuous batching let servers handle many users at once.",""],
+["quant","Quantization","sys",6,"binary,pretrain","Store weights and activations in 8, 4 or fewer bits (GPTQ, AWQ, FP8) to cut memory and speed up inference.",""],
+["specdec","Speculative Decoding","sys",6,"decoding,kvcache","A small draft model proposes several tokens and the large model verifies them in one pass, with identical output distribution.",""],
+["alignment","Alignment Fundamentals","safe",6,"rlhf,fairness","Making systems pursue intended goals: specification gaming, reward hacking, goal misgeneralization and sycophancy.",""],
+["cai","Constitutional AI & RLAIF","safe",6,"rlhf","Use a written set of principles and AI feedback instead of only human labels to train helpful and harmless behaviour.",""],
+["mechinterp","Mechanistic Interpretability","safe",6,"transformer,xai","Reverse-engineer the algorithms inside networks: circuits, induction heads, superposition, probing and activation patching.",""],
+["hallucination","Hallucination & Calibration","safe",6,"llmevals,decoding","Why models state false things confidently, how to measure it, and methods for abstaining or citing sources.",""],
+["redteam","Jailbreaks & Prompt Injection","safe",6,"adversarial,incontext","Attacks that bypass safeguards or hijack a model through untrusted text, and red-teaming to find them first.",""],
+["governance","AI Governance & Policy","safe",6,"alignment","Regulation such as the EU AI Act, frontier safety frameworks, model documentation and audits.",""],
+// ---------- Level 7 ----------
+["reasoning","Reasoning Models","llm",7,"rlhf,incontext,mcts","Models trained with RL to think in long chains of thought before answering, trading inference compute for accuracy. OpenAI o1 (2024) and DeepSeek-R1 (2025) made this mainstream.",""],
+["rlvr","RL with Verifiable Rewards","rl",7,"rlhf,ppo","Reward the model when an answer checks out: unit tests pass or the math answer matches. GRPO estimates advantages from groups of samples without a critic.","Aᵢ = (rᵢ − mean(r)) / std(r)"],
+["prm","Process Reward Models & Verifiers","llm",7,"rlhf,mcts","Score each reasoning step, not just the final answer, to guide search and training.",""],
+["ttscaling","Test-Time Compute Scaling","llm",7,"scaling,reasoning","Accuracy keeps improving with more thinking tokens, parallel samples, voting and search at inference time.",""],
+["latentreason","Latent & Looped Reasoning","llm",7,"reasoning,resnet","Reason in continuous hidden states or by looping layers instead of writing every step as text (e.g. Coconut, recurrent-depth models).",""],
+["formalmath","Formal Math & Theorem Proving","llm",7,"reasoning,rlvr","Models write proofs in Lean that a checker verifies, reaching olympiad-level performance.",""],
+["moemodern","Fine-Grained MoE & MLA","dl",7,"moe,kvcache","Many small routed experts plus shared experts, and multi-head latent attention that compresses the KV cache, as in DeepSeek-V3.",""],
+["hybrid","Hybrid SSM–Attention Models","dl",7,"ssm,transformer","Mix a few attention layers with linear-time layers such as Mamba-2 or gated delta networks for long, cheap context.",""],
+["diffusionlm","Diffusion Language Models","gen",7,"ddpm,gpt","Generate text by iteratively unmasking many tokens in parallel instead of strictly left to right.",""],
+["omni","Natively Multimodal Models","cv",7,"vlm,audiollm,vqvae","One model that takes and produces text, images and audio in a single token stream.",""],
+["worldmodels","Generative World Models","gen",7,"videogen,modelrl","Interactive video models that simulate environments you can act in, used for games, agents and robot training.",""],
+["jepa","Joint-Embedding Predictive Models","dl",7,"sslvision,modelrl","Predict representations of missing or future content rather than raw pixels (I-JEPA, V-JEPA).",""],
+["testtimetrain","Test-Time Training & Continual Learning","dl",7,"sft,ssm","Update some weights while processing the input, and keep learning after deployment without forgetting.",""],
+["muon","New Optimizers (Muon, Shampoo)","opt",7,"adam,newton,svd","Matrix-aware optimizers that orthogonalize or precondition updates, now used to train large models.","Muon: update ← NewtonSchulz(momentum)"],
+["lowprec","FP8/FP4 Training","sys",7,"quant,gputrain","Training and serving in 8-bit and 4-bit floating point with fine-grained scaling on new accelerators.",""],
+["smallmodels","Small & On-Device Models","sys",7,"distill,quant","Distilled, quantized models that run on phones and laptops with strong quality.",""],
+["agents","LLM Agents","agent",7,"tooluse,reasoning","Models that plan, call tools, observe results and iterate in a loop until a goal is reached.","loop: think → act → observe"],
+["mcp","Model Context Protocol","agent",7,"tooluse","An open standard (2024) for connecting models to tools and data sources through servers, alongside agent-to-agent protocols.",""],
+["computeruse","Computer-Use Agents","agent",7,"agents,vlm","Agents that operate graphical interfaces by reading screenshots and sending clicks and keystrokes.",""],
+["codingagents","Agentic Coding","agent",7,"agents,codemodels","Agents that read repositories, run tests and ship changes, measured on benchmarks such as SWE-bench.",""],
+["multiagent","Multi-Agent Systems","agent",7,"agents","Orchestrators, sub-agents and debate, with shared memory and division of labour.",""],
+["contexteng","Context Engineering & Memory","agent",7,"rag,longctx,agents","Deciding what goes into a limited context window: retrieval, summarization, compaction and long-term memory.",""],
+["deepresearch","Deep Research Agents","agent",7,"agents,rag","Agents that search, read and synthesize many sources into cited reports.",""],
+["aiscience","AI for Scientific Discovery","dl",7,"geodl,reasoning,agents","AlphaFold 3, AI co-scientist systems and automated experimentation and math discovery.",""],
+["saes","Sparse Autoencoders & Circuits","safe",7,"mechinterp,autoenc","Dictionary learning extracts interpretable features from activations; attribution graphs trace how features combine into behaviour.",""],
+["cotmon","Chain-of-Thought Monitoring","safe",7,"reasoning,mechinterp","Reading a model's reasoning to catch misbehaviour, and testing whether that reasoning faithfully reflects what it does.",""],
+["scalableov","Scalable Oversight & Control","safe",7,"alignment,agents","Supervising systems that may exceed us: debate, weak-to-strong generalization and AI control protocols.",""],
+["agentsafety","Agent Safety & Sandboxing","safe",7,"agents,redteam","Permissions, sandboxes, prompt-injection defenses and human approval for agents that act in the world.",""],
+["frontierevals","Frontier Risk Evaluations","safe",7,"llmevals,governance","Testing for dangerous capabilities such as cyberoffense, bio-risk uplift, autonomy and sabotage before release.",""]
+];
+
+/* ---------- Syllabus: topics to cover per node ---------- */
+const SYL = {
+numbers:"Natural numbers & integers; Rational & irrational numbers; The real number line; Complex numbers (a + bi); Place value & bases 2, 10, 16; Absolute value & ordering",
+arith:"Four operations & their properties; Order of operations; Negative numbers; Factors, multiples & primes; GCD & LCM; Estimation & rounding",
+fractions:"Equivalent fractions; Operations on fractions; Decimals & conversion; Percentages & percent change; Scientific notation",
+exponents:"Integer exponent rules; Zero & negative exponents; Roots & fractional exponents; Exponential growth & decay; Orders of magnitude",
+logs:"Logarithm as inverse of exponent; Product, quotient & power rules; Natural log & e; Change of base; Log scales & log-log plots; Log-probabilities",
+ratios:"Ratios & rates; Proportional reasoning; Unit conversion; Weighted averages; Scaling & similarity",
+sets:"Sets, subsets & operations; Venn diagrams; Propositional logic & truth tables; Quantifiers ∀ and ∃; Proof by induction; Proof by contradiction; Functions as relations",
+binary:"Binary & hexadecimal; Two's complement integers; IEEE-754 float layout; Precision, rounding & machine epsilon; FP32, FP16, BF16, FP8; Overflow, underflow & NaN",
+sumnot:"Σ notation & index manipulation; Π notation; Nested sums; Arithmetic & geometric sums; Turning sums into vectorized code",
+counting:"Multiplication principle; Permutations; Combinations & binomial coefficients; Pascal's triangle & binomial theorem; Inclusion–exclusion; Pigeonhole principle",
+coord:"Cartesian plane; Distance & midpoint; Slope & equations of lines; Parabolas & circles; Plotting data as points",
+trig:"Unit circle & radians; sin, cos, tan; Core identities; Periodic functions; Polar coordinates; 2D rotations",
+algebra:"Linear equations & inequalities; Quadratics & factoring; Systems of two equations; Rearranging formulas; Absolute value & piecewise expressions",
+functions:"Domain & range; Composition & inverses; Linear, quadratic, exponential & log functions; Shifts & scaling; Piecewise & step functions; Monotonicity",
+polynomials:"Degree & roots; Factoring & division; Behaviour at infinity; Polynomial fitting & interpolation; Overfitting with high degree",
+seqseries:"Arithmetic & geometric sequences; Convergence & divergence; Geometric series sum; Power series; Taylor & Maclaurin series; Approximating functions",
+limits:"Intuitive limits; One-sided limits; Limits at infinity; Continuity; Squeeze theorem; e as a limit",
+deriv:"Derivative as slope & rate; Power, product & quotient rules; Derivatives of exp, log & trig; Critical points & extrema; Linear approximation; Derivatives of sigmoid & softplus",
+chainrule:"Composition of functions; Chain rule statement; Multi-step chains; Implicit differentiation; Computational-graph view; Link to backpropagation",
+integrals:"Riemann sums; Definite & indefinite integrals; Fundamental theorem of calculus; Substitution & integration by parts; Area under a PDF; Improper integrals",
+vectors:"Addition & scaling; Magnitude; Dot product & angle; Projections; Unit vectors; Vectors as data points & embeddings",
+matrices:"Matrix–vector & matrix–matrix products; Identity, transpose & inverse; Linear transformations; Determinant; Diagonal, symmetric & orthogonal matrices; Batched matrix operations",
+lineq:"Ax = b formulation; Gaussian elimination; Row echelon form; Rank & solvability; Over- and under-determined systems; Preview of least squares",
+probbasics:"Sample spaces & events; Axioms of probability; Equally likely outcomes; Complement & union rules; Simulating probability in code",
+condprob:"Conditional probability; Multiplication rule; Independence; Law of total probability; Tree diagrams; Base-rate fallacy",
+bayes:"Deriving Bayes' rule; Prior, likelihood & posterior; Medical test example; Odds form; Naive Bayes intuition; Sequential updating",
+descstats:"Mean, median & mode; Variance & standard deviation; Percentiles & IQR; Histograms & box plots; Covariance & correlation; Outliers",
+randvar:"Discrete vs continuous; PMF, PDF & CDF; Bernoulli, binomial & categorical; Uniform, Gaussian & exponential; Poisson; Transforming variables",
+expect:"Expected value; Linearity of expectation; Variance & covariance; Moments; Conditional expectation; Jensen's inequality",
+graphs:"Vertices, edges & degree; Directed vs undirected; Paths, cycles & connectivity; Trees & DAGs; Adjacency matrices; BFS & DFS",
+programming:"Python syntax & types; Control flow; Functions & modules; Lists, dicts & comprehensions; Classes & objects; Debugging & testing; Notebooks & environments",
+complexity:"Big-O, Θ & Ω; Sorting & searching; Recursion; Divide and conquer; Time vs space trade-offs; Linear vs quadratic scaling",
+datastruct:"Arrays & lists; Hash maps & sets; Stacks & queues; Trees & heaps; Graph representations; Tries",
+multivar:"Functions of several variables; Partial derivatives; Directional derivatives; Multivariable chain rule; Double & triple integrals; Level sets & contour plots",
+gradient:"Gradient vector; Jacobian matrix; Hessian matrix; Gradient as steepest ascent; Multivariate Taylor expansion; Saddle points",
+matcalc:"Layout conventions; Derivatives of linear & quadratic forms; Trace & determinant derivatives; Gradient of least squares; Backprop through a matrix multiply; Softmax Jacobian",
+vecspaces:"Span & linear independence; Basis & dimension; Column, row & null spaces; Rank–nullity theorem; Orthogonality & Gram–Schmidt; Projections onto subspaces",
+normsip:"L1, L2 & L∞ norms; Inner products; Cosine similarity; Euclidean vs Manhattan distance; Frobenius & spectral norms; Unit-norm embeddings",
+eigen:"Characteristic polynomial; Eigendecomposition; Spectral theorem for symmetric matrices; Positive definite matrices; Power iteration; Eigenvalues & stability",
+svd:"SVD definition; Geometric picture; Low-rank approximation (Eckart–Young); Pseudoinverse; Relation to PCA; Compression & the LoRA intuition",
+matdecomp:"LU decomposition; QR decomposition; Cholesky decomposition; Solving systems efficiently; Least squares via QR; Numerical cost",
+tensors:"Shapes & axes; Indexing & slicing; Broadcasting rules; Reshape, transpose & views; Einsum notation; Vectorization vs loops",
+numstab:"Floating-point error; Catastrophic cancellation; Conditioning; Log-sum-exp & stable softmax; Overflow in exp; Gradient clipping & loss scaling",
+fourier:"Fourier series; Fourier transform; DFT & FFT; Convolution theorem; Frequency-domain filtering; Spectrograms",
+convex:"Convex sets; Convex functions & tests; Jensen's inequality; Global vs local minima; Strong convexity; Why deep nets are non-convex",
+gd:"The update rule; Learning rate & convergence; Batch vs stochastic; Loss landscapes; Local minima & saddle points; Line search",
+constrained:"Equality constraints & the Lagrangian; Inequality constraints; KKT conditions; Duality; Projected gradient; The SVM dual as an example",
+newton:"Newton's method; Hessian & curvature; BFGS & L-BFGS; Gauss–Newton; Natural gradient; Cost at scale",
+jointdist:"Joint distributions; Marginalization; Conditional distributions; Independence of variables; Covariance matrices; Chain rule of probability",
+gaussian:"Mean vector & covariance; Density formula; Marginals & conditionals; Mahalanobis distance; Sampling via Cholesky; Reparameterization trick",
+clt:"Law of large numbers; Central limit theorem; Standard error; Concentration inequalities (Hoeffding); Monte Carlo error; Mini-batch gradient noise",
+mle:"Likelihood function; Log-likelihood; MLE for Bernoulli & Gaussian; MLE ⇔ cross-entropy minimization; Bias & consistency; Fisher information",
+bayesinf:"Prior & posterior; Conjugate priors (Beta–Binomial); MAP estimation; Posterior predictive; Credible intervals; Regularization as a prior",
+hyptest:"Null & alternative hypotheses; p-values; Confidence intervals; t-tests & chi-squared; Bootstrap; Multiple comparisons; A/B testing",
+sampling:"Monte Carlo estimation; Inverse transform sampling; Rejection sampling; Importance sampling; Metropolis–Hastings; Gibbs sampling",
+infotheory:"Entropy; Joint & conditional entropy; Mutual information; Bits, nats & coding; Source coding theorem; Compression ⇔ prediction",
+kl:"Cross-entropy; KL divergence & asymmetry; Forward vs reverse KL; Jensen–Shannon divergence; Perplexity; KL penalties in RLHF",
+markov:"Markov property; Transition matrices; Stationary distribution; Ergodicity & mixing; Random walks; PageRank",
+stochproc:"Random walks; Brownian motion; Itô calculus basics; Stochastic differential equations; Langevin dynamics; Ornstein–Uhlenbeck process",
+autodiff:"Computational graphs; Forward mode; Reverse mode; Dual numbers; Building a mini autograd; Gradient checking",
+dataeng:"NumPy arrays; pandas DataFrames; SQL queries & joins; Cleaning & missing values; CSV, Parquet & JSONL; Data pipelines",
+viz:"Histograms & distributions; Scatter & pair plots; Training-curve line charts; Matplotlib & seaborn; Spotting outliers & leakage; Telling a story with data",
+dynprog:"Overlapping subproblems; Memoization vs tabulation; Edit distance; Longest common subsequence; Viterbi algorithm; Shortest paths",
+parallel:"CPU vs GPU architecture; SIMD & threads; CUDA kernels, blocks & warps; Memory hierarchy (HBM, SRAM); Compute- vs memory-bound; Arithmetic intensity",
+mlbasics:"Supervised, unsupervised & RL; Features, labels & examples; Model, loss & optimizer; Training vs inference; Generalization; ML project lifecycle",
+linreg:"Model & assumptions; Least-squares loss; Normal equations; Gradient-descent solution; Polynomial features; Interpreting coefficients; R²",
+logreg:"Sigmoid function; Log-loss; Decision boundary; Gradient derivation; Softmax regression for multiclass; Odds & log-odds",
+losses:"MSE & MAE; Cross-entropy; Hinge loss; Huber loss; Focal loss; Matching the loss to the goal",
+biasvar:"Bias–variance decomposition; Under- & overfitting; Model capacity; Learning curves; Double descent; Data vs model size",
+regularization:"L2 (ridge); L1 (lasso) & sparsity; Elastic net; Regularization paths; Bayesian interpretation; Early stopping as regularizer",
+cvval:"Train/val/test splits; k-fold cross-validation; Stratification; Time-based splits; Data leakage; Nested CV for tuning",
+metrics:"Confusion matrix; Precision, recall & F1; ROC & PR curves, AUC; Calibration; RMSE & MAE; Class imbalance",
+features:"Scaling & standardization; One-hot & target encoding; Missing-value imputation; Feature interactions; Text & date features; Feature selection",
+knn:"Distance metrics; Choosing k; Classification vs regression; Curse of dimensionality; KD-trees; Lazy learning",
+naivebayes:"Conditional independence assumption; Multinomial NB for text; Gaussian NB; Laplace smoothing; Log-space computation; Strengths & limits",
+trees:"Recursive splitting; Information gain & entropy; Gini impurity; Pruning & depth; Regression trees; Interpretability",
+forests:"Bootstrap aggregation; Random feature subsets; Out-of-bag error; Feature importance; Extra trees; Variance reduction",
+boosting:"AdaBoost idea; Gradient boosting as functional GD; XGBoost, LightGBM & CatBoost; Learning rate & number of trees; Early stopping; Tabular best practices",
+svm:"Maximum margin; Hard vs soft margin; Hinge loss; Dual formulation; Kernel trick (RBF, polynomial); Support vectors",
+kmeans:"Lloyd's algorithm; Choosing k (elbow, silhouette); k-means++ initialization; Limitations; Mini-batch k-means; Vector quantization",
+gmm:"Mixture models; Latent variables; E-step & M-step; EM convergence; GMM vs k-means; Model selection with BIC",
+pca:"Variance maximization; PCA via SVD; Explained variance; Whitening; t-SNE; UMAP",
+clustering:"Agglomerative clustering; Linkage criteria; Dendrograms; DBSCAN; HDBSCAN; Spectral clustering",
+anomaly:"Statistical outliers; Isolation forest; One-class SVM; Density-based detection; Autoencoder reconstruction error; Evaluating with rare labels",
+pgm:"Bayesian networks; Markov random fields; d-separation; Variable elimination; Approximate inference; Conditional random fields",
+hmm:"Hidden states & emissions; Forward algorithm; Viterbi decoding; Baum–Welch (EM); Speech & tagging applications",
+timeseries:"Trend & seasonality; Stationarity; Autocorrelation; ARIMA; Exponential smoothing; Backtesting; Deep forecasting models",
+recsys:"Collaborative filtering; Content-based filtering; Matrix factorization; Implicit feedback; Two-tower retrieval; Ranking metrics (NDCG)",
+gp:"Kernels as priors over functions; GP regression; Learning hyperparameters; Uncertainty estimates; Acquisition functions; The Bayesian optimization loop",
+learnth:"PAC learning; VC dimension; Rademacher complexity; Generalization bounds; No free lunch; Uniform convergence",
+causal:"Correlation vs causation; Confounding; Causal DAGs; Do-calculus; Randomized experiments; Propensity scores; Counterfactuals",
+mlworkflow:"Project structure; Experiment tracking; Data & model versioning; Reproducibility & seeds; Config management; Baselines first",
+ngram:"Markov assumption for text; Counting n-grams; Laplace & Kneser–Ney smoothing; Perplexity; Generating text; Sparsity problem",
+tfidf:"Bag-of-words; Term frequency; Inverse document frequency; Cosine similarity of documents; BM25; Text classification baselines",
+imgproc:"Pixels & color spaces; Convolution filters; Edge detection (Sobel, Canny); Image pyramids; SIFT & HOG; Morphology",
+mdp:"States, actions & rewards; Transition dynamics; Policies; Return & discounting; Value functions; Episodic vs continuing tasks",
+bellman:"Bellman expectation equation; Bellman optimality; Policy evaluation; Policy iteration; Value iteration; Contraction mapping",
+bandits:"Exploration vs exploitation; ε-greedy; Upper confidence bound; Thompson sampling; Regret; Contextual bandits",
+fairness:"Sources of bias; Group fairness metrics; Individual fairness; Impossibility results; Pre-, in- & post-processing fixes; Model cards & datasheets",
+perceptron:"Biological inspiration; Weighted sum & threshold; Perceptron learning rule; Linear separability; The XOR problem; From perceptron to logistic unit",
+mlp:"Hidden layers; Forward pass; Universal approximation; Width vs depth; Softmax output; Building an MLP from scratch",
+activations:"Sigmoid & tanh; ReLU & dying units; Leaky ReLU & ELU; GELU & SiLU; GLU & SwiGLU; Choosing an activation",
+backprop:"Network as computational graph; Local gradients; The backward pass; Vector–Jacobian products; Gradient checking; Activation memory",
+sgd:"Mini-batch SGD; Batch-size effects; Momentum; Nesterov momentum; Gradient noise; Weight decay",
+adam:"RMSProp; Adam moments & bias correction; AdamW decoupled decay; β₁, β₂ & ε; Optimizer memory cost; When SGD wins",
+lrsched:"Step decay; Cosine annealing; Linear warmup; Warmup–stable–decay; LR range test; Cyclical schedules",
+init:"Symmetry breaking; Xavier/Glorot init; He/Kaiming init; Orthogonal init; Residual scaling; μP parameterization",
+normalization:"Batch norm; Layer norm; RMSNorm; Group & instance norm; Pre-norm vs post-norm; Train vs eval behaviour",
+dropout:"Dropout; Weight decay; Data augmentation; Early stopping; Label smoothing; Stochastic depth",
+vanishing:"Gradient products through layers; Saturating activations; Exploding gradients & clipping; Effect on RNNs; Remedies: init, normalization, residuals",
+resnet:"Residual blocks; Identity shortcuts; Gradient highways; Bottleneck blocks; Pre-activation ResNets; The residual stream in Transformers",
+frameworks:"Tensors & devices; Autograd; nn.Module & layers; DataLoaders; The training loop; torch.compile, JAX jit & vmap",
+gputrain:"Mixed precision (FP16/BF16); Loss scaling; Gradient accumulation; Activation checkpointing; Profiling GPU utilization; Data-loading bottlenecks",
+cnn:"Convolution & kernels; Stride & padding; Pooling; Receptive fields; Feature maps & channels; LeNet & AlexNet",
+cnnarch:"VGG; Inception; ResNet; MobileNet & depthwise convolutions; EfficientNet scaling; ConvNeXt",
+detection:"Bounding boxes & IoU; Two-stage detectors (Faster R-CNN); One-stage detectors (YOLO, SSD); Semantic segmentation (U-Net); Instance segmentation (Mask R-CNN); mAP",
+transfer:"Pretrained backbones; Feature extraction; Fine-tuning strategies; Layer freezing; Domain shift; Few-shot adaptation",
+selfsup:"Pretext tasks; Masked modeling; Next-token prediction as SSL; Contrastive SSL; Non-contrastive methods (BYOL); Linear-probe evaluation",
+contrastive:"Siamese networks; Triplet loss; InfoNCE; Temperature; Hard negatives; Evaluating embeddings",
+wordemb:"Distributional hypothesis; Skip-gram & CBOW; Negative sampling; GloVe; Word analogies; Limits such as polysemy",
+rnn:"Recurrence & hidden state; Unrolling; Backprop through time; Character-level models; Teacher forcing; Bidirectional RNNs",
+lstm:"Cell state; Input, forget & output gates; GRU; Long-range dependencies; Stacked LSTMs; Sequence labeling",
+seq2seq:"Encoder & decoder; Context-vector bottleneck; Teacher forcing; Beam search; Machine translation; BLEU score",
+tokenization:"Character vs word vs subword; Byte-pair encoding; WordPiece & Unigram; SentencePiece & byte-level BPE; Vocabulary-size trade-offs; Tokenization quirks",
+autoenc:"Encoder–bottleneck–decoder; Undercomplete autoencoders; Denoising autoencoders; Sparse autoencoders; Latent spaces; Anomaly detection",
+vae:"Latent-variable models; ELBO derivation; Reparameterization trick; KL regularization; Sampling & interpolation; β-VAE",
+gan:"Generator & discriminator; Minimax objective; Mode collapse; DCGAN; Wasserstein GAN; StyleGAN; FID evaluation",
+ebm:"Energy functions; Partition function; Contrastive divergence; Langevin sampling; Score functions; Relation to diffusion",
+flows:"Change of variables; Invertible layers; Coupling layers (RealNVP); Glow; Exact log-likelihood; Continuous flows & neural ODEs",
+gnn:"Graph-structured data; Message passing; GCN; GraphSAGE; Graph attention; Node, edge & graph tasks; Oversmoothing",
+uncertainty:"Aleatoric vs epistemic; Bayesian neural nets; MC dropout; Deep ensembles; Calibration & temperature scaling; Conformal prediction",
+hpo:"Grid & random search; Bayesian optimization; Successive halving & Hyperband; Population-based training; μP transfer; Sensible defaults",
+qlearning:"TD error; SARSA; Q-learning; ε-greedy exploration; Off-policy learning; Convergence",
+dqn:"Function approximation; Experience replay; Target networks; Double DQN; Dueling networks; The Atari benchmark",
+polgrad:"Policy parameterization; REINFORCE derivation; Log-derivative trick; Baselines & variance; Advantage estimation; On-policy sampling",
+ppo:"Actor & critic; Generalized advantage estimation; A2C/A3C; Trust regions (TRPO); PPO clipped objective; Entropy bonus",
+mcts:"Game trees; Minimax; Select, expand, simulate, backup; UCT; Policy & value networks; AlphaGo to AlphaZero",
+xai:"Global vs local explanations; Feature importance; LIME; SHAP; Saliency & Grad-CAM; Integrated gradients; Pitfalls of explanations",
+adversarial:"Adversarial examples; FGSM; PGD; Adversarial training; Transferability; Certified robustness",
+attention:"Alignment scores; Soft attention weights; Context vectors; Additive vs dot-product attention; Visualizing attention",
+selfattn:"Queries, keys & values; Scaled dot-product; Causal masking; Multi-head attention; O(n²) cost; Grouped-query attention",
+posenc:"Why order matters; Sinusoidal encodings; Learned embeddings; Relative positions; RoPE; ALiBi",
+transformer:"Encoder & decoder blocks; Feed-forward layers; The residual stream; Pre-norm; Training objective; Implementing one from scratch",
+bert:"Masked language modeling; Next-sentence prediction; [CLS] token & fine-tuning; RoBERTa & DeBERTa; Encoders for classification; Cross-encoders for reranking",
+gpt:"Causal language modeling; Decoder-only architecture; GPT-1 → GPT-2 → GPT-3; Zero- & few-shot ability; Sampling text; Building nanoGPT",
+t5:"Text-to-text framing; Span corruption; Encoder–decoder cross-attention; BART denoising; Translation & summarization",
+speech:"Audio features & spectrograms; CTC loss; Whisper-style ASR; Self-supervised speech (wav2vec 2.0); Neural TTS & vocoders; Neural audio codecs",
+sentemb:"Pooling strategies; Sentence-BERT; Contrastive training (SimCSE); Bi-encoders vs cross-encoders; MTEB evaluation; Matryoshka embeddings",
+vit:"Patch embeddings; Class token; ViT vs CNN inductive bias; Data requirements; DeiT; Hierarchical ViTs (Swin)",
+clip:"Image–text contrastive loss; Zero-shot classification; Prompt templates; Shared embedding space; OpenCLIP & SigLIP; Uses in generation",
+sslvision:"SimCLR & MoCo; BYOL; DINO & DINOv2; Masked autoencoders (MAE); Linear-probe & kNN evaluation",
+sam:"Promptable segmentation; Image encoder & mask decoder; Point, box & text prompts; The data engine; Video segmentation",
+ddpm:"Forward noising process; Reverse denoising; Noise-prediction loss; Score matching; DDPM & DDIM samplers; Noise schedules",
+ldm:"Latent space via an autoencoder; Text conditioning & cross-attention; Classifier-free guidance; Stable Diffusion architecture; ControlNet & adapters; Image editing",
+flowmatch:"Probability paths; Velocity fields; Conditional flow matching; Rectified flow; Few-step sampling; Connection to diffusion",
+dit:"Patchified latents; adaLN conditioning; Scaling DiT; MM-DiT for text and image; Use in video models",
+vqvae:"Vector quantization; Codebooks & commitment loss; VQ-GAN; Residual quantization; Image & audio tokens",
+ssm:"Continuous-time state spaces; Discretization; S4 & structured matrices; Selective SSMs (Mamba); Parallel scan; Linear-time inference",
+moe:"Expert layers; Top-k gating; Load-balancing loss; Capacity factor; Expert parallelism; Sparse vs dense compute",
+dlth:"Overparameterization; Double descent; Neural tangent kernel; Grokking; Lottery ticket hypothesis; Implicit regularization of SGD",
+geodl:"Symmetry & equivariance; Equivariant GNNs; Point clouds; Protein structure prediction; Molecular property prediction; Neural PDE solvers",
+modelrl:"Learned dynamics models; Planning with models; Dyna; MuZero; Dreamer & imagination; Compounding model error",
+offlinerl:"Behavior cloning; Distribution shift; Conservative Q-learning; Decision Transformer; DAgger; Learning from demonstrations",
+scaling:"Power laws for loss; Kaplan vs Chinchilla; Compute-optimal training; Data-constrained scaling; The emergence debate; Predicting from small runs",
+datacuration:"Web crawling (Common Crawl); Text extraction; Deduplication (MinHash); Quality & toxicity filtering; Data mixtures; Benchmark decontamination",
+disttrain:"Data parallelism; Tensor parallelism; Pipeline parallelism; FSDP & ZeRO; Expert & context parallelism; All-reduce & collectives",
+flashattn:"GPU memory hierarchy; Tiling & recomputation; FlashAttention 1/2/3; Sparse & sliding-window attention; Linear attention; Multi-query & grouped-query attention",
+vecdb:"Exact vs approximate search; HNSW graphs; IVF indexes; Product quantization; FAISS & vector databases; Hybrid search with BM25",
+mlops:"Model serving; Monitoring & drift; CI/CD for ML; Feature stores; A/B rollouts; Cost & latency budgets",
+nas:"Search spaces; RL & evolutionary search; Differentiable NAS (DARTS); Weight sharing; AutoML tools",
+privacy:"Federated averaging; Non-IID data; Differential privacy; DP-SGD; Membership inference; Secure aggregation",
+pretrain:"Architecture choices; Tokenizer & data pipeline; Optimizer & LR schedule; Training stability & loss spikes; Checkpointing & evals; Compute budgeting",
+incontext:"Zero- & few-shot prompting; Chain-of-thought; Prompt formats & system prompts; Theories of why ICL works; Self-consistency; Prompt sensitivity",
+sft:"Instruction datasets; Chat templates; Loss masking; Quality vs quantity; Multi-task instruction tuning; Catastrophic forgetting",
+rlhf:"Preference data collection; Bradley–Terry reward models; PPO for LLMs; KL penalty to a reference; Reward hacking & overoptimization; Helpfulness vs harmlessness",
+dpo:"Deriving DPO from RLHF; Implicit reward; IPO, KTO & SimPO; Online vs offline preference learning; When DPO fails",
+peft:"Adapters; Prefix & prompt tuning; LoRA; QLoRA; Choosing rank & target modules; Merging adapters",
+decoding:"Greedy & beam search; Temperature; Top-k & top-p; Min-p; Repetition penalties; Structured & constrained decoding",
+longctx:"Context-length limits; RoPE scaling (PI, YaRN); Long-context training data; Ring & context-parallel attention; Needle-in-a-haystack evals; Lost in the middle",
+distill:"Soft targets & temperature; Logit vs sequence distillation; Distilling reasoning; Choosing the student; On-policy distillation",
+synthetic:"Self-Instruct; Rewriting pretraining data; Verified solutions; Model-collapse risks; Quality filtering; Textbook-quality data",
+codemodels:"Code corpora; Fill-in-the-middle; Execution-based evals (HumanEval); Repository-level context; Code reasoning; Licensing & dedup",
+llmevals:"Benchmarks (MMLU, GPQA, MATH); Contamination; LLM-as-judge; Human preference arenas; Statistical significance; Eval harnesses",
+rag:"Chunking documents; Embedding & retrieval; Reranking; Prompt construction & citations; Hybrid & graph RAG; Evaluating faithfulness",
+tooluse:"JSON function schemas; Tool selection; Parsing & executing calls; Code interpreter; Error handling; Training for tool use",
+vlm:"Vision encoders; Projecting into the LLM; Interleaved image–text data; Visual instruction tuning; OCR & document understanding; Visual grounding",
+audiollm:"Audio tokenization; Speech-to-speech models; Full-duplex conversation; Latency; Voice-cloning concerns",
+videogen:"Spacetime patches; Temporal consistency; Text & image conditioning; Video tokenizers; Scaling video models; Evaluation",
+embodied:"Robot data collection; Behavior cloning at scale; Vision-language-action models; Action tokenization; Sim-to-real; Generalist policies",
+kvcache:"KV-cache mechanics; Memory footprint; PagedAttention; Continuous batching; Prefix caching; Prefill vs decode",
+quant:"Scale & zero-point; Post-training quantization; GPTQ & AWQ; LLM.int8() & outliers; FP8 inference; Quantization-aware training",
+specdec:"Draft-and-verify; Acceptance sampling; Draft models; Medusa & multi-token heads; Lookahead decoding; Speedup vs batch size",
+alignment:"Outer vs inner alignment; Specification gaming; Reward hacking; Goal misgeneralization; Sycophancy; Deceptive alignment",
+cai:"Constitutions & principles; Self-critique & revision; RL from AI feedback; Harmlessness training; Character & values",
+mechinterp:"The residual stream; Attention-head circuits; Induction heads; Superposition; Probing; Activation patching",
+hallucination:"Types of hallucination; Causes; Measuring factuality; Calibration & abstention; Retrieval grounding; Citation verification",
+redteam:"Jailbreak techniques; Adversarial suffixes; Direct & indirect prompt injection; Automated red teaming; Defenses & classifiers",
+governance:"EU AI Act; Risk-management frameworks; Frontier safety policies; Model & system cards; Compute governance; Incident reporting",
+reasoning:"Long chain-of-thought; RL on reasoning; Thinking budgets; Self-verification & backtracking; Distilling reasoning; Overthinking & other failure modes",
+rlvr:"Verifiable rewards (tests, exact answers); GRPO; PPO vs GRPO; Reward hacking in RLVR; Curriculum & data; DAPO & variants",
+prm:"Outcome vs process rewards; Step-level labels; Best-of-N with verifiers; Tree search with PRMs; Automatic step labeling",
+ttscaling:"Sequential vs parallel compute; Best-of-N & majority voting; Search with verifiers; Compute-optimal inference; Coverage from repeated sampling",
+latentreason:"Continuous thought; Looped & recurrent-depth Transformers; Pause tokens; Interpretability trade-offs",
+formalmath:"The Lean proof assistant; Autoformalization; Proof search; RL with proof checkers; Olympiad benchmarks",
+moemodern:"Fine-grained experts; Shared experts; Auxiliary-loss-free balancing; Multi-head latent attention; Multi-token prediction",
+hybrid:"Why mix attention & recurrence; Mamba-2; Gated DeltaNet & linear attention; Layer ratios; Long-context efficiency",
+diffusionlm:"Masked & discrete diffusion; Parallel decoding; Any-order generation; Speed vs quality; Comparison with autoregression",
+omni:"One token stream for all modalities; In-model image & audio generation; Early vs late fusion; Real-time interaction",
+worldmodels:"Action-conditioned video; Latent action models; Interactive environments; Training agents in imagination; Consistency & memory",
+jepa:"Predicting in representation space; I-JEPA; V-JEPA; Avoiding collapse; Planning with JEPA",
+testtimetrain:"Test-time training layers; Memory-augmented models (Titans); Continual learning; Catastrophic forgetting; Online adaptation",
+muon:"Shampoo preconditioning; SOAP; Muon orthogonalization; Newton–Schulz iteration; Scaling Muon to LLMs",
+lowprec:"FP8 formats (E4M3, E5M2); Block & per-tensor scaling; FP4 & MX formats; Low-precision kernels; Stability tricks",
+smallmodels:"Distillation for small models; Quantization for devices; Efficient architectures; On-device runtimes; Quality vs size",
+agents:"The agent loop; ReAct; Planning & decomposition; Reflection; Memory; Agent benchmarks",
+mcp:"Hosts, clients & servers; Tools, resources & prompts; Transports; Security & permissions; Agent-to-agent protocols",
+computeruse:"Screenshots as input; Click & type action spaces; GUI grounding; OSWorld-style benchmarks; Safety & confirmation steps",
+codingagents:"Repository navigation; Edit–test loops; SWE-bench; Sandboxes; Agent code review",
+multiagent:"Orchestrator–worker patterns; Debate; Role specialization; Communication protocols; Failure modes",
+contexteng:"Context-window budgeting; Just-in-time retrieval; Summarization & compaction; Long-term memory; Managing tool output",
+deepresearch:"Query planning; Iterative search & reading; Source evaluation; Synthesis & citation; Evaluating reports",
+aiscience:"Protein & materials models; AI co-scientists; Automated experimentation; Math discovery; Weather & climate models",
+saes:"Dictionary learning; Sparse autoencoders on activations; Interpreting features; Transcoders; Attribution graphs & circuit tracing; Feature steering",
+cotmon:"Monitoring reasoning traces; CoT faithfulness; Obfuscation risks; Monitorability as a property; Steganography concerns",
+scalableov:"Debate; Recursive reward modeling; Weak-to-strong generalization; AI control protocols; Trusted monitoring",
+agentsafety:"Least-privilege permissions; Sandboxing; Prompt-injection defenses; Human-in-the-loop approval; Audit logging",
+frontierevals:"Dangerous-capability evals; Cyber & bio uplift; Autonomy & self-replication; Sabotage & scheming evals; Elicitation; Safety cases"
+};
+
+/* ---------- Resource library: [title, url, type, source] ---------- */
+const LIB = {
+"khan-arith":["Arithmetic","https://www.khanacademy.org/math/arithmetic","course","Khan Academy"],
+"khan-prealg":["Pre-algebra","https://www.khanacademy.org/math/pre-algebra","course","Khan Academy"],
+"khan-alg":["Algebra 1","https://www.khanacademy.org/math/algebra","course","Khan Academy"],
+"khan-precalc":["Precalculus","https://www.khanacademy.org/math/precalculus","course","Khan Academy"],
+"khan-trig":["Trigonometry","https://www.khanacademy.org/math/trigonometry","course","Khan Academy"],
+"khan-calc1":["Calculus 1","https://www.khanacademy.org/math/calculus-1","course","Khan Academy"],
+"khan-int":["Integral calculus","https://www.khanacademy.org/math/integral-calculus","course","Khan Academy"],
+"khan-multi":["Multivariable calculus","https://www.khanacademy.org/math/multivariable-calculus","course","Khan Academy"],
+"khan-la":["Linear algebra","https://www.khanacademy.org/math/linear-algebra","course","Khan Academy"],
+"khan-stats":["Statistics and probability","https://www.khanacademy.org/math/statistics-probability","course","Khan Academy"],
+"khan-algo":["Algorithms","https://www.khanacademy.org/computing/computer-science/algorithms","course","Khan Academy"],
+"3b1b-la":["Essence of Linear Algebra","https://www.3blue1brown.com/topics/linear-algebra","video","3Blue1Brown"],
+"3b1b-calc":["Essence of Calculus","https://www.3blue1brown.com/topics/calculus","video","3Blue1Brown"],
+"3b1b-nn":["Neural Networks series","https://www.3blue1brown.com/topics/neural-networks","video","3Blue1Brown"],
+"3b1b-prob":["Probability lessons","https://www.3blue1brown.com/topics/probability","video","3Blue1Brown"],
+"mit1806":["18.06 Linear Algebra (Strang)","https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/","course","MIT OpenCourseWare"],
+"mit1801":["18.01SC Single Variable Calculus","https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/","course","MIT OpenCourseWare"],
+"mml":["Mathematics for Machine Learning","https://mml-book.github.io/","book","Deisenroth, Faisal & Ong"],
+"proof":["Book of Proof","https://richardhammack.github.io/BookOfProof/","book","Richard Hammack"],
+"seeing":["Seeing Theory","https://seeing-theory.brown.edu/","article","Brown University"],
+"boyd":["Convex Optimization","https://web.stanford.edu/~boyd/cvxbook/","book","Boyd & Vandenberghe"],
+"mackay":["Information Theory, Inference, and Learning Algorithms","http://www.inference.org.uk/mackay/itila/book.html","book","David MacKay"],
+"cs50":["CS50: Introduction to Computer Science","https://cs50.harvard.edu/x/","course","Harvard"],
+"pytut":["The Python Tutorial","https://docs.python.org/3/tutorial/","docs","Python.org"],
+"numpy":["NumPy user guide","https://numpy.org/doc/stable/user/index.html","docs","NumPy"],
+"bcast":["Broadcasting","https://numpy.org/doc/stable/user/basics.broadcasting.html","docs","NumPy"],
+"pandas":["pandas user guide","https://pandas.pydata.org/docs/user_guide/index.html","docs","pandas"],
+"sqlbolt":["SQLBolt interactive lessons","https://sqlbolt.com/","course","SQLBolt"],
+"goldberg":["What Every Computer Scientist Should Know About Floating-Point","https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html","article","David Goldberg"],
+"matcook":["The Matrix Cookbook","https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf","book","Petersen & Pedersen"],
+"brrr":["Making Deep Learning Go Brrrr From First Principles","https://horace.io/brrr_intro.html","article","Horace He"],
+"cuda":["CUDA C++ Programming Guide","https://docs.nvidia.com/cuda/cuda-c-programming-guide/","docs","NVIDIA"],
+"bexfourier":["An Interactive Guide to the Fourier Transform","https://betterexplained.com/articles/an-interactive-guide-to-the-fourier-transform/","article","BetterExplained"],
+"micrograd":["micrograd: a tiny autograd engine","https://github.com/karpathy/micrograd","tool","Andrej Karpathy"],
+"isl":["An Introduction to Statistical Learning","https://www.statlearning.com/","book","James, Witten, Hastie & Tibshirani"],
+"cs229":["CS229: Machine Learning","https://cs229.stanford.edu/","course","Stanford"],
+"bishop":["Pattern Recognition and Machine Learning","https://www.microsoft.com/en-us/research/publication/pattern-recognition-machine-learning/","book","Christopher Bishop"],
+"murphy":["Probabilistic Machine Learning","https://probml.github.io/pml-book/","book","Kevin Murphy"],
+"sklearn":["scikit-learn user guide","https://scikit-learn.org/stable/user_guide.html","docs","scikit-learn"],
+"slp3":["Speech and Language Processing (3rd ed.)","https://web.stanford.edu/~jurafsky/slp3/","book","Jurafsky & Martin"],
+"szeliski":["Computer Vision: Algorithms and Applications","https://szeliski.org/Book/","book","Richard Szeliski"],
+"fpp3":["Forecasting: Principles and Practice","https://otexts.com/fpp3/","book","Hyndman & Athanasopoulos"],
+"gpml":["Gaussian Processes for Machine Learning","https://gaussianprocess.org/gpml/","book","Rasmussen & Williams"],
+"gpdistill":["A Visual Exploration of Gaussian Processes","https://distill.pub/2019/visual-exploration-gaussian-processes/","article","Distill"],
+"shais":["Understanding Machine Learning: From Theory to Algorithms","https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/","book","Shalev-Shwartz & Ben-David"],
+"lattimore":["Bandit Algorithms","https://tor-lattimore.com/downloads/book/book.pdf","book","Lattimore & Szepesvári"],
+"sutton":["Reinforcement Learning: An Introduction","http://incompleteideas.net/book/the-book-2nd.html","book","Sutton & Barto"],
+"silver":["RL lecture course","https://www.davidsilver.uk/teaching/","course","David Silver"],
+"spinup":["Spinning Up in Deep RL","https://spinningup.openai.com/","course","OpenAI"],
+"spinup-pg":["Intro to Policy Optimization","https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html","article","Spinning Up"],
+"hfrl":["Deep RL Course","https://huggingface.co/learn/deep-rl-course","course","Hugging Face"],
+"fairml":["Fairness and Machine Learning","https://fairmlbook.org/","book","Barocas, Hardt & Narayanan"],
+"whatif":["Causal Inference: What If","https://miguelhernan.org/whatifbook","book","Hernán & Robins"],
+"bradyneal":["Introduction to Causal Inference course","https://www.bradyneal.com/causal-inference-course","course","Brady Neal"],
+"madewithml":["Made With ML","https://madewithml.com/","course","Goku Mohandas"],
+"xgb":["XGBoost documentation","https://xgboost.readthedocs.io/","docs","XGBoost"],
+"d2l":["Dive into Deep Learning","https://d2l.ai/","book","Zhang, Lipton, Li & Smola"],
+"dlbook":["Deep Learning","https://www.deeplearningbook.org/","book","Goodfellow, Bengio & Courville"],
+"udl":["Understanding Deep Learning","https://udlbook.github.io/udlbook/","book","Simon Prince"],
+"fastai":["Practical Deep Learning for Coders","https://course.fast.ai/","course","fast.ai"],
+"z2h":["Neural Networks: Zero to Hero","https://karpathy.ai/zero-to-hero.html","video","Andrej Karpathy"],
+"cs231n":["CS231n course notes","https://cs231n.github.io/","course","Stanford"],
+"cs224n":["CS224N: NLP with Deep Learning","https://web.stanford.edu/class/cs224n/","course","Stanford"],
+"cs336":["CS336: Language Modeling from Scratch","https://stanford-cs336.github.io/","course","Stanford"],
+"hfllm":["LLM Course","https://huggingface.co/learn/llm-course","course","Hugging Face"],
+"hfdiff":["Diffusion Models Course","https://huggingface.co/learn/diffusion-course","course","Hugging Face"],
+"illtrans":["The Illustrated Transformer","https://jalammar.github.io/illustrated-transformer/","article","Jay Alammar"],
+"anntrans":["The Annotated Transformer","https://nlp.seas.harvard.edu/annotated-transformer/","article","Harvard NLP"],
+"illbert":["The Illustrated BERT, ELMo, and co.","https://jalammar.github.io/illustrated-bert/","article","Jay Alammar"],
+"colah":["Understanding LSTM Networks","https://colah.github.io/posts/2015-08-Understanding-LSTMs/","article","Chris Olah"],
+"krnn":["The Unreasonable Effectiveness of RNNs","http://karpathy.github.io/2015/05/21/rnn-effectiveness/","article","Andrej Karpathy"],
+"dmom":["Why Momentum Really Works","https://distill.pub/2017/momentum/","article","Distill"],
+"daug":["Attention and Augmented RNNs","https://distill.pub/2016/augmented-rnns/","article","Distill"],
+"dgnn":["A Gentle Introduction to Graph Neural Networks","https://distill.pub/2021/gnn-intro/","article","Distill"],
+"dfeat":["Feature Visualization","https://distill.pub/2017/feature-visualization/","article","Distill"],
+"wdiff":["What are Diffusion Models?","https://lilianweng.github.io/posts/2021-07-11-diffusion-models/","article","Lilian Weng"],
+"wagent":["LLM Powered Autonomous Agents","https://lilianweng.github.io/posts/2023-06-23-agent/","article","Lilian Weng"],
+"whall":["Extrinsic Hallucinations in LLMs","https://lilianweng.github.io/posts/2024-07-07-hallucination/","article","Lilian Weng"],
+"wreward":["Reward Hacking in Reinforcement Learning","https://lilianweng.github.io/posts/2024-11-28-reward-hacking/","article","Lilian Weng"],
+"wprompt":["Prompt Engineering","https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/","article","Lilian Weng"],
+"wadv":["Adversarial Attacks on LLMs","https://lilianweng.github.io/posts/2023-10-25-adv-attack-llm/","article","Lilian Weng"],
+"s4ann":["The Annotated S4","https://srush.github.io/annotated-s4/","article","Sasha Rush"],
+"pytorch":["PyTorch tutorials","https://pytorch.org/tutorials/","docs","PyTorch"],
+"jax":["JAX documentation","https://docs.jax.dev/","docs","JAX"],
+"ultrascale":["The Ultra-Scale Playbook","https://huggingface.co/spaces/nanotron/ultrascale-playbook","book","Hugging Face"],
+"vllm":["vLLM documentation","https://docs.vllm.ai/","docs","vLLM"],
+"rlhfbook":["RLHF Book","https://rlhfbook.com/","book","Nathan Lambert"],
+"hfrlhf":["Illustrating RLHF","https://huggingface.co/blog/rlhf","article","Hugging Face"],
+"o1blog":["Learning to Reason with LLMs","https://openai.com/index/learning-to-reason-with-llms/","article","OpenAI"],
+"mcpsite":["Model Context Protocol docs & spec","https://modelcontextprotocol.io/","docs","MCP"],
+"swebench":["SWE-bench leaderboard","https://www.swebench.com/","tool","SWE-bench"],
+"lean":["Lean theorem prover","https://lean-lang.org/","tool","Lean FRO"],
+"circfw":["A Mathematical Framework for Transformer Circuits","https://transformer-circuits.pub/2021/framework/index.html","article","Transformer Circuits"],
+"monosem":["Towards Monosemanticity","https://transformer-circuits.pub/2023/monosemantic-features","article","Transformer Circuits"],
+"scalemono":["Scaling Monosemanticity","https://transformer-circuits.pub/2024/scaling-monosemanticity/","article","Transformer Circuits"],
+"attrib":["On the Biology of a Large Language Model","https://transformer-circuits.pub/2025/attribution-graphs/biology.html","article","Transformer Circuits"],
+"neuronpedia":["Neuronpedia","https://www.neuronpedia.org/","tool","Neuronpedia"],
+"euact":["EU AI Act explorer","https://artificialintelligenceact.eu/","docs","Future of Life Institute"],
+"nistrmf":["AI Risk Management Framework","https://www.nist.gov/itl/ai-risk-management-framework","docs","NIST"],
+"bea":["Building Effective Agents","https://www.anthropic.com/engineering/building-effective-agents","article","Anthropic"],
+"ctxeng":["Effective Context Engineering for AI Agents","https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents","article","Anthropic"],
+"muonblog":["Muon: An optimizer for hidden layers","https://kellerjordan.github.io/posts/muon/","article","Keller Jordan"],
+"nanogpt":["nanoGPT","https://github.com/karpathy/nanoGPT","tool","Andrej Karpathy"],
+"glove":["GloVe project page","https://nlp.stanford.edu/projects/glove/","article","Stanford NLP"],
+"gpt2":["Language Models are Unsupervised Multitask Learners (GPT-2)","https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf","paper","OpenAI, 2019"]
+};
+
+/* ---------- Resources per topic: library keys and arXiv papers (ax:ID Title) ---------- */
+const RES = {
+numbers:"khan-arith|khan-prealg",
+arith:"khan-arith",
+fractions:"khan-arith|khan-prealg",
+exponents:"khan-prealg|khan-alg",
+logs:"khan-alg|khan-precalc",
+ratios:"khan-prealg",
+sets:"proof|cs50",
+binary:"goldberg|cs50",
+sumnot:"khan-precalc|mml",
+counting:"khan-stats|khan-precalc",
+coord:"khan-alg",
+trig:"khan-trig",
+algebra:"khan-alg",
+functions:"khan-alg|khan-precalc",
+polynomials:"khan-alg|khan-precalc",
+seqseries:"khan-precalc|3b1b-calc|mit1801",
+limits:"khan-calc1|3b1b-calc",
+deriv:"3b1b-calc|khan-calc1|mit1801",
+chainrule:"3b1b-calc|khan-calc1",
+integrals:"khan-int|3b1b-calc|mit1801",
+vectors:"3b1b-la|khan-la",
+matrices:"3b1b-la|khan-la|mit1806",
+lineq:"mit1806|khan-la",
+probbasics:"seeing|khan-stats|3b1b-prob",
+condprob:"seeing|khan-stats",
+bayes:"3b1b-prob|seeing",
+descstats:"khan-stats|seeing",
+randvar:"seeing|khan-stats",
+expect:"seeing|mml",
+graphs:"khan-algo|cs50",
+programming:"pytut|cs50",
+complexity:"khan-algo|cs50",
+datastruct:"cs50|khan-algo",
+multivar:"khan-multi|mml",
+gradient:"khan-multi|mml",
+matcalc:"matcook|mml|ax:1802.01528 The Matrix Calculus You Need For Deep Learning",
+vecspaces:"mit1806|3b1b-la|mml",
+normsip:"mml|khan-la",
+eigen:"3b1b-la|mit1806",
+svd:"mit1806|mml",
+matdecomp:"mit1806|mml",
+tensors:"bcast|numpy|pytorch",
+numstab:"goldberg|dlbook",
+fourier:"bexfourier|khan-int",
+convex:"boyd|mml",
+gd:"mml|d2l|ax:1609.04747 An overview of gradient descent optimization algorithms",
+constrained:"boyd|mml",
+newton:"boyd|d2l",
+jointdist:"seeing|mml",
+gaussian:"mml|bishop",
+clt:"seeing|khan-stats",
+mle:"mml|murphy",
+bayesinf:"murphy|bishop",
+hyptest:"khan-stats|seeing",
+sampling:"mackay|murphy",
+infotheory:"mackay|dlbook",
+kl:"mackay|murphy",
+markov:"seeing|murphy",
+stochproc:"murphy|wdiff",
+autodiff:"micrograd|z2h|ax:1502.05767 Automatic differentiation in machine learning: a survey",
+dataeng:"numpy|pandas|sqlbolt",
+viz:"pandas|madewithml",
+dynprog:"khan-algo|cs50",
+parallel:"brrr|cuda",
+mlbasics:"cs229|isl|fastai",
+linreg:"isl|cs229",
+logreg:"isl|cs229",
+losses:"d2l|murphy",
+biasvar:"isl|cs229",
+regularization:"isl|sklearn",
+cvval:"isl|sklearn",
+metrics:"sklearn|isl",
+features:"sklearn|madewithml",
+knn:"isl|sklearn",
+naivebayes:"slp3|sklearn",
+trees:"isl|sklearn",
+forests:"isl|sklearn",
+boosting:"xgb|isl|ax:1603.02754 XGBoost: A Scalable Tree Boosting System",
+svm:"cs229|isl",
+kmeans:"isl|sklearn",
+gmm:"bishop|sklearn",
+pca:"isl|mml",
+clustering:"sklearn|isl",
+anomaly:"sklearn|murphy",
+pgm:"bishop|murphy",
+hmm:"slp3|bishop",
+timeseries:"fpp3",
+recsys:"cs229|murphy",
+gp:"gpml|gpdistill",
+learnth:"shais|cs229",
+causal:"whatif|bradyneal",
+mlworkflow:"madewithml",
+ngram:"slp3",
+tfidf:"slp3|sklearn",
+imgproc:"szeliski",
+mdp:"sutton|silver",
+bellman:"sutton|silver",
+bandits:"lattimore|sutton",
+fairness:"fairml",
+perceptron:"d2l|3b1b-nn",
+mlp:"3b1b-nn|d2l|z2h",
+activations:"d2l|ax:1606.08415 Gaussian Error Linear Units (GELUs)|ax:2002.05202 GLU Variants Improve Transformer",
+backprop:"3b1b-nn|z2h|micrograd",
+sgd:"dmom|d2l|ax:1609.04747 An overview of gradient descent optimization algorithms",
+adam:"d2l|ax:1412.6980 Adam: A Method for Stochastic Optimization|ax:1711.05101 Decoupled Weight Decay Regularization",
+lrsched:"d2l|ax:1608.03983 SGDR: Stochastic Gradient Descent with Warm Restarts",
+init:"d2l|ax:1502.01852 Delving Deep into Rectifiers (He init)",
+normalization:"d2l|ax:1502.03167 Batch Normalization|ax:1607.06450 Layer Normalization",
+dropout:"d2l|ax:1207.0580 Improving neural networks by preventing co-adaptation (dropout)",
+vanishing:"dlbook|ax:1211.5063 On the difficulty of training recurrent neural networks",
+resnet:"d2l|ax:1512.03385 Deep Residual Learning for Image Recognition",
+frameworks:"pytorch|jax|d2l",
+gputrain:"brrr|ax:1710.03740 Mixed Precision Training",
+cnn:"cs231n|d2l",
+cnnarch:"cs231n|d2l|ax:1905.11946 EfficientNet|ax:2201.03545 A ConvNet for the 2020s",
+detection:"cs231n|ax:1506.02640 You Only Look Once (YOLO)|ax:1505.04597 U-Net|ax:1703.06870 Mask R-CNN",
+transfer:"fastai|cs231n",
+selfsup:"ax:2304.12210 A Cookbook of Self-Supervised Learning|d2l",
+contrastive:"ax:2002.05709 SimCLR|ax:1807.03748 Contrastive Predictive Coding (InfoNCE)",
+wordemb:"cs224n|glove|ax:1301.3781 Efficient Estimation of Word Representations (word2vec)",
+rnn:"krnn|d2l|cs224n",
+lstm:"colah|d2l",
+seq2seq:"cs224n|ax:1409.3215 Sequence to Sequence Learning with Neural Networks",
+tokenization:"z2h|hfllm|ax:1508.07909 Neural Machine Translation of Rare Words with Subword Units (BPE)|ax:1808.06226 SentencePiece",
+autoenc:"dlbook|udl",
+vae:"udl|ax:1312.6114 Auto-Encoding Variational Bayes|ax:1606.05908 Tutorial on Variational Autoencoders",
+gan:"udl|ax:1406.2661 Generative Adversarial Networks|ax:1511.06434 DCGAN",
+ebm:"murphy|ax:2101.03288 How to Train Your Energy-Based Models",
+flows:"udl|ax:1605.08803 Density estimation using Real NVP|ax:1912.02762 Normalizing Flows for Probabilistic Modeling and Inference",
+gnn:"dgnn|ax:1609.02907 Graph Convolutional Networks|ax:1710.10903 Graph Attention Networks",
+uncertainty:"murphy|ax:1612.01474 Deep Ensembles|ax:1506.02142 Dropout as a Bayesian Approximation|ax:2107.07511 A Gentle Introduction to Conformal Prediction",
+hpo:"d2l|ax:1603.06560 Hyperband|ax:2203.03466 Tensor Programs V: μTransfer",
+qlearning:"sutton|silver|hfrl",
+dqn:"hfrl|ax:1312.5602 Playing Atari with Deep Reinforcement Learning",
+polgrad:"spinup-pg|sutton",
+ppo:"spinup|hfrl|ax:1707.06347 Proximal Policy Optimization Algorithms",
+mcts:"sutton|ax:1712.01815 Mastering Chess and Shogi by Self-Play (AlphaZero)",
+xai:"ax:1602.04938 LIME|ax:1705.07874 SHAP|ax:1703.01365 Integrated Gradients|dfeat",
+adversarial:"ax:1312.6199 Intriguing properties of neural networks|ax:1412.6572 Explaining and Harnessing Adversarial Examples (FGSM)|ax:1706.06083 Towards Deep Learning Models Resistant to Adversarial Attacks (PGD)",
+attention:"daug|ax:1409.0473 Neural Machine Translation by Jointly Learning to Align and Translate",
+selfattn:"illtrans|ax:1706.03762 Attention Is All You Need",
+posenc:"ax:2104.09864 RoFormer (RoPE)|ax:2108.12409 Train Short, Test Long (ALiBi)",
+transformer:"illtrans|anntrans|z2h|ax:1706.03762 Attention Is All You Need",
+bert:"illbert|ax:1810.04805 BERT",
+gpt:"z2h|nanogpt|gpt2|ax:2005.14165 Language Models are Few-Shot Learners (GPT-3)",
+t5:"ax:1910.10683 Exploring the Limits of Transfer Learning (T5)",
+speech:"slp3|ax:2212.04356 Robust Speech Recognition via Large-Scale Weak Supervision (Whisper)|ax:2006.11477 wav2vec 2.0",
+sentemb:"ax:1908.10084 Sentence-BERT|ax:2104.08821 SimCSE",
+vit:"ax:2010.11929 An Image is Worth 16x16 Words (ViT)",
+clip:"ax:2103.00020 Learning Transferable Visual Models From Natural Language Supervision (CLIP)",
+sslvision:"ax:2104.14294 Emerging Properties in Self-Supervised Vision Transformers (DINO)|ax:2111.06377 Masked Autoencoders Are Scalable Vision Learners",
+sam:"ax:2304.02643 Segment Anything",
+ddpm:"wdiff|hfdiff|ax:2006.11239 Denoising Diffusion Probabilistic Models|ax:2011.13456 Score-Based Generative Modeling through SDEs",
+ldm:"hfdiff|ax:2112.10752 High-Resolution Image Synthesis with Latent Diffusion Models|ax:2207.12598 Classifier-Free Diffusion Guidance",
+flowmatch:"ax:2210.02747 Flow Matching for Generative Modeling|ax:2209.03003 Flow Straight and Fast (Rectified Flow)",
+dit:"ax:2212.09748 Scalable Diffusion Models with Transformers (DiT)",
+vqvae:"ax:1711.00937 Neural Discrete Representation Learning (VQ-VAE)",
+ssm:"s4ann|ax:2111.00396 Efficiently Modeling Long Sequences with Structured State Spaces (S4)|ax:2312.00752 Mamba",
+moe:"ax:1701.06538 Outrageously Large Neural Networks (Sparsely-Gated MoE)|ax:2101.03961 Switch Transformers",
+dlth:"udl|ax:1912.02292 Deep Double Descent|ax:1806.07572 Neural Tangent Kernel|ax:2201.02177 Grokking|ax:1803.03635 The Lottery Ticket Hypothesis",
+geodl:"ax:2104.13478 Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges|ax:2102.09844 E(n) Equivariant Graph Neural Networks",
+modelrl:"ax:1911.08265 MuZero|ax:1912.01603 Dream to Control (Dreamer)|ax:2301.04104 DreamerV3",
+offlinerl:"ax:2005.01643 Offline Reinforcement Learning: Tutorial, Review, and Perspectives|ax:2006.04779 Conservative Q-Learning|ax:2106.01345 Decision Transformer",
+scaling:"ax:2001.08361 Scaling Laws for Neural Language Models|ax:2203.15556 Training Compute-Optimal LLMs (Chinchilla)",
+datacuration:"ax:2406.17557 The FineWeb Datasets|ax:2101.00027 The Pile",
+disttrain:"ultrascale|ax:1910.02054 ZeRO|ax:1909.08053 Megatron-LM",
+flashattn:"ax:2205.14135 FlashAttention|ax:2307.08691 FlashAttention-2|ax:2006.16236 Transformers are RNNs (linear attention)",
+vecdb:"ax:1603.09320 HNSW|ax:1702.08734 Billion-scale similarity search with GPUs (FAISS)",
+mlops:"madewithml",
+nas:"ax:1611.01578 Neural Architecture Search with Reinforcement Learning",
+privacy:"ax:1602.05629 Communication-Efficient Learning (FedAvg)|ax:1607.00133 Deep Learning with Differential Privacy",
+pretrain:"cs336|nanogpt|ax:2302.13971 LLaMA|ax:2407.21783 The Llama 3 Herd of Models",
+incontext:"wprompt|ax:2201.11903 Chain-of-Thought Prompting|ax:2203.11171 Self-Consistency",
+sft:"hfllm|ax:2109.01652 Finetuned Language Models Are Zero-Shot Learners (FLAN)",
+rlhf:"rlhfbook|hfrlhf|ax:2203.02155 Training language models to follow instructions (InstructGPT)|ax:1706.03741 Deep RL from Human Preferences",
+dpo:"rlhfbook|ax:2305.18290 Direct Preference Optimization|ax:2402.01306 KTO|ax:2405.14734 SimPO",
+peft:"hfllm|ax:2106.09685 LoRA|ax:2305.14314 QLoRA",
+decoding:"ax:1904.09751 The Curious Case of Neural Text Degeneration (top-p)|ax:2407.01082 Min-p Sampling",
+longctx:"ax:2309.00071 YaRN|ax:2310.01889 Ring Attention|ax:2307.03172 Lost in the Middle",
+distill:"ax:1503.02531 Distilling the Knowledge in a Neural Network|ax:1910.01108 DistilBERT",
+synthetic:"ax:2212.10560 Self-Instruct|ax:2306.11644 Textbooks Are All You Need",
+codemodels:"ax:2107.03374 Evaluating LLMs Trained on Code (Codex)",
+llmevals:"ax:2009.03300 MMLU|ax:2311.12022 GPQA|ax:2306.05685 Judging LLM-as-a-Judge|ax:2403.04132 Chatbot Arena",
+rag:"ax:2005.11401 Retrieval-Augmented Generation|ax:2312.10997 RAG for LLMs: A Survey|ax:2404.16130 From Local to Global (GraphRAG)",
+tooluse:"ax:2302.04761 Toolformer|ax:2305.15334 Gorilla",
+vlm:"ax:2304.08485 Visual Instruction Tuning (LLaVA)|ax:2204.14198 Flamingo",
+audiollm:"ax:2209.03143 AudioLM|ax:2210.13438 High Fidelity Neural Audio Compression (EnCodec)",
+videogen:"ax:2204.03458 Video Diffusion Models",
+embodied:"ax:2307.15818 RT-2|ax:2406.09246 OpenVLA|ax:2410.24164 π0",
+kvcache:"vllm|ax:2309.06180 Efficient Memory Management for LLM Serving (PagedAttention)",
+quant:"ax:2210.17323 GPTQ|ax:2306.00978 AWQ|ax:2208.07339 LLM.int8()",
+specdec:"ax:2211.17192 Fast Inference via Speculative Decoding|ax:2401.10774 Medusa",
+alignment:"wreward|ax:1606.06565 Concrete Problems in AI Safety|ax:2209.00626 The Alignment Problem from a Deep Learning Perspective|ax:2310.13548 Towards Understanding Sycophancy",
+cai:"ax:2212.08073 Constitutional AI|ax:2309.00267 RLAIF",
+mechinterp:"circfw|ax:2209.11895 In-context Learning and Induction Heads|ax:2209.10652 Toy Models of Superposition|neuronpedia",
+hallucination:"whall|ax:2109.07958 TruthfulQA",
+redteam:"wadv|ax:2307.15043 Universal and Transferable Adversarial Attacks (GCG)|ax:2302.12173 Indirect Prompt Injection|ax:2307.02483 Jailbroken",
+governance:"euact|nistrmf",
+reasoning:"o1blog|ax:2501.12948 DeepSeek-R1",
+rlvr:"ax:2402.03300 DeepSeekMath (GRPO)|ax:2411.15124 Tülu 3|ax:2503.14476 DAPO",
+prm:"ax:2305.20050 Let's Verify Step by Step|ax:2312.08935 Math-Shepherd",
+ttscaling:"ax:2408.03314 Scaling LLM Test-Time Compute Optimally|ax:2407.21787 Large Language Monkeys",
+latentreason:"ax:2412.06769 Training LLMs to Reason in a Continuous Latent Space (Coconut)|ax:2502.05171 Scaling up Test-Time Compute with Latent Reasoning",
+formalmath:"lean|ax:2405.14333 DeepSeek-Prover",
+moemodern:"ax:2412.19437 DeepSeek-V3 Technical Report|ax:2405.04434 DeepSeek-V2 (MLA)|ax:2401.06066 DeepSeekMoE",
+hybrid:"ax:2405.21060 Transformers are SSMs (Mamba-2)|ax:2403.19887 Jamba|ax:2412.06464 Gated Delta Networks",
+diffusionlm:"ax:2502.09992 Large Language Diffusion Models (LLaDA)|ax:2406.07524 Simple and Effective Masked Diffusion LMs",
+omni:"ax:2405.09818 Chameleon: Mixed-Modal Early-Fusion Foundation Models",
+worldmodels:"ax:1803.10122 World Models|ax:2402.15391 Genie: Generative Interactive Environments",
+jepa:"ax:2301.08243 Self-Supervised Learning from Images with a JEPA (I-JEPA)",
+testtimetrain:"ax:2407.04620 Learning to (Learn at Test Time)|ax:2501.00663 Titans: Learning to Memorize at Test Time",
+muon:"muonblog|ax:1802.09568 Shampoo|ax:2409.11321 SOAP",
+lowprec:"ax:2209.05433 FP8 Formats for Deep Learning|ax:2412.19437 DeepSeek-V3 (FP8 training)",
+smallmodels:"ax:2402.14905 MobileLLM|ax:2306.11644 Textbooks Are All You Need (phi-1)",
+agents:"bea|wagent|ax:2210.03629 ReAct|ax:2303.11366 Reflexion",
+mcp:"mcpsite",
+computeruse:"ax:2404.07972 OSWorld",
+codingagents:"swebench|ax:2310.06770 SWE-bench|ax:2405.15793 SWE-agent",
+multiagent:"ax:2308.08155 AutoGen|ax:2305.14325 Improving Factuality through Multiagent Debate",
+contexteng:"ctxeng|ax:2310.08560 MemGPT|ax:2307.03172 Lost in the Middle",
+deepresearch:"ax:2402.14207 STORM: Writing Wikipedia-like Articles from Scratch",
+aiscience:"ax:2408.06292 The AI Scientist",
+saes:"monosem|scalemono|attrib|ax:2406.04093 Scaling and Evaluating Sparse Autoencoders",
+cotmon:"ax:2305.04388 Language Models Don't Always Say What They Think",
+scalableov:"ax:1805.00899 AI Safety via Debate|ax:2312.09390 Weak-to-Strong Generalization|ax:2312.06942 AI Control|ax:2211.03540 Measuring Progress on Scalable Oversight",
+agentsafety:"ax:2406.13352 AgentDojo|ax:2302.12173 Indirect Prompt Injection",
+frontierevals:"ax:2305.15324 Model Evaluation for Extreme Risks|ax:2401.05566 Sleeper Agents|ax:2412.14093 Alignment Faking in LLMs"
+};
+function resourcesFor(n){
+  const out = [];
+  (RES[n.id]||"").split("|").filter(Boolean).forEach(tok=>{
+    if(tok.startsWith("ax:")){ const sp=tok.indexOf(" "); const id=tok.slice(3,sp); out.push({t:tok.slice(sp+1), u:`https://arxiv.org/abs/${id}`, type:"paper", src:`arXiv ${id}`}); }
+    else if(LIB[tok]){ const [t,u,type,src]=LIB[tok]; out.push({t,u,type,src}); }
+    else console.warn("unknown resource", tok, "for", n.id);
+  });
+  const q = encodeURIComponent(n.label.replace(/\s*\(.*?\)/g,""));
+  const search = [
+    {t:"Wikipedia", u:`https://en.wikipedia.org/w/index.php?search=${q}`, src:"Encyclopedia"},
+    {t:"YouTube lectures", u:`https://www.youtube.com/results?search_query=${q}+${n.lv<=2?"math+lesson":"machine+learning+lecture"}`, src:"Video search"},
+  ];
+  if(n.lv>=3) search.push({t:"arXiv papers", u:`https://arxiv.org/search/?query=${q}&searchtype=all`, src:"Paper search"});
+  if(n.lv>=3) search.push({t:"Google Scholar", u:`https://scholar.google.com/scholar?q=${q}`, src:"Paper search"});
+  return {learn: out.filter(r=>r.type!=="paper"), papers: out.filter(r=>r.type==="paper"), search};
+}
+
+/* ---------- Model ---------- */
+const nodes = RAW.map(([id,label,d,lv,pre,desc,f]) => ({id,label,d,lv,pre:pre?pre.split(","):[],desc,f,kids:[]}));
+const byId = new Map(nodes.map(n=>[n.id,n]));
+nodes.forEach(n=>{ n.pre = n.pre.filter(p=>{ if(!byId.has(p)){console.warn("missing",p,"for",n.id);return false} return true}).map(p=>byId.get(p)); n.pre.forEach(p=>p.kids.push(n)); });
+const edges = []; nodes.forEach(n=>n.pre.forEach(p=>edges.push({s:p,t:n})));
+const dIndex = Object.fromEntries(DOMAINS.map(([k],i)=>[k,i]));
+const dName = Object.fromEntries(DOMAINS);
+function closure(n, key){ const seen=new Set(); const st=[...n[key]]; while(st.length){const x=st.pop(); if(seen.has(x))continue; seen.add(x); st.push(...x[key]);} return seen; }
+nodes.forEach(n=>{ n.nAnc = closure(n,"pre").size; n.nDesc = closure(n,"kids").size; });
+document.getElementById("sub").textContent = `${nodes.length} topics and ${edges.length} prerequisite links, from arithmetic to reasoning models and agents. Pick any topic to trace everything it builds on.`;
+const esc = s => s.replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- State ---------- */
+const state = { sel:null, mode:"pre", dom:null, view:"graph" };
+
+/* ---------- Layout ---------- */
+const COLW = 290, ROWH = 26, PH = 19;
+const measure = document.createElement("canvas").getContext("2d");
+function layout(){
+  measure.font = '500 11.5px "Instrument Sans", system-ui, sans-serif';
+  nodes.forEach(n=> n.w = Math.ceil(measure.measureText(n.label).width) + 30);
+  const cols = LEVELS.map((_,i)=>nodes.filter(n=>n.lv===i));
+  const maxLen = Math.max(...cols.map(c=>c.length));
+  const band = n => (dIndex[n.d]/(DOMAINS.length-1) - .5) * maxLen * ROWH * .9;
+  const place = c => { const off=(c.length-1)*ROWH/2; c.forEach((n,i)=>n.y=i*ROWH-off); };
+  cols.forEach(c=>{ c.sort((a,b)=>dIndex[a.d]-dIndex[b.d]); place(c); });
+  const mean = a => a.reduce((s,x)=>s+x.y,0)/a.length;
+  for(let it=0; it<10; it++){
+    for(let l=1;l<cols.length;l++){ cols[l].forEach(n=>{ const b=n.pre.length?mean(n.pre):n.y; n.t=.62*b+.38*band(n); }); cols[l].sort((a,b)=>a.t-b.t); place(cols[l]); }
+    for(let l=cols.length-2;l>=0;l--){ cols[l].forEach(n=>{ const b=n.kids.length?mean(n.kids):n.y; n.t=.55*b+.2*n.y+.25*band(n); }); cols[l].sort((a,b)=>a.t-b.t); place(cols[l]); }
+  }
+  for(let l=1;l<cols.length;l++){ cols[l].forEach(n=>{ const b=n.pre.length?mean(n.pre):n.y; n.t=.62*b+.38*band(n); }); cols[l].sort((a,b)=>a.t-b.t); place(cols[l]); }
+  nodes.forEach(n=> n.x = n.lv*COLW);
+  return maxLen;
+}
+
+/* ---------- Render graph ---------- */
+const svg = d3.select("#map");
+const root = svg.append("g");
+let nodeSel, edgeSel, zoom, maxLen;
+function renderGraph(){
+  maxLen = layout();
+  const top = -(maxLen-1)*ROWH/2 - 70, H = maxLen*ROWH + 100;
+  const gc = root.append("g");
+  LEVELS.forEach(([name],i)=>{
+    gc.append("rect").attr("class","colband").attr("x",i*COLW-16).attr("y",top-10).attr("width",COLW-18).attr("height",H).attr("rx",14).style("opacity", i%2?0:1);
+    gc.append("text").attr("class","colnum").attr("x",i*COLW).attr("y",top+16).text(`LEVEL ${i}`);
+    gc.append("text").attr("class","colname").attr("x",i*COLW).attr("y",top+38).text(name);
+  });
+  edgeSel = root.append("g").selectAll("path").data(edges).join("path").attr("class","edge")
+    .attr("d", e=>{
+      const x1=e.s.x+e.s.w, y1=e.s.y, x2=e.t.x, y2=e.t.y;
+      if(e.s.lv===e.t.lv){ const sx=e.s.x, k=Math.min(60,20+Math.abs(y2-y1)*.25); return `M${sx},${y1} C${sx-k},${y1} ${x2-k},${y2} ${x2},${y2}`; }
+      const dx=Math.min(110,(x2-x1)/2); return `M${x1},${y1} C${x1+dx},${y1} ${x2-dx},${y2} ${x2},${y2}`;
+    });
+  nodeSel = root.append("g").selectAll("g").data(nodes).join("g").attr("class","node")
+    .attr("transform", n=>`translate(${n.x},${n.y-PH/2})`).attr("style", n=>`--c:var(--d-${n.d})`)
+    .attr("tabindex",0).attr("role","button").attr("aria-label", n=>`${n.label}, level ${n.lv}`)
+    .on("click",(ev,n)=>{ ev.stopPropagation(); select(n.id,{pop:true}); })
+    .on("keydown",(ev,n)=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); select(n.id,{pop:true}); } })
+    .on("mouseenter",(ev,n)=>{ edgeSel.classed("hov",e=>e.s===n||e.t===n); d3.select(ev.currentTarget).raise(); })
+    .on("mouseleave",()=> edgeSel.classed("hov",false));
+  nodeSel.append("rect").attr("width",n=>n.w).attr("height",PH).attr("rx",PH/2);
+  nodeSel.append("circle").attr("cx",10).attr("cy",PH/2).attr("r",3.6);
+  nodeSel.append("text").attr("x",19).attr("y",PH/2+4).text(n=>n.label);
+  zoom = d3.zoom().scaleExtent([.2,2.5]).clickDistance(5).on("zoom", e=>root.attr("transform", e.transform));
+  svg.call(zoom).on("dblclick.zoom", null);
+  svg.on("click", ()=> { if(state.sel) select(null); });
+}
+function bounds(){ const xs=nodes.map(n=>n.x), xe=nodes.map(n=>n.x+n.w), ys=nodes.map(n=>n.y); return {x0:Math.min(...xs)-20,x1:Math.max(...xe)+20,y0:Math.min(...ys)-80,y1:Math.max(...ys)+20}; }
+function fit(anim=true){ const r=svg.node().getBoundingClientRect(); const b=bounds(); const k=Math.min(r.width/(b.x1-b.x0), r.height/(b.y1-b.y0))*.96;
+  const t=d3.zoomIdentity.translate(r.width/2-k*(b.x0+b.x1)/2, r.height/2-k*(b.y0+b.y1)/2).scale(k);
+  (anim?svg.transition().duration(600):svg).call(zoom.transform,t); }
+function focusNode(n, anim=true){ const r=svg.node().getBoundingClientRect(); if(!r.width) return; const cur=d3.zoomTransform(svg.node()).k; const k=Math.max(cur,.75);
+  const t=d3.zoomIdentity.translate(r.width/2-k*(n.x+n.w/2), r.height/2-k*n.y).scale(k);
+  (anim?svg.transition().duration(650):svg).call(zoom.transform,t); }
+
+/* ---------- Curriculum list ---------- */
+function renderList(){
+  const el = document.getElementById("list");
+  el.innerHTML = LEVELS.map(([name,blurb],i)=>{
+    const items = nodes.filter(n=>n.lv===i).sort((a,b)=>dIndex[a.d]-dIndex[b.d]||a.label.localeCompare(b.label));
+    return `<section class="lvl"><div><div class="num">Level ${i} · ${items.length} topics</div><h2>${esc(name)}</h2><p>${esc(blurb)}</p></div>
+      <div class="items">${items.map(itemHTML).join("")}</div></section>`;
+  }).join("");
+  el.addEventListener("click", ev=>{ const b=ev.target.closest("[data-id]"); if(b) select(b.dataset.id,{pop:true}); });
+}
+const itemHTML = n => `<button class="item" data-id="${n.id}" style="--c:var(--d-${n.d})"><span class="dot"></span>${esc(n.label)}</button>`;
+
+/* ---------- Highlight ---------- */
+function activeSet(){
+  if(state.sel){ const n=byId.get(state.sel); const s=closure(n, state.mode==="pre"?"pre":"kids"); s.add(n); return s; }
+  if(state.dom){ return new Set(nodes.filter(n=>n.d===state.dom)); }
+  return null;
+}
+function applyHighlight(){
+  const act = activeSet(); const sel = state.sel && byId.get(state.sel);
+  nodeSel.classed("sel", n=>n===sel).classed("on", n=>!!act && act.has(n) && n!==sel).classed("dim", n=>!!act && !act.has(n));
+  edgeSel.classed("on", e=>!!act && act.has(e.s) && act.has(e.t)).classed("dim", e=>!!act && !(act.has(e.s)&&act.has(e.t)))
+    .attr("style", e=> act && act.has(e.s)&&act.has(e.t) ? `--c:var(--d-${(sel||e.t).d})` : null);
+  edgeSel.filter(".on").raise();
+  document.querySelectorAll("#list .item").forEach(b=>{ const n=byId.get(b.dataset.id); b.classList.toggle("sel",n===sel); b.classList.toggle("on",!!act&&act.has(n)&&n!==sel); b.classList.toggle("dim",!!act&&!act.has(n)); });
+  document.querySelectorAll("#legend .chip").forEach(c=>c.setAttribute("aria-pressed", String(c.dataset.d===state.dom)));
+}
+
+/* ---------- Panel ---------- */
+const panel = document.getElementById("panel");
+function renderPanel(){
+  if(!state.sel){ panel.innerHTML = overviewHTML(); return; }
+  const n = byId.get(state.sel);
+  const set = [...closure(n, state.mode==="pre"?"pre":"kids")].sort((a,b)=>a.lv-b.lv||dIndex[a.d]-dIndex[b.d]||a.label.localeCompare(b.label));
+  const perLv = LEVELS.map((_,i)=>set.filter(x=>x.lv===i).length); const mx=Math.max(1,...perLv);
+  const groups = LEVELS.map((l,i)=>[i,set.filter(x=>x.lv===i)]).filter(([,a])=>a.length);
+  const pre = [...n.pre].sort((a,b)=>a.lv-b.lv), kids=[...n.kids].sort((a,b)=>a.lv-b.lv);
+  panel.innerHTML = `
+    <div class="meta"><span class="dchip" style="--c:var(--d-${n.d})"><span class="dot"></span>${esc(dName[n.d])}</span><span class="lvtag">Level ${n.lv} · ${esc(LEVELS[n.lv][0])}</span></div>
+    <h2>${esc(n.label)}</h2>
+    <p class="desc">${esc(n.desc)}</p>
+    ${n.f?`<div class="formula" aria-label="Key idea">${esc(n.f)}</div>`:""}
+    <button class="openbtn" data-open="${n.id}">Topics to cover &amp; learning resources</button>
+    <div class="stats"><div><b>${n.pre.length}</b><span>direct prerequisites</span></div><div><b>${n.nAnc}</b><span>topics underneath</span></div><div><b>${n.nDesc}</b><span>topics it unlocks</span></div></div>
+    <h3>Builds directly on</h3>
+    ${pre.length?`<div class="links">${pre.map(itemHTML).join("")}</div>`:`<p class="none">Nothing. This is a starting point.</p>`}
+    <h3>Leads directly to</h3>
+    ${kids.length?`<div class="links">${kids.map(itemHTML).join("")}</div>`:`<p class="none">Nothing yet. This is at the current frontier.</p>`}
+    <div class="modes" role="group" aria-label="Highlight">
+      <button data-mode="pre" aria-pressed="${state.mode==="pre"}">Learning path (${n.nAnc})</button>
+      <button data-mode="kids" aria-pressed="${state.mode==="kids"}">What it unlocks (${n.nDesc})</button>
+    </div>
+    <div class="profile" aria-label="Topics per level">${perLv.map((c,i)=>`<div><div class="bar"><span style="height:${c/mx*100}%"></span></div><small>L${i}·${c}</small></div>`).join("")}</div>
+    <h3>${state.mode==="pre"?`Study order: ${set.length} topics to learn first`:`${set.length} topics that depend on it`}</h3>
+    ${groups.length?`<ol class="path">${groups.map(([i,a])=>`<li><div class="lh">Level ${i} · ${esc(LEVELS[i][0])}</div><div class="links">${a.map(itemHTML).join("")}</div></li>`).join("")}</ol>`:`<p class="none">None.</p>`}
+    <p class="foot">Click any topic above to jump to it. Click empty map space to clear.</p>`;
+}
+function overviewHTML(){
+  const starts = ["gd","backprop","transformer","rlhf","reasoning","agents"].map(id=>byId.get(id));
+  return `<div class="meta"><span class="lvtag">Overview</span></div>
+    <h2>How to read this atlas</h2>
+    <p class="desc">Topics flow left to right through eight levels, from arithmetic to the 2024–26 frontier. Each line means "is a prerequisite for". Colours mark the domain.</p>
+    <div class="stats"><div><b>${nodes.length}</b><span>topics</span></div><div><b>${edges.length}</b><span>links</span></div><div><b>${DOMAINS.length}</b><span>domains</span></div></div>
+    <h3>Ways to explore</h3>
+    <ol class="howto"><li>Select a topic to light up its full learning path back to the basics.</li><li>Switch to “What it unlocks” to see where a topic leads.</li><li>Tap a domain chip to see one field across all levels.</li><li>Use Curriculum for a level-by-level reading list.</li></ol>
+    <h3>Good places to start</h3><div class="links">${starts.map(itemHTML).join("")}</div>
+    <p class="foot">The frontier column reflects developments through mid-2026. It moves fast.</p>`;
+}
+panel.addEventListener("click", ev=>{
+  const m = ev.target.closest("[data-mode]"); if(m){ state.mode=m.dataset.mode; renderPanel(); applyHighlight(); return; }
+  const o = ev.target.closest("[data-open]"); if(o){ openModal(o.dataset.open); return; }
+  const b = ev.target.closest("[data-id]"); if(b) select(b.dataset.id,{pop:true});
+});
+
+/* ---------- Topic popup ---------- */
+const modal = document.getElementById("modal"), sheet = document.getElementById("sheet"); let lastFocus = null, modalId = null;
+const doneKey = id => "atlas-done-" + id;
+function getDone(id){ try{ return JSON.parse(localStorage.getItem(doneKey(id))||"[]"); }catch(e){ return []; } }
+function setDone(id, arr){ try{ localStorage.setItem(doneKey(id), JSON.stringify(arr)); }catch(e){} }
+const KIND = {course:"Course",book:"Book",video:"Video",article:"Article",docs:"Docs",tool:"Code",paper:"Paper"};
+const resHTML = r => `<a class="res" href="${esc(r.u)}" target="_blank" rel="noopener noreferrer"><span class="rt">${esc(r.t)} ↗</span><span class="rs">${esc(r.src)}</span><span class="rk">${KIND[r.type]||""}</span></a>`;
+function openModal(id){
+  const n = byId.get(id); if(!n) return;
+  modalId = id;
+  const subs = (SYL[id]||"").split(";").map(s=>s.trim()).filter(Boolean);
+  const done = new Set(getDone(id));
+  const r = resourcesFor(n);
+  const anc = [...closure(n,"pre")]; const lvls = anc.map(a=>a.lv);
+  const range = anc.length ? `L${Math.min(...lvls)}–L${Math.max(...lvls)}` : "none";
+  sheet.style.setProperty("--c", `var(--d-${n.d})`);
+  sheet.innerHTML = `
+    <button class="xbtn" id="mClose" aria-label="Close">×</button>
+    <div class="meta"><span class="dchip"><span class="dot"></span>${esc(dName[n.d])}</span><span class="lvtag">Level ${n.lv} · ${esc(LEVELS[n.lv][0])}</span></div>
+    <h2 id="mTitle">${esc(n.label)}</h2>
+    <p class="desc">${esc(n.desc)}</p>
+    <div class="scope">
+      <span><b>${subs.length}</b> subtopics to cover</span>
+      ${anc.length?`<span>Builds on <b>${n.nAnc}</b> topics across ${range}</span>`:`<span>A starting point: no prerequisites</span>`}
+      <span>Unlocks <b>${n.nDesc}</b> topics</span>
+    </div>
+    <div class="mgrid">
+      <section>
+        <h3>Topics to cover</h3>
+        <ol class="subs">${subs.map((s,i)=>`<li><label for="chk-${id}-${i}"><input type="checkbox" id="chk-${id}-${i}" data-i="${i}" ${done.has(i)?"checked":""}><span>${esc(s)}</span></label></li>`).join("")}</ol>
+        <div class="prog" id="mProg"></div>
+        ${n.f?`<div class="formula" style="margin-top:16px">${esc(n.f)}</div>`:""}
+      </section>
+      <section>
+        ${r.learn.length?`<h3>Learn it</h3><div class="reslist">${r.learn.map(resHTML).join("")}</div>`:""}
+        ${r.papers.length?`<h3>Key papers</h3><div class="reslist">${r.papers.map(resHTML).join("")}</div>`:""}
+        <h3>Search further</h3>
+        <div class="searchlinks">${r.search.map(s=>`<a href="${esc(s.u)}" target="_blank" rel="noopener noreferrer">${esc(s.t)} ↗</a>`).join("")}</div>
+      </section>
+    </div>
+    <div class="mfoot">
+      <button class="primary" id="mPath">Show learning path on map</button>
+      <button id="mUnlocks">Show what it unlocks</button>
+      ${window.AtlasNative?`<button id="mShare">Share</button>`:""}
+    </div>`;
+  updateProg();
+  if(modal.hidden) lastFocus = document.activeElement;
+  modal.hidden = false; sheet.scrollTop = 0;
+  document.getElementById("mClose").focus();
+}
+function updateProg(){
+  const boxes=[...sheet.querySelectorAll(".subs input")]; const c=boxes.filter(b=>b.checked).length;
+  document.getElementById("mProg").innerHTML = `<div class="track"><div class="fill" style="width:${boxes.length?c/boxes.length*100:0}%"></div></div><span>${c} of ${boxes.length} covered</span>`;
+}
+function closeModal(){ if(modal.hidden) return; modal.hidden = true; modalId = null; if(lastFocus && document.contains(lastFocus)) lastFocus.focus(); }
+sheet.addEventListener("change", ev=>{
+  if(!ev.target.matches(".subs input")) return;
+  const arr=[...sheet.querySelectorAll(".subs input")].filter(b=>b.checked).map(b=>+b.dataset.i);
+  setDone(modalId, arr); updateProg();
+});
+sheet.addEventListener("click", ev=>{
+  if(ev.target.closest("#mClose")) return closeModal();
+  if(ev.target.closest("#mShare")){ shareTopic(modalId); return; }
+  const p = ev.target.closest("#mPath,#mUnlocks");
+  if(p){ const id=modalId; state.mode = p.id==="mPath"?"pre":"kids"; closeModal(); setView("graph"); select(id,{scroll:true}); }
+});
+modal.addEventListener("click", ev=>{ if(ev.target===modal) closeModal(); });
+document.addEventListener("keydown", ev=>{
+  if(modal.hidden) return;
+  if(ev.key==="Escape"){ ev.preventDefault(); closeModal(); }
+  if(ev.key==="Tab"){ const f=[...sheet.querySelectorAll("a,button,input")]; if(!f.length) return; const first=f[0], last=f[f.length-1];
+    if(ev.shiftKey && document.activeElement===first){ ev.preventDefault(); last.focus(); } else if(!ev.shiftKey && document.activeElement===last){ ev.preventDefault(); first.focus(); } }
+});
+
+/* ---------- Select ---------- */
+function select(id, opts={}){
+  state.sel = id; if(id) state.dom = null;
+  renderPanel(); applyHighlight();
+  if(id){ if(state.view==="graph" && opts.focus!==false) focusNode(byId.get(id), opts.anim!==false);
+    if(location.hash.slice(1)!==id){ try{ history.replaceState(null,"","#"+id); }catch(e){ location.hash=id; } }
+    if(window.matchMedia("(max-width:860px)").matches && opts.scroll) panel.scrollIntoView({behavior:"smooth"});
+  }
+  if(id && opts.pop) openModal(id);
+  if(state.view==="list" && id){ const b=document.querySelector(`#list .item[data-id="${id}"]`); b && b.scrollIntoView({block:"nearest",behavior:"smooth"}); }
+}
+window.addEventListener("hashchange", ()=>{ const h=location.hash.slice(1); if(byId.has(h) && h!==state.sel) select(h); });
+
+/* ---------- Legend ---------- */
+const legend = document.getElementById("legend");
+legend.innerHTML = DOMAINS.map(([k,name])=>`<button class="chip" data-d="${k}" aria-pressed="false" style="--c:var(--d-${k})"><span class="dot"></span>${esc(name)}</button>`).join("");
+legend.addEventListener("click", ev=>{ const c=ev.target.closest(".chip"); if(!c) return; state.dom = state.dom===c.dataset.d?null:c.dataset.d; state.sel=null; renderPanel(); applyHighlight(); });
+
+/* ---------- Search ---------- */
+const q = document.getElementById("q"), qres = document.getElementById("qres"); let hits=[], kb=0;
+function runSearch(){
+  const s = q.value.trim().toLowerCase(); if(!s){ qres.hidden=true; return; }
+  hits = nodes.map(n=>{ const l=n.label.toLowerCase(); const sc = l.startsWith(s)?0 : l.includes(s)?1 : n.desc.toLowerCase().includes(s)?2 : 9; return [sc,n]; })
+    .filter(([sc])=>sc<9).sort((a,b)=>a[0]-b[0]||a[1].lv-b[1].lv).slice(0,9).map(x=>x[1]);
+  kb=0;
+  qres.innerHTML = hits.length? hits.map((n,i)=>`<li><button data-id="${n.id}" class="${i===kb?"kb":""}" style="--c:var(--d-${n.d})"><span class="dot"></span><span>${esc(n.label)}</span><small style="margin-left:auto;color:var(--muted)">L${n.lv}</small></button></li>`).join("")
+    : `<li style="padding:8px;color:var(--muted)">No topic matches “${esc(q.value)}”.</li>`;
+  qres.hidden=false;
+}
+q.addEventListener("input", runSearch);
+q.addEventListener("keydown", ev=>{
+  if(qres.hidden||!hits.length) return;
+  if(ev.key==="ArrowDown"||ev.key==="ArrowUp"){ ev.preventDefault(); kb=(kb+(ev.key==="ArrowDown"?1:-1)+hits.length)%hits.length; qres.querySelectorAll("button").forEach((b,i)=>b.classList.toggle("kb",i===kb)); }
+  if(ev.key==="Enter"){ ev.preventDefault(); pick(hits[kb].id); }
+  if(ev.key==="Escape"){ qres.hidden=true; }
+});
+qres.addEventListener("click", ev=>{ const b=ev.target.closest("[data-id]"); if(b) pick(b.dataset.id); });
+document.addEventListener("click", ev=>{ if(!ev.target.closest(".search")) qres.hidden=true; });
+function pick(id){ qres.hidden=true; q.value=""; select(id,{pop:true}); }
+
+/* ---------- Views & zoom buttons ---------- */
+function setView(v){
+  state.view=v; document.getElementById("vGraph").setAttribute("aria-pressed",v==="graph"); document.getElementById("vList").setAttribute("aria-pressed",v==="list");
+  document.getElementById("map").style.display = v==="graph"?"block":"none";
+  document.getElementById("list").hidden = v!=="list";
+  document.getElementById("zoombtns").hidden = v!=="graph"; document.getElementById("hint").hidden = v!=="graph";
+  if(v==="graph" && state.sel) focusNode(byId.get(state.sel), false);
+  try{ localStorage.setItem("atlas-view", v); }catch(e){}
+}
+document.getElementById("vGraph").onclick=()=>setView("graph");
+document.getElementById("vList").onclick=()=>setView("list");
+document.getElementById("zin").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1.3);
+document.getElementById("zout").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1/1.3);
+document.getElementById("zfit").onclick=()=>fit();
+
+/* ---------- Android bridge ---------- */
+function shareTopic(id){
+  const n=byId.get(id); if(!n||!window.AtlasNative) return;
+  const r=resourcesFor(n); const subs=(SYL[id]||"").split(";").map(x=>x.trim()).filter(Boolean);
+  const text=[`${n.label} (Level ${n.lv}, ${dName[n.d]})`,n.desc,"","Topics to cover:",...subs.map((x,i)=>`${i+1}. ${x}`),"","Resources:",...[...r.learn,...r.papers].map(x=>`• ${x.t}: ${x.u}`)].join("\n");
+  window.AtlasNative.share(n.label, text);
+}
+// Called by the app's Back button. Returns true when the page handled it.
+window.atlasBack = function(){
+  if(!modal.hidden){ closeModal(); return true; }
+  if(!qres.hidden){ qres.hidden=true; return true; }
+  if(state.view==="list"){ setView("graph"); return true; }
+  return false;
+};
+
+/* ---------- Boot ---------- */
+function start(){
+  renderGraph(); renderList();
+  const h = location.hash.slice(1); const first = byId.has(h)? h : "transformer";
+  let v="graph"; try{ v = localStorage.getItem("atlas-view")||"graph"; }catch(e){}
+  setView(v==="list"?"list":"graph");
+  const r=svg.node().getBoundingClientRect(); svg.call(zoom.transform, d3.zoomIdentity.translate(r.width/2,r.height/2).scale(.7));
+  select(first,{anim:false});
+}
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start, start);
+</script>
+</body>
+</html>

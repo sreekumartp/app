@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AI &amp; ML Atlas</string>
+    <string name="share_title">Share topic</string>
+    <string name="no_browser">No app found to open this link.</string>
+</resources>

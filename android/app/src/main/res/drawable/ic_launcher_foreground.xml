@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A small left-to-right knowledge graph: foundations feeding into a frontier node. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:strokeColor="#7F9BE0" android:strokeWidth="2.6" android:strokeLineCap="round"
+        android:pathData="M36,40 C46,40 46,50 54,50 M36,54 L54,50 M36,68 C46,68 46,58 54,58 M54,50 C64,50 64,46 72,46 M54,58 C64,58 64,62 72,62 M54,50 L54,58" />
+    <path android:fillColor="#86A7FF" android:pathData="M36,40m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+    <path android:fillColor="#6CCB7E" android:pathData="M36,54m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+    <path android:fillColor="#B596FF" android:pathData="M36,68m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+    <path android:fillColor="#FF9F55" android:pathData="M54,50m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+    <path android:fillColor="#4FD0DA" android:pathData="M54,58m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+    <path android:fillColor="#FF85AE" android:pathData="M72,46m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+    <path android:fillColor="#FFFFFF" android:pathData="M72,62m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+</vector>

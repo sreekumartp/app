@@ -1,0 +1,52 @@
+# AI & ML Atlas for Android
+
+An offline Android app for the AI & ML Knowledge Atlas: 227 topics in eight levels, from arithmetic to
+2024–26 frontier research, with prerequisite paths, a syllabus and learning resources for every topic.
+
+## What the app does
+
+- **Works offline.** The atlas page, d3 and the fonts ship inside the APK. Only the external learning
+  resources need a connection.
+- **Opens resources in Chrome Custom Tabs**, so reading a paper or course page and coming back is quick.
+- **Back button** closes the topic popup, the search list or the Curriculum view before leaving the app.
+- **Share** on any topic sends its syllabus and resource links to any app.
+- **Remembers progress.** Ticked subtopics persist between launches.
+- **Follows the system theme** (light/dark) and font size, and draws edge to edge on Android 15.
+
+Requires Android 8.0 (API 26) or newer.
+
+## Build locally
+
+You need JDK 17+ and the Android SDK (platform 35). Point Gradle at the SDK with `ANDROID_HOME` or a
+`local.properties` file containing `sdk.dir=/path/to/Android/Sdk`, then:
+
+```sh
+cd android
+./gradlew assembleDebug          # app/build/outputs/apk/debug/app-debug.apk
+./gradlew installDebug           # install on a connected device or emulator
+```
+
+Or open the `android/` folder in Android Studio and press Run.
+
+`assembleRelease` produces a minified APK. It is signed with the debug key so it installs right away;
+add your own signing config in `app/build.gradle.kts` before publishing to Google Play.
+
+## CI
+
+`.github/workflows/android-atlas.yml` builds both APKs and runs lint on every push that touches
+`android/`. Download the APKs from the run's **Artifacts** section (`aiml-atlas-apks`).
+
+## Project layout
+
+```
+android/
+├── app/src/main/assets/        index.html (the atlas), d3.min.js, fonts/
+├── app/src/main/java/.../      MainActivity.kt (WebView host), AtlasBridge.kt (share)
+└── app/src/main/res/           theme, colours, adaptive launcher icon
+```
+
+To update the content, edit `app/src/main/assets/index.html`. Topics live in the `RAW` array, their
+syllabi in `SYL`, and resources in `LIB` and `RES`.
+
+Third-party: d3 (ISC, see `assets/d3-LICENSE.txt`); Instrument Sans, Bricolage Grotesque and JetBrains
+Mono (SIL Open Font License, see `assets/fonts/OFL-*.txt`).
