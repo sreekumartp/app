@@ -11,7 +11,9 @@ An offline Android app for the AI & ML Knowledge Atlas: 227 topics in eight leve
 - **Back button** closes the topic popup, the search list or the Curriculum view before leaving the app.
 - **Share** on any topic sends its syllabus and resource links to any app.
 - **K.I.S.S. ladder.** Every topic and level spells out Information (aware), Knowledge (can teach it),
-  Skill (can build with it) and Success (earns money). Mark your rung per topic; the overview shows your
+  Skill (can build with it) and Success (others recognise, use or build on it). Success comes in six
+  forms: SME recognition, paper or talk, new technique, adoption, influence and money. Each topic shows
+  its natural forms, and you can pick your own success goal in the header. Mark your rung per topic; the overview shows your
   funnel against the 99 / 0.5 / 0.4 / 0.1 baseline and suggests what to convert next.
 - **Remembers progress.** Ticked subtopics and your ladder rungs persist between launches.
 - **Follows the system theme** (light/dark) and font size, and draws edge to edge on Android 15.

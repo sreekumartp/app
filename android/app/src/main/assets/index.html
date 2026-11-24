@@ -149,6 +149,15 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .rung.reached{background:color-mix(in srgb,var(--c) 10%,var(--surface));border-color:color-mix(in srgb,var(--c) 50%,var(--line))}
 .rung.reached .rk2{background:var(--c);color:var(--on-c)}
 .rung.current{border-color:var(--c);border-width:2px;padding:9px 11px}
+.sform{display:inline-block;margin-right:6px;padding:1px 7px;border-radius:999px;background:var(--surface-2);font-size:.72rem;font-weight:600}
+.forms{margin-top:6px;font-size:.84rem}
+.forms summary{cursor:pointer;color:var(--fg);font-weight:500;padding:4px 0}
+.natline{margin:6px 0 8px;color:var(--muted)}
+.forms ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.forms li{display:grid;grid-template-columns:130px minmax(0,1fr);gap:10px;padding:7px 10px;border-radius:6px;background:var(--surface-2);opacity:.75}
+.forms li.fit{opacity:1;background:color-mix(in srgb,var(--c) 12%,var(--surface))}
+.goalsel{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font:inherit;max-width:min(260px,80vw)}
+@media (max-width:700px){.forms li{grid-template-columns:1fr;gap:2px}}
 .ladclear{align-self:flex-start;border:0;background:none;color:var(--muted);font-size:.78rem;text-decoration:underline;cursor:pointer;padding:2px 0}
 .stg{font-family:var(--font-mono);font-size:.62rem;font-weight:700;padding:0 5px;border-radius:4px;background:var(--fg);color:var(--bg);margin-left:2px}
 .item.sel .stg{background:var(--on-c);color:var(--c)}
@@ -234,6 +243,15 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
           <input id="q" type="search" placeholder="Search topics, e.g. attention" autocomplete="off" aria-label="Search topics">
           <ul id="qres" hidden></ul>
         </div>
+        <select id="goalSel" class="goalsel" aria-label="What success means to you">
+          <option value="">Success: natural for each topic</option>
+          <option value="sme">Success: SME recognition</option>
+          <option value="paper">Success: paper or talk</option>
+          <option value="technique">Success: new technique</option>
+          <option value="adoption">Success: adoption</option>
+          <option value="influence">Success: influence</option>
+          <option value="money">Success: money</option>
+        </select>
         <div class="seg" role="group" aria-label="View">
           <button id="vGraph" aria-pressed="true">Map</button>
           <button id="vList" aria-pressed="false">Curriculum</button>
@@ -1109,18 +1127,18 @@ const KISS_STAGES = [
   {k:"i", name:"Information", verb:"Aware", def:"You know it exists, what it is for, and where it sits in the map.", base:99},
   {k:"k", name:"Knowledge", verb:"Can teach", def:"You can teach it or hold a technical conversation about it without notes.", base:0.5},
   {k:"s", name:"Skill", verb:"Can build", def:"You can build or create something real with it.", base:0.4},
-  {k:"$", name:"Success", verb:"Earns money", def:"It earns you money: a salary, a contract, a product or a paid service.", base:0.1}
+  {k:"$", name:"Success", verb:"Recognised or used", def:"Others recognise, use or build on it: SME status, a paper, a new technique, adoption, influence or money.", base:0.1}
 ];
 // Per level: what each rung means for the whole band of the curriculum.
 const LEVEL_KISS = [
-  ["You recognise numbers, operations, logs and floats when they appear in ML papers and code.","You can explain why logs turn products into sums and why floating-point precision matters, to a beginner.","You can compute, estimate and sanity-check quantities by hand and in code without a calculator mindset.","Paid tutoring, exam coaching and fast, correct back-of-envelope estimates in analyst work."],
-  ["You know what derivatives, matrices, probability and Bayes' rule are for.","You can teach the chain rule, matrix multiplication and conditional probability with worked examples.","You can implement these from scratch in Python and solve applied problems with them.","Tutoring, math content, and passing the quantitative screens for data and engineering jobs."],
-  ["You can read gradients, SVD, KL divergence and MLE in a paper without stalling.","You can derive gradient descent, MLE and cross-entropy at a whiteboard and defend each step.","You can write vectorised NumPy, a mini autograd and data pipelines that are numerically stable.","Clearing ML/quant interview rounds, data-engineering roles and technical writing."],
-  ["You know the classic model families and which problem each one fits.","You can explain bias–variance, regularisation, validation and metrics to a stakeholder or a junior.","You can ship a validated, tuned model on real tabular, text or time-series data.","Data scientist and analyst roles, freelance analytics and consulting on tabular ML."],
-  ["You know how neural nets train and what CNNs, RNNs, VAEs, GANs and RL agents are.","You can teach backprop, optimisers and normalisation, and debug a training run in conversation.","You can train, debug and fine-tune deep models in PyTorch or JAX on GPUs.","ML engineer and computer-vision roles, and paid model-building contracts."],
-  ["You know how Transformers, diffusion, ViT/CLIP, MoE and scaling laws fit together.","You can whiteboard attention, diffusion and scaling laws and critique architecture choices.","You can implement a Transformer or diffusion model and train or fine-tune one at modest scale.","Applied scientist and research engineer roles, and premium consulting on modern architectures."],
-  ["You know the LLM lifecycle: pretraining, SFT, RLHF, RAG, tool use, serving and safety.","You can explain post-training, RAG trade-offs and serving costs to engineers and buyers.","You can fine-tune, evaluate, serve and harden LLM applications end to end.","LLM engineer roles, AI product building, and RAG or fine-tuning services for businesses."],
-  ["You follow reasoning models, agents, new architectures and safety research as they land.","You can discuss frontier papers critically and explain trade-offs to a technical audience.","You can build agents, RL-tuned reasoning pipelines or interpretability tools that work.","Founding AI products, frontier-lab and AI-safety roles, and high-value advisory work."]
+  ["You recognise numbers, operations, logs and floats when they appear in ML papers and code.","You can explain why logs turn products into sums and why floating-point precision matters, to a beginner.","You can compute, estimate and sanity-check quantities by hand and in code without a calculator mindset.","Influence: you become the person who explains these clearly, and your notes or tutorials are what others learn from."],
+  ["You know what derivatives, matrices, probability and Bayes' rule are for.","You can teach the chain rule, matrix multiplication and conditional probability with worked examples.","You can implement these from scratch in Python and solve applied problems with them.","Influence and SME recognition: peers come to you for the math behind models, and your explanations get shared."],
+  ["You can read gradients, SVD, KL divergence and MLE in a paper without stalling.","You can derive gradient descent, MLE and cross-entropy at a whiteboard and defend each step.","You can write vectorised NumPy, a mini autograd and data pipelines that are numerically stable.","SME recognition: you are the one asked to debug numerical issues and review derivations; your explanations get cited."],
+  ["You know the classic model families and which problem each one fits.","You can explain bias–variance, regularisation, validation and metrics to a stakeholder or a junior.","You can ship a validated, tuned model on real tabular, text or time-series data.","Adoption and domain SME: your models drive real decisions and you are recognised as the ML expert in your domain."],
+  ["You know how neural nets train and what CNNs, RNNs, VAEs, GANs and RL agents are.","You can teach backprop, optimisers and normalisation, and debug a training run in conversation.","You can train, debug and fine-tune deep models in PyTorch or JAX on GPUs.","Adoption: your models, notebooks or open-source contributions are used by others; competition rankings and medals."],
+  ["You know how Transformers, diffusion, ViT/CLIP, MoE and scaling laws fit together.","You can whiteboard attention, diffusion and scaling laws and critique architecture choices.","You can implement a Transformer or diffusion model and train or fine-tune one at modest scale.","Papers and techniques: workshop or conference papers, new variants and careful reproductions that others cite."],
+  ["You know the LLM lifecycle: pretraining, SFT, RLHF, RAG, tool use, serving and safety.","You can explain post-training, RAG trade-offs and serving costs to engineers and buyers.","You can fine-tune, evaluate, serve and harden LLM applications end to end.","Adoption and papers: LLM systems people rely on, open-source tools, and talks or write-ups that others reference."],
+  ["You follow reasoning models, agents, new architectures and safety research as they land.","You can discuss frontier papers critically and explain trade-offs to a technical audience.","You can build agents, RL-tuned reasoning pipelines or interpretability tools that work.","New techniques and papers: methods, evals or agents others adopt, and a recognised voice on frontier topics."]
 ];
 // Per topic: "Skill (build it) | Success (earn from it)".
 const KISS = {
@@ -1352,6 +1370,49 @@ scalableov:"Run a weak-to-strong or debate experiment|Alignment research roles",
 agentsafety:"Sandbox an agent and test it against prompt injection|AI-security engineering",
 frontierevals:"Design a dangerous-capability eval with graded tasks|Evals roles at labs and AI safety institutes"
 };
+const STAGE_LETTER = {i:"I",k:"K",s:"S","$":"★"};
+const SUCCESS_FORMS = [
+  {k:"sme", name:"SME recognition", def:"People seek you out as the expert; you are asked to review, advise or speak.",
+   tpl:(n)=>`Colleagues bring you their ${n.label} problems, and you are asked to review, advise or speak on it.`},
+  {k:"paper", name:"Paper or talk", def:"You publish or present something that adds to the field.",
+   tpl:(n)=>`Present a paper, workshop talk or widely cited write-up that adds something new on ${n.label}.`},
+  {k:"technique", name:"New technique", def:"You create a method, dataset or benchmark that others reuse by name.",
+   tpl:(n)=>`Create a new method, variant, dataset or benchmark for ${n.label} that others reuse.`},
+  {k:"adoption", name:"Adoption", def:"Something you built is used by others.",
+   tpl:(n,b)=>`Something you built with it is used by real users, teams or the open-source community, for example: ${b.charAt(0).toLowerCase()+b.slice(1)}.`},
+  {k:"influence", name:"Influence", def:"You shape how others learn, work or govern.",
+   tpl:(n)=> n.d==="safe" ? `Your eval, standard or policy work on ${n.label} is adopted by labs, companies or regulators.` : `Your tutorial, course or explanation of ${n.label} is what others learn from.`},
+  {k:"money", name:"Money", def:"Salary, promotion, contracts or revenue.",
+   tpl:(n,b,e)=>`${e}.`}
+];
+const FORM = Object.fromEntries(SUCCESS_FORMS.map(f=>[f.k,f]));
+const FORM_OVERRIDE = {
+  programming:["sme","adoption"], dataeng:["adoption","sme"], viz:["influence","adoption"], mlworkflow:["sme","adoption"],
+  datacuration:["adoption","technique"], llmevals:["technique","influence"], mcp:["adoption","influence"],
+  codingagents:["adoption","technique"], fairness:["influence","sme"], causal:["sme","paper"], learnth:["paper","influence"],
+  dlth:["paper","technique"], scaling:["paper","influence"], boosting:["adoption","sme"], rag:["adoption","influence"]
+};
+// The forms of success that come naturally for a topic, from its band, domain and position in the map.
+function naturalForms(n){
+  if(FORM_OVERRIDE[n.id]) return FORM_OVERRIDE[n.id];
+  const d=n.d, lv=n.lv, leaf=!n.kids.length;
+  if(d==="safe") return ["influence","paper"];
+  if(lv<=2) return d==="sys" ? ["sme","influence"] : ["influence","sme"];
+  if(d==="sys") return ["sme","adoption"];
+  if(d==="agent") return ["adoption","technique"];
+  if(lv<=4) return (d==="rl"||d==="gen") ? ["adoption","paper"] : ["adoption","sme"];
+  if(lv===5) return ["paper","technique"];
+  if(lv===6) return (d==="llm"||d==="cv"||d==="nlp") ? ["adoption","paper"] : ["paper","technique"];
+  return leaf ? ["technique","paper"] : ["paper","adoption"];
+}
+function getGoal(){ try{ return localStorage.getItem("atlas-goal")||""; }catch(e){ return ""; } }
+function setGoal(v){ try{ v?localStorage.setItem("atlas-goal",v):localStorage.removeItem("atlas-goal"); }catch(e){} }
+function successFor(n, formKey){
+  const [build,earn]=(KISS[n.id]||"|").split("|");
+  const nat=naturalForms(n), g=getGoal();
+  const k = formKey || (g && FORM[g] ? g : nat[0]);
+  return {k, name:FORM[k].name, text:FORM[k].tpl(n,build,earn), natural:nat, fits:nat.includes(k)};
+}
 function kissFor(n){
   const subs=(SYL[n.id]||"").split(";").map(s=>s.trim()).filter(Boolean);
   const [build,earn]=(KISS[n.id]||"|").split("|");
@@ -1360,7 +1421,7 @@ function kissFor(n){
     `Know what it is and why it matters: ${first}`,
     `Explain without notes: ${subs.slice(0,3).join(", ")}${subs.length>3?", "+subs.slice(3,-1).join(", ")+(subs.length>4?",":"")+" and "+subs[subs.length-1]:""}${n.f?`. Walk through: ${n.f}`:""}.`,
     `${build}.`,
-    `${earn}.`
+    successFor(n).text
   ];
 }
 const stageKey = id => "atlas-stage-" + id;
@@ -1451,7 +1512,7 @@ function renderList(){
   el.innerHTML = LEVELS.map(([name,blurb],i)=>{
     const items = nodes.filter(n=>n.lv===i).sort((a,b)=>dIndex[a.d]-dIndex[b.d]||a.label.localeCompare(b.label));
     return `<section class="lvl"><div><div class="num">Level ${i} · ${items.length} topics</div><h2>${esc(name)}</h2><p>${esc(blurb)}</p></div>
-      <div style="min-width:0"><div class="lkiss">${KISS_STAGES.map((st,j)=>`<div><span class="rk2">${st.k==="$"?"$":st.k.toUpperCase()}</span><b>${st.name}</b><p>${esc(LEVEL_KISS[i][j])}</p></div>`).join("")}</div>
+      <div style="min-width:0"><div class="lkiss">${KISS_STAGES.map((st,j)=>`<div><span class="rk2">${STAGE_LETTER[st.k]}</span><b>${st.name}</b><p>${esc(LEVEL_KISS[i][j])}</p></div>`).join("")}</div>
       <div class="items">${items.map(itemHTML).join("")}</div></div></section>`;
   }).join("");
   el.addEventListener("click", ev=>{ const b=ev.target.closest("[data-id]"); if(b) select(b.dataset.id,{pop:true}); });
@@ -1507,13 +1568,14 @@ function funnelHTML(){
   const idx = nodes.map(n=>STAGE_IDX[getStage(n.id)]);
   const reached = KISS_STAGES.map((_,i)=>idx.filter(x=>x>=i).length);
   const at = KISS_STAGES.map((_,i)=>nodes.filter((n,j)=>idx[j]===i));
-  const next = i => at[i].sort((a,b)=>b.nDesc-a.nDesc).slice(0,3);
-  const verbs = ["Turn into knowledge (teach it)","Turn into skill (build it)","Turn into money (sell it)"];
+  const next = i => at[i].sort((a,b)=> (i===2&&g ? (naturalForms(b).includes(g)-naturalForms(a).includes(g)) : 0) || b.nDesc-a.nDesc).slice(0,3);
+  const g=getGoal();
+  const verbs = ["Turn into knowledge (teach it)","Turn into skill (build it)", g&&FORM[g] ? `Turn into success: ${FORM[g].name.toLowerCase()}` : "Turn into success (get it recognised or used)"];
   const anyMarked = reached[0]>0;
   return `<h3>Your K.I.S.S. funnel</h3>
-    <p class="none" style="margin-bottom:10px">Information is awareness, knowledge is being able to teach it, skill is being able to build with it, success is earning from it. A typical brain holds 99% information and 0.1% success. Push topics up the ladder.</p>
+    <p class="none" style="margin-bottom:10px">Information is awareness, knowledge is being able to teach it, skill is being able to build with it, and success is when others recognise, use or build on it. A typical brain holds 99% information and 0.1% success. Push topics up the ladder.</p>
     <div class="funnel">${KISS_STAGES.map((st,i)=>`<div class="frow">
-      <span class="fl"><span class="rk2">${st.k==="$"?"$":st.k.toUpperCase()}</span>${st.name}</span>
+      <span class="fl"><span class="rk2">${STAGE_LETTER[st.k]}</span>${i===3&&g&&FORM[g]?esc(FORM[g].name):st.name}</span>
       <span class="ftrack"><span class="fbase" style="width:${st.base}%"></span><span class="fyou" style="width:${reached[i]/nodes.length*100}%"></span></span>
       <span class="fn">${reached[i]}<small>/${nodes.length}</small></span></div>`).join("")}
     </div>
@@ -1596,19 +1658,23 @@ function ladderHTML(n){
   return `<section class="ladder" aria-label="K.I.S.S. ladder">
     <div class="ladhead"><h3>K.I.S.S. ladder for this topic</h3><span class="ladnote">Mark the highest rung you have reached</span></div>
     ${KISS_STAGES.map((st,i)=>`<button class="rung${i<=cur?" reached":""}${i===cur?" current":""}" data-stage="${st.k}" aria-pressed="${i===cur}">
-      <span class="rl"><span class="rk2">${st.k==="$"?"$":st.k.toUpperCase()}</span><span><b>${st.name}</b><small>${st.verb}</small></span></span>
-      <span class="rt2">${esc(lines[i])}</span>
+      <span class="rl"><span class="rk2">${STAGE_LETTER[st.k]}</span><span><b>${st.name}</b><small>${st.verb}</small></span></span>
+      <span class="rt2">${i===3?`<span class="sform">${esc(successFor(n).name)}${successFor(n).fits?"":" (less natural here)"}</span>`:""}${esc(lines[i])}</span>
       <span class="rb" title="Share of what sits in a typical brain">${st.base}%</span>
     </button>`).join("")}
     ${cur>=0?`<button class="ladclear" data-stage="">Clear my rung</button>`:""}
+    <details class="forms"><summary>What success looks like for this topic, in all six forms</summary>
+      <p class="natline">Natural here: ${successFor(n).natural.map(k=>`<b>${esc(FORM[k].name)}</b>`).join(" · ")}</p>
+      <ul>${SUCCESS_FORMS.map(f=>{ const x=successFor(n,f.k); return `<li class="${x.fits?"fit":""}"><b>${esc(f.name)}</b><span>${esc(x.text)}</span></li>`; }).join("")}</ul>
+    </details>
   </section>`;
 }
-function stageBadge(id){ const st=getStage(id); return st?`<span class="stg" title="${KISS_STAGES[STAGE_IDX[st]].name}">${st==="$"?"$":st.toUpperCase()}</span>`:""; }
+function stageBadge(id){ const st=getStage(id); return st?`<span class="stg" title="${KISS_STAGES[STAGE_IDX[st]].name}">${STAGE_LETTER[st]}</span>`:""; }
 function refreshStages(){
   document.querySelectorAll(".item[data-id]").forEach(b=>{ const old=b.querySelector(".stg"); if(old) old.remove(); const h=stageBadge(b.dataset.id); if(h) b.insertAdjacentHTML("beforeend",h); });
   if(nodeSel){
     nodeSel.select("circle").attr("r", n=>getStage(n.id)?6.5:3.6);
-    nodeSel.select("text.sl").text(n=>{ const st=getStage(n.id); return st ? (st==="$"?"$":st.toUpperCase()) : ""; });
+    nodeSel.select("text.sl").text(n=>{ const st=getStage(n.id); return st ? STAGE_LETTER[st] : ""; });
   }
   if(!state.sel) renderPanel();
 }
@@ -1692,6 +1758,15 @@ document.getElementById("vList").onclick=()=>setView("list");
 document.getElementById("zin").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1.3);
 document.getElementById("zout").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1/1.3);
 document.getElementById("zfit").onclick=()=>fit();
+
+/* ---------- Success goal ---------- */
+const goalSel = document.getElementById("goalSel");
+goalSel.value = getGoal();
+goalSel.addEventListener("change", ()=>{
+  setGoal(goalSel.value);
+  renderPanel();
+  if(!modal.hidden && modalId){ const top=sheet.scrollTop; const lad=sheet.querySelector(".ladder"); lad.outerHTML=ladderHTML(byId.get(modalId)); sheet.scrollTop=top; }
+});
 
 /* ---------- Android bridge ---------- */
 function shareTopic(id){
