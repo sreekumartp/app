@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">The K.I.S.S model for mastering AI</string>
+    <string name="launcher_name">K.I.S.S AI</string>
+    <string name="share_title">Share topic</string>
+    <string name="no_browser">No app found to open this link.</string>
+</resources>

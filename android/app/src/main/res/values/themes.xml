@@ -1,0 +1,8 @@
+<resources>
+    <!-- DayNight makes the WebView's prefers-color-scheme follow the system theme. -->
+    <style name="Theme.AIMLAtlas" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/atlas_ink</item>
+        <item name="colorAccent">@color/atlas_accent</item>
+        <item name="android:windowBackground">@color/atlas_bg</item>
+    </style>
+</resources>

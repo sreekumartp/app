@@ -1,0 +1,7 @@
+<resources>
+    <color name="atlas_bg">#F2F4F8</color>
+    <color name="atlas_surface">#FFFFFF</color>
+    <color name="atlas_ink">#172033</color>
+    <color name="atlas_accent">#2F5FD0</color>
+    <color name="ic_launcher_background">#172033</color>
+</resources>
