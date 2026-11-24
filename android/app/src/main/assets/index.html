@@ -160,11 +160,16 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .forms li.fit{opacity:1;background:color-mix(in srgb,var(--c) 12%,var(--surface))}
 .goalsel{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font:inherit;max-width:min(260px,80vw)}
 @media (max-width:700px){.forms li{grid-template-columns:1fr;gap:2px}}
-.mysucc{display:flex;flex-direction:column;gap:4px;margin-top:8px}
-.mysucc label{font-size:.82rem;font-weight:600}
-.mysucc textarea{width:100%;resize:vertical;min-height:52px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font:inherit;font-size:.88rem;line-height:1.4}
+.mysucc{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding:12px 14px;border:2px dashed var(--c);border-radius:10px;background:color-mix(in srgb,var(--c) 10%,var(--surface))}
+.mysucc.filled{border-style:solid;background:color-mix(in srgb,var(--c) 16%,var(--surface))}
+.mysucc label{display:flex;align-items:center;gap:8px;font-size:.92rem;font-weight:700;color:var(--fg)}
+.mysucc label .rk2{background:var(--c);color:var(--on-c)}
+.mssaved{display:none;margin-left:auto;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--c);color:var(--on-c)}
+.mysucc.filled .mssaved{display:inline-block}
+.mysucc textarea{width:100%;resize:vertical;min-height:56px;padding:9px 11px;border:1px solid color-mix(in srgb,var(--c) 45%,var(--line));border-radius:8px;background:var(--surface);color:var(--fg);font:inherit;font-size:.92rem;line-height:1.45}
 .mysucc textarea:focus{outline:2px solid var(--c);outline-offset:0;border-color:var(--c)}
-.mshint{font-size:.72rem;color:var(--muted)}
+.mshint{font-size:.74rem;color:var(--muted)}
+.sform.mine{background:var(--c);color:var(--on-c)}
 .ladclear{align-self:flex-start;border:0;background:none;color:var(--muted);font-size:.78rem;text-decoration:underline;cursor:pointer;padding:2px 0}
 .stg{font-family:var(--font-mono);font-size:.62rem;font-weight:700;padding:0 5px;border-radius:4px;background:var(--fg);color:var(--bg);margin-left:2px}
 .item.sel .stg{background:var(--on-c);color:var(--c)}
@@ -2007,13 +2012,13 @@ function ladderHTML(n){
     <div class="ladhead"><h3>K.I.S.S. ladder for this topic</h3><span class="ladnote">Mark the highest rung you have reached</span></div>
     ${KISS_STAGES.map((st,i)=>`<button class="rung${i<=cur?" reached":""}${i===cur?" current":""}" data-stage="${st.k}" aria-pressed="${i===cur}">
       <span class="rl"><span class="rk2">${STAGE_LETTER[st.k]}</span><span><b>${st.name}</b><small>${st.verb}</small></span></span>
-      <span class="rt2">${i===3?`<span class="sform">${esc(successFor(n).name)}${successFor(n).fits?"":" (less natural here)"}</span>`:""}${esc(lines[i])}</span>
+      <span class="rt2">${i===3?`<span class="sform${successFor(n).custom?" mine":""}">${esc(successFor(n).name)}${successFor(n).fits?"":" (less natural here)"}</span>`:""}${esc(lines[i])}</span>
       <span class="rb" title="Share of what sits in a typical brain">${st.base}%</span>
     </button>`).join("")}
     ${cur>=0?`<button class="ladclear" data-stage="">Clear my rung</button>`:""}
-    <div class="mysucc">
-      <label for="ms-${n.id}">My definition of success for this topic</label>
-      <textarea id="ms-${n.id}" data-mysucc rows="2" maxlength="500" placeholder="For example: present our results at the team all-hands, or get a pull request merged upstream">${esc(getMySucc(n.id))}</textarea>
+    <div class="mysucc${getMySucc(n.id).trim()?" filled":""}">
+      <label for="ms-${n.id}"><span class="rk2">★</span>My definition of success for this topic<span class="mssaved">Saved</span></label>
+      <textarea id="ms-${n.id}" data-mysucc rows="3" maxlength="500" placeholder="For example: present our results at the team all-hands, or get a pull request merged upstream">${esc(getMySucc(n.id))}</textarea>
       <span class="mshint">Saved on this device. When filled in, it replaces the suggestion on the Success rung.</span>
     </div>
     <details class="forms"><summary>What success looks like for this topic, in all six forms</summary>
@@ -2040,7 +2045,8 @@ sheet.addEventListener("input", ev=>{
   if(!ev.target.matches("[data-mysucc]")) return;
   setMySucc(modalId, ev.target.value);
   const n=byId.get(modalId), sf=successFor(n), t=sheet.querySelector('.rung[data-stage="$"] .rt2');
-  if(t) t.innerHTML = `<span class="sform">${esc(sf.name)}${sf.fits?"":" (less natural here)"}</span>${esc(sf.text)}`;
+  ev.target.closest(".mysucc").classList.toggle("filled", !!sf.custom);
+  if(t) t.innerHTML = `<span class="sform${sf.custom?" mine":""}">${esc(sf.name)}${sf.fits?"":" (less natural here)"}</span>${esc(sf.text)}`;
 });
 sheet.addEventListener("change", ev=>{
   if(!ev.target.matches(".subs input")) return;
