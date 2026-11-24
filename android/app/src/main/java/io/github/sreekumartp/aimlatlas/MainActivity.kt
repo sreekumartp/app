@@ -10,6 +10,8 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -39,15 +41,25 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        // A WebView ignores its own padding when laying out web content, so the
+        // system-bar insets go on a container around it. Otherwise the page's
+        // bottom menu sits under the navigation bar.
         webView = WebView(this)
-        setContentView(webView)
+        val root = FrameLayout(this).apply {
+            setBackgroundColor(getColor(R.color.atlas_surface))
+            addView(webView, FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        }
+        setContentView(root)
 
-        // Keep page content clear of the status bar, navigation bar and display cutouts.
-        ViewCompat.setOnApplyWindowInsetsListener(webView) { view, insets ->
+        // Keep page content clear of the status bar, navigation bar, display
+        // cutouts and the on-screen keyboard.
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val bars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
             )
-            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            view.setPadding(bars.left, bars.top, bars.right, maxOf(bars.bottom, ime.bottom))
             WindowInsetsCompat.CONSUMED
         }
 
