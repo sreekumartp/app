@@ -10,7 +10,10 @@ An offline Android app for the AI & ML Knowledge Atlas: 227 topics in eight leve
 - **Opens resources in Chrome Custom Tabs**, so reading a paper or course page and coming back is quick.
 - **Back button** closes the topic popup, the search list or the Curriculum view before leaving the app.
 - **Share** on any topic sends its syllabus and resource links to any app.
-- **Remembers progress.** Ticked subtopics persist between launches.
+- **K.I.S.S. ladder.** Every topic and level spells out Information (aware), Knowledge (can teach it),
+  Skill (can build with it) and Success (earns money). Mark your rung per topic; the overview shows your
+  funnel against the 99 / 0.5 / 0.4 / 0.1 baseline and suggests what to convert next.
+- **Remembers progress.** Ticked subtopics and your ladder rungs persist between launches.
 - **Follows the system theme** (light/dark) and font size, and draws edge to edge on Android 15.
 
 Requires Android 8.0 (API 26) or newer.
@@ -45,8 +48,9 @@ android/
 └── app/src/main/res/           theme, colours, adaptive launcher icon
 ```
 
-To update the content, edit `app/src/main/assets/index.html`. Topics live in the `RAW` array, their
-syllabi in `SYL`, and resources in `LIB` and `RES`.
+To update the content, edit the web atlas and regenerate the app page with
+`python3 tools/build_app_page.py <atlas.html> app/src/main/assets/index.html`. Topics live in the `RAW` array, their
+syllabi in `SYL`, resources in `LIB` and `RES`, and the ladder in `KISS` and `LEVEL_KISS`.
 
 Third-party: d3 (ISC, see `assets/d3-LICENSE.txt`); Instrument Sans, Bricolage Grotesque and JetBrains
 Mono (SIL Open Font License, see `assets/fonts/OFL-*.txt`).

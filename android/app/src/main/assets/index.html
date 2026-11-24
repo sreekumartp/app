@@ -83,11 +83,13 @@ main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 390px}
 .node rect{fill:var(--surface);stroke:color-mix(in srgb,var(--c) 40%,var(--line));stroke-width:1}
 .node circle{fill:var(--c)}
 .node text{font-family:var(--font-body);font-size:11.5px;font-weight:500;fill:var(--fg)}
+.node text.sl{font-family:var(--font-mono);font-size:8px;font-weight:700;fill:var(--surface);pointer-events:none}
+.node.sel text.sl{fill:var(--c)}
 .node:hover rect,.node:focus-visible rect{stroke:var(--c);stroke-width:2}
 .node:focus{outline:none}
 .node.on rect{fill:color-mix(in srgb,var(--c) 18%,var(--surface));stroke:var(--c)}
 .node.sel rect{fill:var(--c);stroke:var(--c);stroke-width:2}
-.node.sel text{fill:var(--on-c);font-weight:600}
+.node.sel text.lbl{fill:var(--on-c);font-weight:600}
 .node.sel circle{fill:var(--on-c)}
 .node.dim{opacity:.16}
 /* Curriculum */
@@ -131,9 +133,46 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .howto{margin:0;padding-left:18px;font-size:.88rem}
 .howto li{margin-bottom:4px}
 .foot{margin-top:24px;font-size:.75rem;color:var(--muted)}
+/* K.I.S.S. */
+.rk2{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:5px;background:var(--fg);color:var(--bg);font-family:var(--font-mono);font-size:.7rem;font-weight:600;flex:none}
+.ladder{display:flex;flex-direction:column;gap:6px;margin-top:20px}
+.ladhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px}
+.ladhead h3{margin:0}
+.ladnote{font-size:.75rem;color:var(--muted)}
+.rung{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:12px;align-items:start;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer}
+.rung:hover{border-color:var(--c)}
+.rung .rl{display:flex;gap:8px;align-items:flex-start}
+.rung .rl b{display:block;font-size:.88rem}
+.rung .rl small{display:block;font-size:.72rem;color:var(--muted)}
+.rung .rt2{font-size:.86rem;line-height:1.45}
+.rung .rb{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.rung.reached{background:color-mix(in srgb,var(--c) 10%,var(--surface));border-color:color-mix(in srgb,var(--c) 50%,var(--line))}
+.rung.reached .rk2{background:var(--c);color:var(--on-c)}
+.rung.current{border-color:var(--c);border-width:2px;padding:9px 11px}
+.ladclear{align-self:flex-start;border:0;background:none;color:var(--muted);font-size:.78rem;text-decoration:underline;cursor:pointer;padding:2px 0}
+.stg{font-family:var(--font-mono);font-size:.62rem;font-weight:700;padding:0 5px;border-radius:4px;background:var(--fg);color:var(--bg);margin-left:2px}
+.item.sel .stg{background:var(--on-c);color:var(--c)}
+.funnel{display:flex;flex-direction:column;gap:8px}
+.frow{display:grid;grid-template-columns:118px minmax(0,1fr) 54px;gap:10px;align-items:center;font-size:.82rem}
+.fl{display:flex;align-items:center;gap:6px}
+.ftrack{position:relative;height:14px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.fbase{position:absolute;left:0;top:0;height:5px;background:var(--muted);opacity:.55;min-width:2px}
+.fyou{position:absolute;left:0;bottom:0;height:9px;background:var(--accent);min-width:0;border-radius:0 3px 3px 0}
+.fn{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.fn small{color:var(--muted);font-weight:400}
+.flegend{display:flex;gap:14px;margin-top:8px;font-size:.72rem;color:var(--muted)}
+.flegend i{display:inline-block;width:10px;height:6px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.flegend .fb{background:var(--muted);opacity:.55}.flegend .fy{background:var(--accent)}
+.lkiss{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.lkiss div{background:var(--surface-2);border-radius:8px;padding:8px 10px;font-size:.78rem}
+.lkiss b{margin-left:6px;font-size:.8rem}
+.lkiss p{margin:6px 0 0;color:var(--fg);font-size:.78rem;line-height:1.4}
+@media (max-width:1100px){.lkiss{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.rung{grid-template-columns:minmax(0,1fr) auto}.rung .rt2{grid-column:1/-1;grid-row:2}.lkiss{grid-template-columns:1fr}}
 .openbtn{margin-top:14px;width:100%;padding:9px 12px;border:1px solid var(--fg);border-radius:8px;background:var(--fg);color:var(--bg);font-weight:600;cursor:pointer}
 /* Popup */
 .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(8,12,24,.5);padding-block:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.modal[hidden]{display:none}
 .sheet{position:relative;width:100%;max-width:860px;max-height:100%;overflow:auto;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 60px rgba(8,12,24,.35);padding:22px 24px 26px}
 .sheet h2{font-family:var(--font-display);font-size:1.7rem;line-height:1.15;margin:6px 40px 6px 0;text-wrap:balance}
 .sheet .meta{padding-right:44px}
@@ -1065,6 +1104,269 @@ function resourcesFor(n){
   return {learn: out.filter(r=>r.type!=="paper"), papers: out.filter(r=>r.type==="paper"), search};
 }
 
+/* ---------- K.I.S.S. ladder: Information → Knowledge → Skill → Success ($) ---------- */
+const KISS_STAGES = [
+  {k:"i", name:"Information", verb:"Aware", def:"You know it exists, what it is for, and where it sits in the map.", base:99},
+  {k:"k", name:"Knowledge", verb:"Can teach", def:"You can teach it or hold a technical conversation about it without notes.", base:0.5},
+  {k:"s", name:"Skill", verb:"Can build", def:"You can build or create something real with it.", base:0.4},
+  {k:"$", name:"Success", verb:"Earns money", def:"It earns you money: a salary, a contract, a product or a paid service.", base:0.1}
+];
+// Per level: what each rung means for the whole band of the curriculum.
+const LEVEL_KISS = [
+  ["You recognise numbers, operations, logs and floats when they appear in ML papers and code.","You can explain why logs turn products into sums and why floating-point precision matters, to a beginner.","You can compute, estimate and sanity-check quantities by hand and in code without a calculator mindset.","Paid tutoring, exam coaching and fast, correct back-of-envelope estimates in analyst work."],
+  ["You know what derivatives, matrices, probability and Bayes' rule are for.","You can teach the chain rule, matrix multiplication and conditional probability with worked examples.","You can implement these from scratch in Python and solve applied problems with them.","Tutoring, math content, and passing the quantitative screens for data and engineering jobs."],
+  ["You can read gradients, SVD, KL divergence and MLE in a paper without stalling.","You can derive gradient descent, MLE and cross-entropy at a whiteboard and defend each step.","You can write vectorised NumPy, a mini autograd and data pipelines that are numerically stable.","Clearing ML/quant interview rounds, data-engineering roles and technical writing."],
+  ["You know the classic model families and which problem each one fits.","You can explain bias–variance, regularisation, validation and metrics to a stakeholder or a junior.","You can ship a validated, tuned model on real tabular, text or time-series data.","Data scientist and analyst roles, freelance analytics and consulting on tabular ML."],
+  ["You know how neural nets train and what CNNs, RNNs, VAEs, GANs and RL agents are.","You can teach backprop, optimisers and normalisation, and debug a training run in conversation.","You can train, debug and fine-tune deep models in PyTorch or JAX on GPUs.","ML engineer and computer-vision roles, and paid model-building contracts."],
+  ["You know how Transformers, diffusion, ViT/CLIP, MoE and scaling laws fit together.","You can whiteboard attention, diffusion and scaling laws and critique architecture choices.","You can implement a Transformer or diffusion model and train or fine-tune one at modest scale.","Applied scientist and research engineer roles, and premium consulting on modern architectures."],
+  ["You know the LLM lifecycle: pretraining, SFT, RLHF, RAG, tool use, serving and safety.","You can explain post-training, RAG trade-offs and serving costs to engineers and buyers.","You can fine-tune, evaluate, serve and harden LLM applications end to end.","LLM engineer roles, AI product building, and RAG or fine-tuning services for businesses."],
+  ["You follow reasoning models, agents, new architectures and safety research as they land.","You can discuss frontier papers critically and explain trade-offs to a technical audience.","You can build agents, RL-tuned reasoning pipelines or interpretability tools that work.","Founding AI products, frontier-lab and AI-safety roles, and high-value advisory work."]
+];
+// Per topic: "Skill (build it) | Success (earn from it)".
+const KISS = {
+numbers:"Write a converter between decimal, binary and hex, including negatives|Tutor number sense; it is also the basis of every paid quantitative task",
+arith:"Do multi-step calculations mentally and check results in a script|Tutoring and fast, accurate estimates in analyst and pricing work",
+fractions:"Build a percent-change and discount calculator for real prices|Retail, finance and analyst work runs on percentages; tutor it",
+exponents:"Model compound growth and decay in a spreadsheet|Financial modelling and growth forecasting for clients",
+logs:"Plot data on log scales and compute log-probabilities in code|Read scaling and finance charts correctly in analyst and ML roles",
+ratios:"Build a unit-conversion and weighted-average tool|Pricing, budgeting and operations analysis work",
+sets:"Write proofs by induction and Boolean logic in code|Passes CS and algorithm interview screens",
+binary:"Show float rounding errors and convert FP32 to BF16 in NumPy|Debugging numeric bugs and precision tuning in ML infra roles",
+sumnot:"Translate any Σ formula from a paper into vectorised code|Faster paper-to-code turnaround in paid ML work",
+counting:"Simulate and count outcomes for a card or dice game|Probability interview questions in quant and data jobs",
+coord:"Plot a dataset and fit a line by hand|Basic charting and analysis for reports",
+trig:"Implement 2D rotations and a sinusoidal position encoding|Graphics, signal and position-encoding work",
+algebra:"Solve and rearrange model formulas symbolically with SymPy|Clears quantitative aptitude tests for jobs",
+functions:"Build an interactive function plotter with composition|Tutoring and teaching content",
+polynomials:"Fit polynomials of rising degree and show overfitting|Curve-fitting and calibration jobs in engineering",
+seqseries:"Approximate exp and sin with Taylor series in code|Numerical and finance modelling (discounting, annuities)",
+limits:"Explore limits numerically in a notebook|Tutoring calculus",
+deriv:"Write numerical and analytic derivatives and compare them|Calculus tutoring; an optimisation prerequisite for paid ML work",
+chainrule:"Hand-derive gradients for a 3-layer composite function|Required in ML interview whiteboard rounds",
+integrals:"Compute areas under PDFs numerically and analytically|Probability, actuarial and engineering analysis",
+vectors:"Implement cosine-similarity search over word vectors|Semantic search features for clients",
+matrices:"Write matrix multiply from scratch, then compare with NumPy|Clears ML and graphics interviews; the core of every model job",
+lineq:"Solve least squares with elimination and np.linalg|Regression and calibration consulting",
+probbasics:"Simulate probabilities with Monte Carlo|Analyst roles and risk estimation",
+condprob:"Build a tree-diagram calculator for diagnostic tests|Risk and fraud analysis",
+bayes:"Write a Bayesian spam or medical-test calculator|Fraud detection and A/B-testing analysis jobs",
+descstats:"Profile a real dataset with summary statistics and plots|Business analyst and reporting work",
+randvar:"Sample from and fit common distributions with SciPy|Simulation and risk modelling for clients",
+expect:"Compute expected value for decisions such as insurance and bets|Pricing, insurance and decision analysis",
+graphs:"Implement BFS/DFS and shortest paths on a real network|Routing, logistics and network-analysis gigs",
+programming:"Build and test a small Python CLI tool end to end|Entry to every paid tech role; freelance scripting",
+complexity:"Optimise a slow script from O(n²) to O(n log n)|Coding interviews; performance consulting",
+datastruct:"Build an LRU cache and a priority queue|Coding interviews and backend roles",
+multivar:"Visualise loss surfaces and contour plots|Optimisation-heavy engineering roles",
+gradient:"Compute Jacobians numerically and check them against autograd|ML engineering interviews and debugging",
+matcalc:"Derive and code the gradients of linear regression and softmax|Research-engineer interviews",
+vecspaces:"Project data onto subspaces and compute rank|Signal processing and ML roles",
+normsip:"Build a nearest-neighbour search comparing L1, L2 and cosine|Embedding search and matching features for clients",
+eigen:"Implement power iteration and PageRank|Ranking and recommendation work",
+svd:"Compress an image with truncated SVD|Recommender and compression features for clients",
+matdecomp:"Solve systems with LU, QR and Cholesky and compare speed|Scientific-computing contracts",
+tensors:"Rewrite loops as broadcasting and einsum|Faster model code; ML engineer roles",
+numstab:"Implement a stable softmax and log-sum-exp|Fixing NaN-loss bugs, a valued ML infra skill",
+fourier:"Build an audio spectrum analyser with the FFT|Audio, signal and sensor analytics jobs",
+convex:"Solve a convex problem with CVXPY|Operations-research and portfolio optimisation work",
+gd:"Code gradient descent and tune the learning rate on regression|Core of every paid model-training job",
+constrained:"Solve a constrained portfolio or resource problem with Lagrange multipliers|Operations research and finance roles",
+newton:"Compare Newton, L-BFGS and gradient descent on a test function|Scientific computing and calibration work",
+jointdist:"Build a joint probability table from data and marginalise|Analytics and risk modelling",
+gaussian:"Sample correlated Gaussians and fit a covariance matrix|Quant finance and anomaly detection",
+clt:"Simulate the CLT and compute confidence intervals|A/B-testing and analytics roles",
+mle:"Fit distributions by MLE from scratch|Statistical modelling consulting",
+bayesinf:"Build a Beta–Binomial A/B-test analyser|Experimentation platforms and growth analytics",
+hyptest:"Run and report a full A/B test with bootstrap intervals|Product analyst and growth roles",
+sampling:"Implement Metropolis–Hastings for a simple posterior|Bayesian modelling contracts",
+infotheory:"Compute entropy and mutual information for feature selection|Feature engineering in paid ML work",
+kl:"Compute cross-entropy and KL by hand, then in PyTorch|Loss design in ML jobs",
+markov:"Build a text generator with a Markov chain and compute PageRank|Ranking and simulation work",
+stochproc:"Simulate Brownian motion and Langevin sampling|Quant finance and diffusion-model work",
+autodiff:"Build a micrograd-style autograd engine|Strong portfolio piece for ML engineer roles",
+dataeng:"Build a clean ETL pipeline from raw CSV to Parquet with SQL checks|Data engineer roles; data-cleaning gigs",
+viz:"Publish an exploratory data analysis notebook with clear charts|Analyst roles; dashboard and report freelancing",
+dynprog:"Implement edit distance and Viterbi|Coding interviews; spell-check and alignment features",
+parallel:"Write and profile a simple CUDA or Triton kernel|GPU performance engineering, a high-paying niche",
+mlbasics:"Frame a real business problem as an ML task with data, loss and metric|First ML job; scoping paid projects",
+linreg:"Build a house-price model with diagnostics|Pricing and forecasting gigs",
+logreg:"Build a churn or credit-risk classifier|Churn and credit scoring for businesses",
+losses:"Compare losses on noisy data and pick one with justification|Model-quality improvements in paid work",
+biasvar:"Plot learning curves and diagnose under- or overfitting|Model debugging in data science roles",
+regularization:"Tune ridge and lasso and explain the chosen features|Interpretable models for regulated clients",
+cvval:"Set up leak-free cross-validation for a time-series problem|Trustworthy models clients will pay for",
+metrics:"Build an evaluation report with PR curves and calibration|Communicating model value to stakeholders",
+features:"Engineer features that lift a Kaggle baseline|Kaggle and freelance tabular ML",
+knn:"Build a kNN recommender for a small catalogue|Simple recommendation features",
+naivebayes:"Build a spam classifier from scratch|Text-classification gigs",
+trees:"Train and visualise an interpretable decision tree|Explainable models for business rules",
+forests:"Ship a random-forest baseline with feature importance|Tabular consulting",
+boosting:"Win or place in a tabular Kaggle competition with XGBoost|Top earner for tabular ML in industry",
+svm:"Train an RBF SVM and tune C and γ|Classification on small datasets",
+kmeans:"Segment customers with k-means|Customer segmentation for marketing clients",
+gmm:"Fit a GMM and explain soft cluster assignments|Segmentation and anomaly work",
+pca:"Visualise embeddings with PCA and UMAP|Data exploration and analytics",
+clustering:"Cluster geospatial data with DBSCAN|Location analytics",
+anomaly:"Build a fraud or anomaly detector on transactions|Fraud and monitoring products",
+pgm:"Model a diagnosis problem as a Bayesian network|Decision-support systems",
+hmm:"Build a part-of-speech tagger with an HMM|Sequence-labelling tasks",
+timeseries:"Forecast sales with ARIMA and backtest it|Demand forecasting for businesses",
+recsys:"Build a matrix-factorisation movie recommender|Recommendation engines for e-commerce",
+gp:"Tune a model's hyperparameters with Bayesian optimisation|Experiment-efficiency consulting",
+learnth:"Compute VC bounds and compare them with observed error|Research roles and technical interviews",
+causal:"Estimate a treatment effect with propensity scores|Marketing attribution and policy analysis",
+mlworkflow:"Set up a reproducible project with experiment tracking|Senior ML roles that value reproducibility",
+ngram:"Build an n-gram autocomplete with perplexity evaluation|Autocomplete features",
+tfidf:"Build a BM25 search engine over documents|Search features for clients",
+imgproc:"Build an edge-detection and feature-matching pipeline with OpenCV|Industrial inspection gigs",
+mdp:"Model a simple game as an MDP|Operations and decision-automation work",
+bellman:"Solve a gridworld with value iteration|RL interviews and simulations",
+bandits:"Build a Thompson-sampling A/B testing tool|Ad and pricing optimisation",
+fairness:"Audit a model for group fairness and mitigate the gaps|Responsible-AI audits and compliance roles",
+perceptron:"Implement a perceptron and show the XOR failure|Teaching content and tutorials",
+mlp:"Build an MLP from scratch that classifies MNIST|Portfolio piece for ML roles",
+activations:"Compare activations empirically on one network|Model tuning in ML jobs",
+backprop:"Derive and implement backprop for an MLP by hand|Core ML engineer interview topic",
+sgd:"Compare SGD, momentum and batch sizes with plots|Training-efficiency work",
+adam:"Implement Adam from scratch and match PyTorch's output|Optimiser tuning in ML jobs",
+lrsched:"Run an LR range test and add warmup with cosine decay|Training-stability expertise",
+init:"Show training failure with bad init and fix it|Debugging deep models",
+normalization:"Add LayerNorm/RMSNorm and measure stability|Model architecture work",
+dropout:"Reduce overfitting with augmentation and dropout|Small-data client projects",
+vanishing:"Visualise gradient norms per layer and fix vanishing gradients|Deep-training debugging",
+resnet:"Train a ResNet on CIFAR-10|Vision-model roles",
+frameworks:"Write a clean PyTorch training loop with logging|Every paid deep learning job",
+gputrain:"Speed up training with BF16 and gradient accumulation|Cutting clients' GPU bills",
+cnn:"Train a CNN image classifier from scratch|Vision prototypes",
+cnnarch:"Fine-tune EfficientNet or ConvNeXt on a custom dataset|Product image classification for e-commerce",
+detection:"Train a YOLO detector on a custom dataset|Retail, security and agri-tech vision contracts",
+transfer:"Fine-tune a pretrained model on 500 labelled images|Fast custom models for small businesses",
+selfsup:"Pretrain with a masked objective on unlabelled data|Label-scarce industrial projects",
+contrastive:"Train a face or product matcher with triplet loss|Similarity search and deduplication products",
+wordemb:"Train word2vec and explore analogies|Domain-specific search",
+rnn:"Build a character-level text generator|Sequence-modelling demos",
+lstm:"Forecast a time series with an LSTM|Sensor and forecasting gigs",
+seq2seq:"Build a small translation model|Localisation tooling",
+tokenization:"Train a BPE tokenizer on a domain corpus|Domain LLM projects",
+autoenc:"Build an autoencoder for anomaly detection|Predictive maintenance",
+vae:"Train a VAE and interpolate in latent space|Generative design prototypes",
+gan:"Train a DCGAN on a small image set|Synthetic data and creative tools",
+ebm:"Sample from a toy EBM with Langevin dynamics|Research roles",
+flows:"Fit a RealNVP to 2D data|Density-estimation research",
+gnn:"Build a GNN for node classification or molecules|Drug discovery and fraud graph analytics",
+uncertainty:"Add conformal prediction intervals to a model|Risk-sensitive industries (health, finance)",
+hpo:"Run Optuna or Hyperband sweeps|Model-performance contracts",
+qlearning:"Solve CartPole or FrozenLake with Q-learning|RL portfolio work",
+dqn:"Train a DQN agent on an Atari game|Game AI and simulation",
+polgrad:"Implement REINFORCE on CartPole|RL engineer interviews",
+ppo:"Train a PPO agent in a custom Gym environment|Robotics and control simulation",
+mcts:"Build an MCTS bot for Connect Four|Game AI products",
+xai:"Explain a credit model with SHAP for stakeholders|Explainability for regulated clients",
+adversarial:"Attack and adversarially train an image classifier|Security and robustness audits",
+attention:"Add attention to a seq2seq model and visualise it|Explainable NLP demos",
+selfattn:"Implement multi-head self-attention from scratch|Core LLM-engineer interview topic",
+posenc:"Implement RoPE and test length extrapolation|Long-context model work",
+transformer:"Build and train a small Transformer from scratch|Portfolio cornerstone for LLM roles",
+bert:"Fine-tune BERT for classification or NER|Document classification for enterprises",
+gpt:"Train nanoGPT on your own corpus|LLM-engineer roles",
+t5:"Fine-tune T5 for summarisation|Summarisation services",
+speech:"Build a transcription app with Whisper|Transcription and captioning services",
+sentemb:"Build semantic search with sentence embeddings|Enterprise search products",
+vit:"Fine-tune a ViT on a custom dataset|Vision product work",
+clip:"Build zero-shot image search with CLIP|Visual search for e-commerce and media",
+sslvision:"Use DINO features for retrieval or clustering|Label-free vision pipelines",
+sam:"Build a click-to-segment annotation tool with SAM|Annotation tooling and services",
+ddpm:"Train a small DDPM on a toy image set|Generative-model research and engineering roles",
+ldm:"Fine-tune Stable Diffusion with LoRA or DreamBooth|Custom image generation for brands",
+flowmatch:"Train a flow-matching model on 2D data and images|Generative research roles",
+dit:"Train a small DiT on latent patches|Image and video-generation teams",
+vqvae:"Tokenise images with a VQ-VAE|Multimodal model work",
+ssm:"Implement a Mamba block and compare it with attention|Efficient-model research",
+moe:"Add top-k MoE layers to a small Transformer|LLM architecture roles",
+dlth:"Reproduce double descent or grokking|Research positions",
+geodl:"Train an equivariant GNN on molecules|AI-for-science and biotech roles",
+modelrl:"Train a Dreamer-style agent on a simple environment|Robotics and simulation roles",
+offlinerl:"Train a policy from logged data with behaviour cloning or CQL|Recommendation and control from logs",
+scaling:"Fit scaling laws from small training runs|Compute-planning roles at AI labs",
+datacuration:"Build a dedup and quality-filter pipeline for web text|Data-vendor and LLM-data roles",
+disttrain:"Train with FSDP across multiple GPUs|Highly paid large-scale training roles",
+flashattn:"Benchmark FlashAttention vs naive attention|Inference and kernel optimisation roles",
+vecdb:"Stand up a vector DB with hybrid search|RAG infrastructure for companies",
+mlops:"Deploy a model behind an API with monitoring|MLOps engineer roles",
+nas:"Run an AutoML search on a tabular task|AutoML consulting",
+privacy:"Train with DP-SGD and report the privacy budget|Healthcare and finance privacy roles",
+pretrain:"Pretrain a small LLM end to end|LLM pretraining teams",
+incontext:"Design and evaluate prompts for a real task|Prompt and AI-workflow consulting",
+sft:"Instruction-tune an open model on a custom dataset|Custom assistants for businesses",
+rlhf:"Train a reward model and run PPO on a small LM|Post-training roles at AI labs",
+dpo:"Run DPO on preference data and evaluate it|Model alignment for product teams",
+peft:"Fine-tune a 7B model with QLoRA on one GPU|Affordable custom-LLM services",
+decoding:"Implement top-p, min-p and JSON-constrained decoding|Reliable LLM apps",
+longctx:"Extend a model's context and test it with needle tests|Long-document products",
+distill:"Distil a large model into a small one for a task|Cutting clients' inference costs",
+synthetic:"Generate and filter a synthetic training dataset|Data-generation services",
+codemodels:"Fine-tune a code model and evaluate it with unit tests|Developer-tool products",
+llmevals:"Build an eval harness with LLM-as-judge and statistics|Eval engineering roles; model selection consulting",
+rag:"Build a production RAG chatbot over company documents|One of the most in-demand paid AI projects",
+tooluse:"Build an assistant that calls real APIs|Workflow-automation products",
+vlm:"Build a document or chart Q&A app with a VLM|Document-processing automation",
+audiollm:"Build a voice assistant with speech in and out|Voice agents for customer service",
+videogen:"Build a text-to-video pipeline with an open model|Marketing video production",
+embodied:"Fine-tune a VLA policy in simulation|Robotics startups",
+kvcache:"Serve a model with vLLM and measure throughput|Inference-cost optimisation roles",
+quant:"Quantise a model to 4-bit and measure the quality loss|Edge and cost-reduction projects",
+specdec:"Add speculative decoding and benchmark the speedup|Inference-engineering roles",
+alignment:"Write a reward-hacking case study with experiments|AI-safety research roles",
+cai:"Apply a written constitution to critique and revise model outputs|Policy and safety tooling",
+mechinterp:"Find an induction head with activation patching|Interpretability research roles",
+hallucination:"Build a factuality checker with retrieval and citations|Trust layers for enterprise AI",
+redteam:"Red-team an LLM app and write up its fixes|AI-security consulting and bug bounties",
+governance:"Write a risk assessment and model card for an AI system|AI governance and compliance roles",
+reasoning:"Distil or RL-tune a small model to show long chain-of-thought|Frontier research roles; reasoning products",
+rlvr:"Run GRPO on math problems with verifiable rewards|Post-training and RL engineering roles",
+prm:"Train a step-level verifier and use it for best-of-N|Reasoning-quality products",
+ttscaling:"Plot accuracy vs samples with majority voting|Inference-strategy consulting",
+latentreason:"Reproduce a small continuous-thought experiment|Research positions",
+formalmath:"Prove theorems in Lean with an LLM assistant|Formal-verification roles",
+moemodern:"Implement shared and fine-grained experts in a small MoE|LLM architecture teams",
+hybrid:"Build a hybrid Mamba–attention model and benchmark it|Efficient-LLM startups",
+diffusionlm:"Train a tiny masked-diffusion text model|Research roles",
+omni:"Build an app that mixes text, image and audio in and out|Multimodal product startups",
+worldmodels:"Train a small action-conditioned video model|Gaming and simulation companies",
+jepa:"Train an I-JEPA-style model and probe its features|Self-supervised learning research",
+testtimetrain:"Add test-time adaptation to a model under distribution shift|Robust ML in production",
+muon:"Swap AdamW for Muon and compare training curves|Training-efficiency roles at labs",
+lowprec:"Train with FP8 and track numerical stability|GPU efficiency roles",
+smallmodels:"Ship an on-device model in a mobile app|Mobile AI products",
+agents:"Build an agent that completes multi-step tasks with tools|AI agent products and automation agencies",
+mcp:"Write an MCP server for a real data source|Integration services and developer tools",
+computeruse:"Automate a browser workflow with a computer-use agent|Robotic-process-automation replacement",
+codingagents:"Build an agent that fixes failing tests in a repo|Developer-productivity products",
+multiagent:"Build an orchestrator with specialised sub-agents|Complex automation contracts",
+contexteng:"Design memory and compaction for a long-running agent|Senior agent-engineering roles",
+deepresearch:"Build a research agent that writes cited reports|Research-automation products",
+aiscience:"Apply ML to a scientific dataset and publish the results|Biotech and materials AI roles",
+saes:"Train an SAE on a small model's activations and label its features|Interpretability research roles",
+cotmon:"Build a CoT monitor that flags unsafe reasoning|AI-safety tooling roles",
+scalableov:"Run a weak-to-strong or debate experiment|Alignment research roles",
+agentsafety:"Sandbox an agent and test it against prompt injection|AI-security engineering",
+frontierevals:"Design a dangerous-capability eval with graded tasks|Evals roles at labs and AI safety institutes"
+};
+function kissFor(n){
+  const subs=(SYL[n.id]||"").split(";").map(s=>s.trim()).filter(Boolean);
+  const [build,earn]=(KISS[n.id]||"|").split("|");
+  const first=n.desc.split(/(?<=\.)\s/)[0];
+  return [
+    `Know what it is and why it matters: ${first}`,
+    `Explain without notes: ${subs.slice(0,3).join(", ")}${subs.length>3?", "+subs.slice(3,-1).join(", ")+(subs.length>4?",":"")+" and "+subs[subs.length-1]:""}${n.f?`. Walk through: ${n.f}`:""}.`,
+    `${build}.`,
+    `${earn}.`
+  ];
+}
+const stageKey = id => "atlas-stage-" + id;
+function getStage(id){ try{ return localStorage.getItem(stageKey(id))||""; }catch(e){ return ""; } }
+function setStage(id,v){ try{ v?localStorage.setItem(stageKey(id),v):localStorage.removeItem(stageKey(id)); }catch(e){} }
+
 /* ---------- Model ---------- */
 const nodes = RAW.map(([id,label,d,lv,pre,desc,f]) => ({id,label,d,lv,pre:pre?pre.split(","):[],desc,f,kids:[]}));
 const byId = new Map(nodes.map(n=>[n.id,n]));
@@ -1129,7 +1431,8 @@ function renderGraph(){
     .on("mouseleave",()=> edgeSel.classed("hov",false));
   nodeSel.append("rect").attr("width",n=>n.w).attr("height",PH).attr("rx",PH/2);
   nodeSel.append("circle").attr("cx",10).attr("cy",PH/2).attr("r",3.6);
-  nodeSel.append("text").attr("x",19).attr("y",PH/2+4).text(n=>n.label);
+  nodeSel.append("text").attr("class","lbl").attr("x",19).attr("y",PH/2+4).text(n=>n.label);
+  nodeSel.append("text").attr("class","sl").attr("x",10).attr("y",PH/2+3).attr("text-anchor","middle");
   zoom = d3.zoom().scaleExtent([.2,2.5]).clickDistance(5).on("zoom", e=>root.attr("transform", e.transform));
   svg.call(zoom).on("dblclick.zoom", null);
   svg.on("click", ()=> { if(state.sel) select(null); });
@@ -1148,7 +1451,8 @@ function renderList(){
   el.innerHTML = LEVELS.map(([name,blurb],i)=>{
     const items = nodes.filter(n=>n.lv===i).sort((a,b)=>dIndex[a.d]-dIndex[b.d]||a.label.localeCompare(b.label));
     return `<section class="lvl"><div><div class="num">Level ${i} · ${items.length} topics</div><h2>${esc(name)}</h2><p>${esc(blurb)}</p></div>
-      <div class="items">${items.map(itemHTML).join("")}</div></section>`;
+      <div style="min-width:0"><div class="lkiss">${KISS_STAGES.map((st,j)=>`<div><span class="rk2">${st.k==="$"?"$":st.k.toUpperCase()}</span><b>${st.name}</b><p>${esc(LEVEL_KISS[i][j])}</p></div>`).join("")}</div>
+      <div class="items">${items.map(itemHTML).join("")}</div></div></section>`;
   }).join("");
   el.addEventListener("click", ev=>{ const b=ev.target.closest("[data-id]"); if(b) select(b.dataset.id,{pop:true}); });
 }
@@ -1199,12 +1503,31 @@ function renderPanel(){
     ${groups.length?`<ol class="path">${groups.map(([i,a])=>`<li><div class="lh">Level ${i} · ${esc(LEVELS[i][0])}</div><div class="links">${a.map(itemHTML).join("")}</div></li>`).join("")}</ol>`:`<p class="none">None.</p>`}
     <p class="foot">Click any topic above to jump to it. Click empty map space to clear.</p>`;
 }
+function funnelHTML(){
+  const idx = nodes.map(n=>STAGE_IDX[getStage(n.id)]);
+  const reached = KISS_STAGES.map((_,i)=>idx.filter(x=>x>=i).length);
+  const at = KISS_STAGES.map((_,i)=>nodes.filter((n,j)=>idx[j]===i));
+  const next = i => at[i].sort((a,b)=>b.nDesc-a.nDesc).slice(0,3);
+  const verbs = ["Turn into knowledge (teach it)","Turn into skill (build it)","Turn into money (sell it)"];
+  const anyMarked = reached[0]>0;
+  return `<h3>Your K.I.S.S. funnel</h3>
+    <p class="none" style="margin-bottom:10px">Information is awareness, knowledge is being able to teach it, skill is being able to build with it, success is earning from it. A typical brain holds 99% information and 0.1% success. Push topics up the ladder.</p>
+    <div class="funnel">${KISS_STAGES.map((st,i)=>`<div class="frow">
+      <span class="fl"><span class="rk2">${st.k==="$"?"$":st.k.toUpperCase()}</span>${st.name}</span>
+      <span class="ftrack"><span class="fbase" style="width:${st.base}%"></span><span class="fyou" style="width:${reached[i]/nodes.length*100}%"></span></span>
+      <span class="fn">${reached[i]}<small>/${nodes.length}</small></span></div>`).join("")}
+    </div>
+    <div class="flegend"><span><i class="fb"></i>Typical brain share</span><span><i class="fy"></i>Topics you have reached</span></div>
+    ${anyMarked ? [0,1,2].filter(i=>at[i].length).map(i=>`<h3>${verbs[i]}</h3><div class="links">${next(i).map(itemHTML).join("")}</div>`).join("")
+      : `<p class="none" style="margin-top:10px">Open any topic and tap the rung you have reached. The funnel and your next conversions appear here.</p>`}`;
+}
 function overviewHTML(){
   const starts = ["gd","backprop","transformer","rlhf","reasoning","agents"].map(id=>byId.get(id));
   return `<div class="meta"><span class="lvtag">Overview</span></div>
     <h2>How to read this atlas</h2>
     <p class="desc">Topics flow left to right through eight levels, from arithmetic to the 2024–26 frontier. Each line means "is a prerequisite for". Colours mark the domain.</p>
     <div class="stats"><div><b>${nodes.length}</b><span>topics</span></div><div><b>${edges.length}</b><span>links</span></div><div><b>${DOMAINS.length}</b><span>domains</span></div></div>
+    ${funnelHTML()}
     <h3>Ways to explore</h3>
     <ol class="howto"><li>Select a topic to light up its full learning path back to the basics.</li><li>Switch to “What it unlocks” to see where a topic leads.</li><li>Tap a domain chip to see one field across all levels.</li><li>Use Curriculum for a level-by-level reading list.</li></ol>
     <h3>Good places to start</h3><div class="links">${starts.map(itemHTML).join("")}</div>
@@ -1242,6 +1565,7 @@ function openModal(id){
       ${anc.length?`<span>Builds on <b>${n.nAnc}</b> topics across ${range}</span>`:`<span>A starting point: no prerequisites</span>`}
       <span>Unlocks <b>${n.nDesc}</b> topics</span>
     </div>
+    ${ladderHTML(n)}
     <div class="mgrid">
       <section>
         <h3>Topics to cover</h3>
@@ -1266,6 +1590,28 @@ function openModal(id){
   modal.hidden = false; sheet.scrollTop = 0;
   document.getElementById("mClose").focus();
 }
+const STAGE_IDX = {"":-1,i:0,k:1,s:2,"$":3};
+function ladderHTML(n){
+  const lines = kissFor(n), cur = STAGE_IDX[getStage(n.id)];
+  return `<section class="ladder" aria-label="K.I.S.S. ladder">
+    <div class="ladhead"><h3>K.I.S.S. ladder for this topic</h3><span class="ladnote">Mark the highest rung you have reached</span></div>
+    ${KISS_STAGES.map((st,i)=>`<button class="rung${i<=cur?" reached":""}${i===cur?" current":""}" data-stage="${st.k}" aria-pressed="${i===cur}">
+      <span class="rl"><span class="rk2">${st.k==="$"?"$":st.k.toUpperCase()}</span><span><b>${st.name}</b><small>${st.verb}</small></span></span>
+      <span class="rt2">${esc(lines[i])}</span>
+      <span class="rb" title="Share of what sits in a typical brain">${st.base}%</span>
+    </button>`).join("")}
+    ${cur>=0?`<button class="ladclear" data-stage="">Clear my rung</button>`:""}
+  </section>`;
+}
+function stageBadge(id){ const st=getStage(id); return st?`<span class="stg" title="${KISS_STAGES[STAGE_IDX[st]].name}">${st==="$"?"$":st.toUpperCase()}</span>`:""; }
+function refreshStages(){
+  document.querySelectorAll(".item[data-id]").forEach(b=>{ const old=b.querySelector(".stg"); if(old) old.remove(); const h=stageBadge(b.dataset.id); if(h) b.insertAdjacentHTML("beforeend",h); });
+  if(nodeSel){
+    nodeSel.select("circle").attr("r", n=>getStage(n.id)?6.5:3.6);
+    nodeSel.select("text.sl").text(n=>{ const st=getStage(n.id); return st ? (st==="$"?"$":st.toUpperCase()) : ""; });
+  }
+  if(!state.sel) renderPanel();
+}
 function updateProg(){
   const boxes=[...sheet.querySelectorAll(".subs input")]; const c=boxes.filter(b=>b.checked).length;
   document.getElementById("mProg").innerHTML = `<div class="track"><div class="fill" style="width:${boxes.length?c/boxes.length*100:0}%"></div></div><span>${c} of ${boxes.length} covered</span>`;
@@ -1279,6 +1625,8 @@ sheet.addEventListener("change", ev=>{
 sheet.addEventListener("click", ev=>{
   if(ev.target.closest("#mClose")) return closeModal();
   if(ev.target.closest("#mShare")){ shareTopic(modalId); return; }
+  const sb = ev.target.closest("[data-stage]");
+  if(sb){ const id=modalId, top=sheet.scrollTop; setStage(id, sb.dataset.stage); const lad=sheet.querySelector(".ladder"); lad.outerHTML = ladderHTML(byId.get(id)); sheet.scrollTop=top; refreshStages(); return; }
   const p = ev.target.closest("#mPath,#mUnlocks");
   if(p){ const id=modalId; state.mode = p.id==="mPath"?"pre":"kids"; closeModal(); setView("graph"); select(id,{scroll:true}); }
 });
@@ -1349,7 +1697,11 @@ document.getElementById("zfit").onclick=()=>fit();
 function shareTopic(id){
   const n=byId.get(id); if(!n||!window.AtlasNative) return;
   const r=resourcesFor(n); const subs=(SYL[id]||"").split(";").map(x=>x.trim()).filter(Boolean);
-  const text=[`${n.label} (Level ${n.lv}, ${dName[n.d]})`,n.desc,"","Topics to cover:",...subs.map((x,i)=>`${i+1}. ${x}`),"","Resources:",...[...r.learn,...r.papers].map(x=>`• ${x.t}: ${x.u}`)].join("\n");
+  const k=kissFor(n);
+  const text=[`${n.label} (Level ${n.lv}, ${dName[n.d]})`,n.desc,"",
+    "K.I.S.S. ladder:",...KISS_STAGES.map((st,i)=>`${st.name}: ${k[i]}`),"",
+    "Topics to cover:",...subs.map((x,i)=>`${i+1}. ${x}`),"",
+    "Resources:",...[...r.learn,...r.papers].map(x=>`• ${x.t}: ${x.u}`)].join("\n");
   window.AtlasNative.share(n.label, text);
 }
 // Called by the app's Back button. Returns true when the page handled it.
@@ -1362,12 +1714,12 @@ window.atlasBack = function(){
 
 /* ---------- Boot ---------- */
 function start(){
-  renderGraph(); renderList();
-  const h = location.hash.slice(1); const first = byId.has(h)? h : "transformer";
+  renderGraph(); renderList(); refreshStages();
+  const h = location.hash.slice(1); const first = byId.has(h)? h : null;
   let v="graph"; try{ v = localStorage.getItem("atlas-view")||"graph"; }catch(e){}
   setView(v==="list"?"list":"graph");
   const r=svg.node().getBoundingClientRect(); svg.call(zoom.transform, d3.zoomIdentity.translate(r.width/2,r.height/2).scale(.7));
-  select(first,{anim:false});
+  if(first) select(first,{anim:false}); else { renderPanel(); applyHighlight(); if(v!=="list") fit(false); }
 }
 (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start, start);
 </script>
