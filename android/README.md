@@ -13,7 +13,8 @@ An offline Android app for the AI & ML Knowledge Atlas: 227 topics in eight leve
 - **K.I.S.S. ladder.** Every topic and level spells out Information (aware), Knowledge (can teach it),
   Skill (can build with it) and Success (others recognise, use or build on it). Success comes in six
   forms: SME recognition, paper or talk, new technique, adoption, influence and money. Each topic shows
-  its natural forms; 50 key topics have hand-written markers for every form. Pick your own success goal
+  its natural forms; 50 key topics have hand-written markers for every form. You can also type your own
+  definition of success for any topic; it replaces the suggestion on that topic's ladder. Pick your own success goal
   in the header. Mark your rung per topic; the overview shows your
   funnel against the 99 / 0.5 / 0.4 / 0.1 baseline and suggests what to convert next.
 - **Role learning paths.** A Roles view covers 20 AI jobs in five families (build products, research,

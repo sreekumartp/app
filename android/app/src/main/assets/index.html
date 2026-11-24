@@ -160,6 +160,11 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .forms li.fit{opacity:1;background:color-mix(in srgb,var(--c) 12%,var(--surface))}
 .goalsel{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font:inherit;max-width:min(260px,80vw)}
 @media (max-width:700px){.forms li{grid-template-columns:1fr;gap:2px}}
+.mysucc{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.mysucc label{font-size:.82rem;font-weight:600}
+.mysucc textarea{width:100%;resize:vertical;min-height:52px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font:inherit;font-size:.88rem;line-height:1.4}
+.mysucc textarea:focus{outline:2px solid var(--c);outline-offset:0;border-color:var(--c)}
+.mshint{font-size:.72rem;color:var(--muted)}
 .ladclear{align-self:flex-start;border:0;background:none;color:var(--muted);font-size:.78rem;text-decoration:underline;cursor:pointer;padding:2px 0}
 .stg{font-family:var(--font-mono);font-size:.62rem;font-weight:700;padding:0 5px;border-radius:4px;background:var(--fg);color:var(--bg);margin-left:2px}
 .item.sel .stg{background:var(--on-c);color:var(--c)}
@@ -1505,7 +1510,11 @@ function naturalForms(n){
 }
 function getGoal(){ try{ return localStorage.getItem("atlas-goal")||""; }catch(e){ return ""; } }
 function setGoal(v){ try{ v?localStorage.setItem("atlas-goal",v):localStorage.removeItem("atlas-goal"); }catch(e){} }
+function getMySucc(id){ try{ return localStorage.getItem("atlas-mysucc-"+id)||""; }catch(e){ return ""; } }
+function setMySucc(id,v){ try{ v.trim()?localStorage.setItem("atlas-mysucc-"+id,v):localStorage.removeItem("atlas-mysucc-"+id); }catch(e){} }
 function successFor(n, formKey){
+  const mine = !formKey && getMySucc(n.id).trim();
+  if(mine) return {k:"custom", name:"My definition", text:mine, natural:naturalForms(n), fits:true, hand:!!HAND[n.id], custom:true};
   const [build,earn]=(KISS[n.id]||"|").split("|");
   const nat=naturalForms(n), g=getGoal();
   const k = formKey || (g && FORM[g] ? g : nat[0]);
@@ -2002,6 +2011,11 @@ function ladderHTML(n){
       <span class="rb" title="Share of what sits in a typical brain">${st.base}%</span>
     </button>`).join("")}
     ${cur>=0?`<button class="ladclear" data-stage="">Clear my rung</button>`:""}
+    <div class="mysucc">
+      <label for="ms-${n.id}">My definition of success for this topic</label>
+      <textarea id="ms-${n.id}" data-mysucc rows="2" maxlength="500" placeholder="For example: present our results at the team all-hands, or get a pull request merged upstream">${esc(getMySucc(n.id))}</textarea>
+      <span class="mshint">Saved on this device. When filled in, it replaces the suggestion on the Success rung.</span>
+    </div>
     <details class="forms"><summary>What success looks like for this topic, in all six forms</summary>
       <p class="natline">Natural here: ${successFor(n).natural.map(k=>`<b>${esc(FORM[k].name)}</b>`).join(" · ")}${HAND[n.id]?" · Hand-written for this key topic":""}</p>
       <ul>${SUCCESS_FORMS.map(f=>{ const x=successFor(n,f.k); return `<li class="${x.fits?"fit":""}"><b>${esc(f.name)}</b><span>${esc(x.text)}</span></li>`; }).join("")}</ul>
@@ -2022,6 +2036,12 @@ function updateProg(){
   document.getElementById("mProg").innerHTML = `<div class="track"><div class="fill" style="width:${boxes.length?c/boxes.length*100:0}%"></div></div><span>${c} of ${boxes.length} covered</span>`;
 }
 function closeModal(){ if(modal.hidden) return; modal.hidden = true; modalId = null; if(lastFocus && document.contains(lastFocus)) lastFocus.focus(); }
+sheet.addEventListener("input", ev=>{
+  if(!ev.target.matches("[data-mysucc]")) return;
+  setMySucc(modalId, ev.target.value);
+  const n=byId.get(modalId), sf=successFor(n), t=sheet.querySelector('.rung[data-stage="$"] .rt2');
+  if(t) t.innerHTML = `<span class="sform">${esc(sf.name)}${sf.fits?"":" (less natural here)"}</span>${esc(sf.text)}`;
+});
 sheet.addEventListener("change", ev=>{
   if(!ev.target.matches(".subs input")) return;
   const arr=[...sheet.querySelectorAll(".subs input")].filter(b=>b.checked).map(b=>+b.dataset.i);
@@ -2039,7 +2059,7 @@ modal.addEventListener("click", ev=>{ if(ev.target===modal) closeModal(); });
 document.addEventListener("keydown", ev=>{
   if(modal.hidden) return;
   if(ev.key==="Escape"){ ev.preventDefault(); closeModal(); }
-  if(ev.key==="Tab"){ const f=[...sheet.querySelectorAll("a,button,input")]; if(!f.length) return; const first=f[0], last=f[f.length-1];
+  if(ev.key==="Tab"){ const f=[...sheet.querySelectorAll("a,button,input,textarea,summary")]; if(!f.length) return; const first=f[0], last=f[f.length-1];
     if(ev.shiftKey && document.activeElement===first){ ev.preventDefault(); last.focus(); } else if(!ev.shiftKey && document.activeElement===last){ ev.preventDefault(); first.focus(); } }
 });
 
