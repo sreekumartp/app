@@ -16,6 +16,11 @@ An offline Android app for the AI & ML Knowledge Atlas: 227 topics in eight leve
   its natural forms; 50 key topics have hand-written markers for every form. Pick your own success goal
   in the header. Mark your rung per topic; the overview shows your
   funnel against the 99 / 0.5 / 0.4 / 0.1 baseline and suggests what to convert next.
+- **Role learning paths.** A Roles view covers 18 AI jobs in five families (build products, research,
+  platform & infra, trust & safety, bridge roles). Each path is derived from the map: core topics at
+  Skill (or Knowledge for PM, governance and educator roles), their direct prerequisites at Knowledge,
+  and everything further back at Information. Your marked rungs give a readiness score and the gaps to
+  close next. Link straight to a role with `#role-<id>`.
 - **Remembers progress.** Ticked subtopics and your ladder rungs persist between launches.
 - **Follows the system theme** (light/dark) and font size, and draws edge to edge on Android 15.
 
@@ -53,7 +58,7 @@ android/
 
 To update the content, edit the web atlas and regenerate the app page with
 `python3 tools/build_app_page.py <atlas.html> app/src/main/assets/index.html`. Topics live in the `RAW` array, their
-syllabi in `SYL`, resources in `LIB` and `RES`, and the ladder in `KISS` and `LEVEL_KISS`.
+syllabi in `SYL`, roles in `ROLES`, resources in `LIB` and `RES`, and the ladder in `KISS` and `LEVEL_KISS`.
 
 Third-party: d3 (ISC, see `assets/d3-LICENSE.txt`); Instrument Sans, Bricolage Grotesque and JetBrains
 Mono (SIL Open Font License, see `assets/fonts/OFL-*.txt`).

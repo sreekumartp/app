@@ -62,7 +62,8 @@ function shareTopic(id){
 window.atlasBack = function(){
   if(!modal.hidden){ closeModal(); return true; }
   if(!qres.hidden){ qres.hidden=true; return true; }
-  if(state.view==="list"){ setView("graph"); return true; }
+  if(state.view!=="graph"){ setView("graph"); return true; }
+  if(state.role){ state.role=null; select(null); return true; }
   return false;
 };
 

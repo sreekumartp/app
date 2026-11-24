@@ -68,6 +68,7 @@ main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 390px}
 .pane{position:relative;min-width:0;min-height:0;overflow:hidden}
 #map{width:100%;height:100%;display:block;touch-action:none;cursor:grab;background:var(--bg)}
 #map:active{cursor:grabbing}
+.zoombtns[hidden],.hint[hidden]{display:none}
 .zoombtns{position:absolute;right:12px;bottom:12px;display:flex;flex-direction:column;gap:6px}
 .zoombtns button{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;font-weight:600}
 .hint{position:absolute;left:12px;bottom:12px;font-size:.75rem;color:var(--muted);background:color-mix(in srgb,var(--surface) 85%,transparent);padding:4px 8px;border-radius:6px;border:1px solid var(--line)}
@@ -179,6 +180,27 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .lkiss p{margin:6px 0 0;color:var(--fg);font-size:.78rem;line-height:1.4}
 @media (max-width:1100px){.lkiss{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:700px){.rung{grid-template-columns:minmax(0,1fr) auto}.rung .rt2{grid-column:1/-1;grid-row:2}.lkiss{grid-template-columns:1fr}}
+#roles{height:100%;overflow:auto;padding:18px max(16px,env(safe-area-inset-right,0px)) 40px max(16px,env(safe-area-inset-left,0px))}
+.rolesintro h2{font-family:var(--font-display);font-size:1.3rem;margin:0}
+.rolesintro p{margin:4px 0 0;color:var(--muted);max-width:62ch}
+.rfam{margin-top:20px}
+.rfam h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 8px;font-weight:600}
+.rcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.rcard{display:flex;flex-direction:column;gap:4px;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer}
+.rcard:hover,.rcard.cur{border-color:var(--accent)}
+.rcard b{font-family:var(--font-display);font-size:1rem}
+.rcard .rd{font-size:.84rem}
+.rcard .rm{font-size:.74rem;color:var(--muted)}
+.rbar{display:block;height:4px;border-radius:2px;background:var(--surface-2);margin-top:6px;overflow:hidden}
+.rbar span{display:block;height:100%;background:var(--accent)}
+.succchip{font-size:.8rem;padding:4px 10px;border-radius:999px;background:var(--surface-2);font-weight:500}
+.rgroup{margin-bottom:10px}
+.rgroup summary{display:flex;justify-content:space-between;cursor:pointer;font-weight:600;font-size:.88rem;padding:6px 0}
+.rgroup summary b{font-variant-numeric:tabular-nums;color:var(--muted)}
+.rgroup .links{margin-top:4px}
+.item .need{font-family:var(--font-mono);font-size:.62rem;color:var(--muted);margin-left:4px}
+.node.tgt rect{stroke:var(--c);stroke-width:2.4;fill:color-mix(in srgb,var(--c) 30%,var(--surface))}
+.node.tgt text.lbl{font-weight:700}
 .openbtn{margin-top:14px;width:100%;padding:9px 12px;border:1px solid var(--fg);border-radius:8px;background:var(--fg);color:var(--bg);font-weight:600;cursor:pointer}
 /* Popup */
 .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(8,12,24,.5);padding-block:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -256,6 +278,7 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
         <div class="seg" role="group" aria-label="View">
           <button id="vGraph" aria-pressed="true">Map</button>
           <button id="vList" aria-pressed="false">Curriculum</button>
+          <button id="vRoles" aria-pressed="false">Roles</button>
         </div>
       </div>
     </div>
@@ -265,6 +288,7 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
     <div class="pane" id="pane">
       <svg id="map" aria-label="Knowledge graph of AI and ML topics"></svg>
       <div id="list" hidden></div>
+      <div id="roles" hidden></div>
       <div class="zoombtns" id="zoombtns">
         <button id="zin" aria-label="Zoom in">+</button>
         <button id="zout" aria-label="Zoom out">−</button>
@@ -1484,6 +1508,82 @@ const stageKey = id => "atlas-stage-" + id;
 function getStage(id){ try{ return localStorage.getItem(stageKey(id))||""; }catch(e){ return ""; } }
 function setStage(id,v){ try{ v?localStorage.setItem(stageKey(id),v):localStorage.removeItem(stageKey(id)); }catch(e){} }
 
+/* ---------- Roles: learning paths derived from the map ---------- */
+// targets: topics the role must reach at `depth` (Skill = build, Knowledge = teach).
+// Their direct prerequisites are needed at Knowledge; everything further back at Information.
+const ROLE_FAMILIES = {build:"Build products", research:"Research", platform:"Platform & infra", trust:"Trust & safety", bridge:"Bridge roles"};
+const ROLES = [
+ {id:"data-scientist", name:"Data Scientist", fam:"build", depth:"s", success:["adoption","sme"],
+  does:"Turns business data into models, experiments and decisions.",
+  targets:"linreg logreg boosting cvval metrics features causal timeseries hyptest kmeans pca viz"},
+ {id:"ml-engineer", name:"Machine Learning Engineer", fam:"build", depth:"s", success:["adoption","sme"],
+  does:"Trains, ships and maintains ML models in production systems.",
+  targets:"boosting frameworks gputrain transfer cnnarch transformer hpo mlworkflow mlops quant"},
+ {id:"ai-engineer", name:"AI Engineer (LLM applications)", fam:"build", depth:"s", success:["adoption","technique"],
+  does:"Builds products on top of foundation models: RAG, agents, tools and evals.",
+  targets:"incontext decoding rag vecdb tooluse agents mcp contexteng llmevals hallucination peft"},
+ {id:"cv-engineer", name:"Computer Vision Engineer", fam:"build", depth:"s", success:["adoption","paper"],
+  does:"Builds systems that detect, segment and understand images and video.",
+  targets:"cnnarch detection vit sslvision sam clip vlm quant"},
+ {id:"nlp-speech", name:"NLP & Speech Engineer", fam:"build", depth:"s", success:["adoption","paper"],
+  does:"Builds language and speech systems: classification, search, ASR and voice.",
+  targets:"tokenization bert sentemb t5 gpt speech audiollm llmevals"},
+ {id:"genai-media", name:"Generative Media Engineer", fam:"build", depth:"s", success:["adoption","technique"],
+  does:"Builds image, video and audio generation pipelines and tools.",
+  targets:"ldm dit flowmatch vqvae videogen peft gan"},
+ {id:"rl-robotics", name:"RL & Robotics Engineer", fam:"build", depth:"s", success:["adoption","paper"],
+  does:"Trains agents and robot policies through interaction and demonstrations.",
+  targets:"ppo dqn mcts modelrl offlinerl embodied worldmodels"},
+ {id:"research-scientist", name:"Research Scientist", fam:"research", depth:"s", success:["paper","technique"],
+  does:"Invents and publishes new methods and explains why they work.",
+  targets:"dlth learnth scaling transformer ddpm flowmatch ssm moe rlhf reasoning"},
+ {id:"research-engineer", name:"Research Engineer (LLM training)", fam:"research", depth:"s", success:["technique","adoption"],
+  does:"Builds and runs large training runs: pretraining, post-training and RL.",
+  targets:"pretrain disttrain flashattn moe scaling rlhf dpo rlvr muon lowprec"},
+ {id:"ai-scientist", name:"AI for Science Researcher", fam:"research", depth:"s", success:["paper","technique"],
+  does:"Applies ML to biology, chemistry, physics and other sciences.",
+  targets:"gnn geodl uncertainty gp aiscience causal"},
+ {id:"mlops", name:"MLOps / ML Platform Engineer", fam:"platform", depth:"s", success:["sme","adoption"],
+  does:"Builds the pipelines, serving and monitoring that every model runs on.",
+  targets:"mlworkflow mlops dataeng disttrain kvcache quant vecdb"},
+ {id:"inference-perf", name:"Inference & GPU Performance Engineer", fam:"platform", depth:"s", success:["sme","technique"],
+  does:"Makes training and serving fast and cheap at the kernel and system level.",
+  targets:"parallel numstab flashattn kvcache quant specdec lowprec disttrain"},
+ {id:"data-engineer", name:"AI Data Engineer", fam:"platform", depth:"s", success:["adoption","sme"],
+  does:"Builds the datasets models learn from: collection, cleaning, curation and synthetic data.",
+  targets:"dataeng datacuration tokenization synthetic vecdb privacy"},
+ {id:"safety-researcher", name:"AI Safety & Alignment Researcher", fam:"trust", depth:"s", success:["paper","influence"],
+  does:"Studies and reduces risks from advanced AI: alignment, interpretability and oversight.",
+  targets:"alignment rlhf mechinterp saes scalableov cotmon frontierevals"},
+ {id:"ai-security", name:"AI Security Engineer / Red Teamer", fam:"trust", depth:"s", success:["sme","technique"],
+  does:"Attacks and defends AI systems against jailbreaks, injection and data leaks.",
+  targets:"adversarial redteam agentsafety privacy hallucination"},
+ {id:"responsible-ai", name:"Responsible AI & Governance Lead", fam:"trust", depth:"k", success:["influence","sme"],
+  does:"Sets policy, audits systems and makes AI compliant and fair.",
+  targets:"fairness xai governance frontierevals privacy llmevals alignment"},
+ {id:"ai-pm", name:"AI Product Manager", fam:"bridge", depth:"k", success:["adoption","influence"],
+  does:"Decides what AI products to build and how to measure them.",
+  targets:"mlbasics metrics incontext rag agents llmevals hallucination fairness"},
+ {id:"educator", name:"AI Educator / Developer Advocate", fam:"bridge", depth:"k", success:["influence","sme"],
+  does:"Teaches AI to developers and the public through courses, docs and talks.",
+  targets:"gd backprop transformer rag agents ddpm reasoning"}
+];
+const RUNG_RANK = {i:0,k:1,s:2,"$":3};
+function rolePath(role){
+  const t = role.targets.split(/\s+/).map(id=>byId.get(id)).filter(Boolean);
+  const need = new Map();
+  const put = (n,r)=>{ if(!need.has(n) || RUNG_RANK[r]>RUNG_RANK[need.get(n)]) need.set(n,r); };
+  t.forEach(n=>put(n, role.depth));
+  t.forEach(n=>n.pre.forEach(p=>put(p, role.depth==="s"?"k":"i")));
+  t.forEach(n=>closure(n,"pre").forEach(a=>put(a,"i")));
+  return need;
+}
+function roleGap(need){
+  let met=0; const gaps=[];
+  need.forEach((r,n)=>{ const have=STAGE_IDX[getStage(n.id)]; if(have>=RUNG_RANK[r]) met++; else gaps.push(n); });
+  return {met, gaps};
+}
+
 /* ---------- Model ---------- */
 const nodes = RAW.map(([id,label,d,lv,pre,desc,f]) => ({id,label,d,lv,pre:pre?pre.split(","):[],desc,f,kids:[]}));
 const byId = new Map(nodes.map(n=>[n.id,n]));
@@ -1497,7 +1597,7 @@ document.getElementById("sub").textContent = `${nodes.length} topics and ${edges
 const esc = s => s.replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 /* ---------- State ---------- */
-const state = { sel:null, mode:"pre", dom:null, view:"graph" };
+const state = { sel:null, mode:"pre", dom:null, view:"graph", role:null };
 
 /* ---------- Layout ---------- */
 const COLW = 290, ROWH = 26, PH = 19;
@@ -1552,7 +1652,7 @@ function renderGraph(){
   nodeSel.append("text").attr("class","sl").attr("x",10).attr("y",PH/2+3).attr("text-anchor","middle");
   zoom = d3.zoom().scaleExtent([.2,2.5]).clickDistance(5).on("zoom", e=>root.attr("transform", e.transform));
   svg.call(zoom).on("dblclick.zoom", null);
-  svg.on("click", ()=> { if(state.sel) select(null); });
+  svg.on("click", ()=> { if(state.sel || state.role){ state.role=null; select(null); } });
 }
 function bounds(){ const xs=nodes.map(n=>n.x), xe=nodes.map(n=>n.x+n.w), ys=nodes.map(n=>n.y); return {x0:Math.min(...xs)-20,x1:Math.max(...xe)+20,y0:Math.min(...ys)-80,y1:Math.max(...ys)+20}; }
 function fit(anim=true){ const r=svg.node().getBoundingClientRect(); const b=bounds(); const k=Math.min(r.width/(b.x1-b.x0), r.height/(b.y1-b.y0))*.96;
@@ -1573,16 +1673,19 @@ function renderList(){
   }).join("");
   el.addEventListener("click", ev=>{ const b=ev.target.closest("[data-id]"); if(b) select(b.dataset.id,{pop:true}); });
 }
-const itemHTML = n => `<button class="item" data-id="${n.id}" style="--c:var(--d-${n.d})"><span class="dot"></span>${esc(n.label)}</button>`;
+const itemHTML = n => `<button class="item" data-id="${n.id}" style="--c:var(--d-${n.d})"><span class="dot"></span>${esc(n.label)}${stageBadge(n.id)}</button>`;
 
 /* ---------- Highlight ---------- */
 function activeSet(){
   if(state.sel){ const n=byId.get(state.sel); const s=closure(n, state.mode==="pre"?"pre":"kids"); s.add(n); return s; }
+  if(state.role){ return new Set(rolePath(ROLES.find(x=>x.id===state.role)).keys()); }
   if(state.dom){ return new Set(nodes.filter(n=>n.d===state.dom)); }
   return null;
 }
 function applyHighlight(){
   const act = activeSet(); const sel = state.sel && byId.get(state.sel);
+  const roleT = state.role && !sel ? new Set(ROLES.find(x=>x.id===state.role).targets.split(/\s+/)) : null;
+  nodeSel.classed("tgt", n=>!!roleT && roleT.has(n.id));
   nodeSel.classed("sel", n=>n===sel).classed("on", n=>!!act && act.has(n) && n!==sel).classed("dim", n=>!!act && !act.has(n));
   edgeSel.classed("on", e=>!!act && act.has(e.s) && act.has(e.t)).classed("dim", e=>!!act && !(act.has(e.s)&&act.has(e.t)))
     .attr("style", e=> act && act.has(e.s)&&act.has(e.t) ? `--c:var(--d-${(sel||e.t).d})` : null);
@@ -1594,6 +1697,7 @@ function applyHighlight(){
 /* ---------- Panel ---------- */
 const panel = document.getElementById("panel");
 function renderPanel(){
+  if(!state.sel && state.role){ panel.innerHTML = roleHTML(ROLES.find(x=>x.id===state.role)); return; }
   if(!state.sel){ panel.innerHTML = overviewHTML(); return; }
   const n = byId.get(state.sel);
   const set = [...closure(n, state.mode==="pre"?"pre":"kids")].sort((a,b)=>a.lv-b.lv||dIndex[a.d]-dIndex[b.d]||a.label.localeCompare(b.label));
@@ -1647,7 +1751,7 @@ function overviewHTML(){
     <div class="stats"><div><b>${nodes.length}</b><span>topics</span></div><div><b>${edges.length}</b><span>links</span></div><div><b>${DOMAINS.length}</b><span>domains</span></div></div>
     ${funnelHTML()}
     <h3>Ways to explore</h3>
-    <ol class="howto"><li>Select a topic to light up its full learning path back to the basics.</li><li>Switch to “What it unlocks” to see where a topic leads.</li><li>Tap a domain chip to see one field across all levels.</li><li>Use Curriculum for a level-by-level reading list.</li></ol>
+    <ol class="howto"><li>Select a topic to light up its full learning path back to the basics.</li><li>Switch to “What it unlocks” to see where a topic leads.</li><li>Tap a domain chip to see one field across all levels.</li><li>Use Curriculum for a level-by-level reading list.</li><li>Use Roles for a learning path and gap check for 18 AI jobs.</li></ol>
     <h3>Good places to start</h3><div class="links">${starts.map(itemHTML).join("")}</div>
     <p class="foot">The frontier column reflects developments through mid-2026. It moves fast.</p>`;
 }
@@ -1762,7 +1866,7 @@ document.addEventListener("keydown", ev=>{
 
 /* ---------- Select ---------- */
 function select(id, opts={}){
-  state.sel = id; if(id) state.dom = null;
+  state.sel = id; if(id){ state.dom = null; state.role = null; }
   renderPanel(); applyHighlight();
   if(id){ if(state.view==="graph" && opts.focus!==false) focusNode(byId.get(id), opts.anim!==false);
     if(location.hash.slice(1)!==id){ try{ history.replaceState(null,"","#"+id); }catch(e){ location.hash=id; } }
@@ -1771,7 +1875,7 @@ function select(id, opts={}){
   if(id && opts.pop) openModal(id);
   if(state.view==="list" && id){ const b=document.querySelector(`#list .item[data-id="${id}"]`); b && b.scrollIntoView({block:"nearest",behavior:"smooth"}); }
 }
-window.addEventListener("hashchange", ()=>{ const h=location.hash.slice(1); if(byId.has(h) && h!==state.sel) select(h); });
+window.addEventListener("hashchange", ()=>{ const h=location.hash.slice(1); if(byId.has(h) && h!==state.sel) select(h); else if(h.startsWith("role-") && h.slice(5)!==state.role && ROLES.some(r=>r.id===h.slice(5))) selectRole(h.slice(5)); });
 
 /* ---------- Legend ---------- */
 const legend = document.getElementById("legend");
@@ -1802,18 +1906,76 @@ function pick(id){ qres.hidden=true; q.value=""; select(id,{pop:true}); }
 
 /* ---------- Views & zoom buttons ---------- */
 function setView(v){
-  state.view=v; document.getElementById("vGraph").setAttribute("aria-pressed",v==="graph"); document.getElementById("vList").setAttribute("aria-pressed",v==="list");
+  state.view=v; document.getElementById("vGraph").setAttribute("aria-pressed",v==="graph"); document.getElementById("vList").setAttribute("aria-pressed",v==="list"); document.getElementById("vRoles").setAttribute("aria-pressed",v==="roles");
+  document.getElementById("roles").hidden = v!=="roles"; if(v==="roles") renderRoles();
   document.getElementById("map").style.display = v==="graph"?"block":"none";
   document.getElementById("list").hidden = v!=="list";
   document.getElementById("zoombtns").hidden = v!=="graph"; document.getElementById("hint").hidden = v!=="graph";
   if(v==="graph" && state.sel) focusNode(byId.get(state.sel), false);
+  if(v==="graph" && !state.sel && state.role) fitNodes([...rolePath(ROLES.find(x=>x.id===state.role)).keys()], false);
   try{ localStorage.setItem("atlas-view", v); }catch(e){}
 }
 document.getElementById("vGraph").onclick=()=>setView("graph");
 document.getElementById("vList").onclick=()=>setView("list");
+document.getElementById("vRoles").onclick=()=>setView("roles");
 document.getElementById("zin").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1.3);
 document.getElementById("zout").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1/1.3);
 document.getElementById("zfit").onclick=()=>fit();
+
+/* ---------- Roles UI ---------- */
+function fitNodes(list, anim=true){
+  if(!list.length) return; const r=svg.node().getBoundingClientRect(); if(!r.width) return;
+  const x0=Math.min(...list.map(n=>n.x))-30, x1=Math.max(...list.map(n=>n.x+n.w))+30, y0=Math.min(...list.map(n=>n.y))-80, y1=Math.max(...list.map(n=>n.y))+30;
+  const k=Math.max(.2, Math.min(1.1, Math.min(r.width/(x1-x0), r.height/(y1-y0))*.95));
+  const t=d3.zoomIdentity.translate(r.width/2-k*(x0+x1)/2, r.height/2-k*(y0+y1)/2).scale(k);
+  (anim?svg.transition().duration(650):svg).call(zoom.transform,t);
+}
+function selectRole(id, opts={}){
+  state.role=id; state.sel=null; state.dom=null;
+  if(!modal.hidden) closeModal();
+  renderPanel(); applyHighlight();
+  if(id && state.view==="graph") fitNodes([...rolePath(ROLES.find(x=>x.id===id)).keys()], opts.anim!==false);
+  if(id && location.hash.slice(1)!=="role-"+id){ try{ history.replaceState(null,"","#role-"+id); }catch(e){ location.hash="role-"+id; } }
+  if(id && opts.scroll && window.matchMedia("(max-width:860px)").matches) panel.scrollIntoView({behavior:"smooth"});
+}
+const RUNG_LABEL = {s:"Build it (Skill)", k:"Teach it (Knowledge)", i:"Be aware of it (Information)"};
+function roleHTML(role){
+  const need=rolePath(role), {met,gaps}=roleGap(need);
+  const by = rr => [...need].filter(([n,x])=>x===rr).map(([n])=>n).sort((a,b)=>a.lv-b.lv||dIndex[a.d]-dIndex[b.d]);
+  const S=by("s"), K=by("k"), I=by("i");
+  const deep = gaps.filter(n=>need.get(n)!=="i"), shallow = gaps.filter(n=>need.get(n)==="i");
+  const next = (deep.length?deep:shallow).sort((a,b)=>a.lv-b.lv||b.nDesc-a.nDesc).slice(0,6);
+  const pct = Math.round(met/need.size*100);
+  const group = (title,list,open)=> list.length ? `<details class="rgroup" ${open?"open":""}><summary><span>${title}</span><b>${list.length}</b></summary><div class="links">${list.map(itemHTML).join("")}</div></details>` : "";
+  return `<div class="meta"><span class="lvtag">Role · ${esc(ROLE_FAMILIES[role.fam])}</span></div>
+    <h2>${esc(role.name)}</h2>
+    <p class="desc">${esc(role.does)}</p>
+    <div class="stats"><div><b>${S.length||"–"}</b><span>topics to build</span></div><div><b>${K.length + (role.depth==="k"?0:0)}</b><span>topics to teach</span></div><div><b>${I.length}</b><span>topics to know of</span></div></div>
+    <h3>What success looks like</h3>
+    <div class="links">${role.success.map(k=>`<span class="succchip">${esc(FORM[k].name)}</span>`).join("")}</div>
+    <h3>Your readiness</h3>
+    <div class="prog" style="--c:var(--accent)"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span>${met} of ${need.size} at the required rung</span></div>
+    <p class="none" style="margin-top:6px">Required rungs come from the map: the role's core topics at ${role.depth==="s"?"Skill":"Knowledge"}, their direct prerequisites at ${role.depth==="s"?"Knowledge":"Information"}, and everything further back at Information. Mark your rungs in any topic to update this.</p>
+    ${next.length?`<h3>Close these gaps next</h3><div class="links">${next.map(n=>`<button class="item" data-id="${n.id}" style="--c:var(--d-${n.d})"><span class="dot"></span>${esc(n.label)}<span class="need">needs ${STAGE_LETTER[need.get(n)]}</span></button>`).join("")}</div>`:`<p class="none">You meet every required rung for this role.</p>`}
+    <h3>Learning path</h3>
+    ${group(RUNG_LABEL[role.depth], role.depth==="s"?S:K, true)}
+    ${role.depth==="s"?group(RUNG_LABEL.k, K, true):""}
+    ${group(RUNG_LABEL.i, I, false)}
+    <p class="foot">Click empty map space to leave this role. Link to this role: #role-${role.id}</p>`;
+}
+function renderRoles(){
+  const el=document.getElementById("roles");
+  el.innerHTML = `<div class="rolesintro"><h2>Learning paths by role</h2><p>Each path is built from the map. Pick a role to see what to build, what to be able to teach, and where your gaps are.</p></div>` +
+    Object.entries(ROLE_FAMILIES).map(([f,fname])=>`<section class="rfam"><h3>${esc(fname)}</h3><div class="rcards">${ROLES.filter(r=>r.fam===f).map(r=>{
+      const need=rolePath(r), {met}=roleGap(need), core=[...need.values()].filter(x=>x===r.depth).length;
+      return `<button class="rcard${state.role===r.id?" cur":""}" data-role="${r.id}">
+        <b>${esc(r.name)}</b><span class="rd">${esc(r.does)}</span>
+        <span class="rm">${core} core topics at ${r.depth==="s"?"Skill":"Knowledge"} · ${need.size} in path</span>
+        <span class="rm">Success: ${r.success.map(k=>esc(FORM[k].name)).join(" · ")}</span>
+        <span class="rbar"><span style="width:${Math.round(met/need.size*100)}%"></span></span>
+      </button>`; }).join("")}</div></section>`).join("");
+}
+document.getElementById("roles").addEventListener("click", ev=>{ const c=ev.target.closest("[data-role]"); if(!c) return; setView("graph"); selectRole(c.dataset.role,{scroll:true}); });
 
 /* ---------- Success goal ---------- */
 const goalSel = document.getElementById("goalSel");
@@ -1839,7 +2001,8 @@ function shareTopic(id){
 window.atlasBack = function(){
   if(!modal.hidden){ closeModal(); return true; }
   if(!qres.hidden){ qres.hidden=true; return true; }
-  if(state.view==="list"){ setView("graph"); return true; }
+  if(state.view!=="graph"){ setView("graph"); return true; }
+  if(state.role){ state.role=null; select(null); return true; }
   return false;
 };
 
@@ -1847,10 +2010,11 @@ window.atlasBack = function(){
 function start(){
   renderGraph(); renderList(); refreshStages();
   const h = location.hash.slice(1); const first = byId.has(h)? h : null;
+  const firstRole = h.startsWith("role-") && ROLES.some(r=>r.id===h.slice(5)) ? h.slice(5) : null;
   let v="graph"; try{ v = localStorage.getItem("atlas-view")||"graph"; }catch(e){}
   setView(v==="list"?"list":"graph");
   const r=svg.node().getBoundingClientRect(); svg.call(zoom.transform, d3.zoomIdentity.translate(r.width/2,r.height/2).scale(.7));
-  if(first) select(first,{anim:false}); else { renderPanel(); applyHighlight(); if(v!=="list") fit(false); }
+  if(first) select(first,{anim:false}); else if(firstRole){ setView("graph"); selectRole(firstRole,{anim:false}); } else { renderPanel(); applyHighlight(); if(v!=="list") fit(false); }
 }
 (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start, start);
 </script>
