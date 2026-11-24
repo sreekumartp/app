@@ -201,6 +201,25 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .item .need{font-family:var(--font-mono);font-size:.62rem;color:var(--muted);margin-left:4px}
 .node.tgt rect{stroke:var(--c);stroke-width:2.4;fill:color-mix(in srgb,var(--c) 30%,var(--surface))}
 .node.tgt text.lbl{font-weight:700}
+.bglabel{display:inline-flex;align-items:center;gap:8px;margin-top:12px;font-size:.85rem;font-weight:500}
+.bgsel{padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--fg);font:inherit;max-width:100%}
+.phases{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.phase{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface)}
+.phase.now{border-color:var(--accent);border-width:2px;padding:9px 11px}
+.phase.done{opacity:.6}
+.phhead{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.phn{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--surface-2);font-family:var(--font-mono);font-size:.72rem;font-weight:600;flex:none}
+.phase.now .phn{background:var(--accent);color:var(--bg)}
+.phhead b{font-size:.92rem}
+.phst{margin-left:auto;font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.phase.now .phst{color:var(--accent)}
+.item.known{opacity:.5}
+.item.known::after{content:"✓";margin-left:4px;font-size:.75rem}
+.phk{margin:10px 0 0;display:flex;flex-direction:column;gap:6px}
+.phk div{display:grid;grid-template-columns:112px minmax(0,1fr);gap:8px;font-size:.84rem}
+.phk dt{display:flex;align-items:center;gap:6px;font-weight:600;color:var(--muted)}
+.phk dd{margin:0}
+@media (max-width:420px){.phk div{grid-template-columns:1fr;gap:2px}}
 .openbtn{margin-top:14px;width:100%;padding:9px 12px;border:1px solid var(--fg);border-radius:8px;background:var(--fg);color:var(--bg);font-weight:600;cursor:pointer}
 /* Popup */
 .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(8,12,24,.5);padding-block:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -1566,7 +1585,13 @@ const ROLES = [
   targets:"mlbasics metrics incontext rag agents llmevals hallucination fairness"},
  {id:"educator", name:"AI Educator / Developer Advocate", fam:"bridge", depth:"k", success:["influence","sme"],
   does:"Teaches AI to developers and the public through courses, docs and talks.",
-  targets:"gd backprop transformer rag agents ddpm reasoning"}
+  targets:"gd backprop transformer rag agents ddpm reasoning"},
+ {id:"solutions-architect", name:"AI Solutions Architect / Consultant", fam:"bridge", depth:"k", success:["influence","adoption"],
+  does:"Fits AI into a business: build vs buy vs fine-tune, cost, data and risk.",
+  targets:"rag vecdb peft llmevals kvcache quant mlops agents governance privacy"},
+ {id:"eval-engineer", name:"AI Evaluation Engineer", fam:"trust", depth:"s", success:["technique","influence"],
+  does:"Measures what models can do: benchmarks, LLM-as-judge, red-team and safety evals.",
+  targets:"hyptest metrics llmevals hallucination prm redteam frontierevals"}
 ];
 const RUNG_RANK = {i:0,k:1,s:2,"$":3};
 function rolePath(role){
@@ -1582,6 +1607,159 @@ function roleGap(need){
   let met=0; const gaps=[];
   need.forEach((r,n)=>{ const have=STAGE_IDX[getStage(n.id)]; if(have>=RUNG_RANK[r]) met++; else gaps.push(n); });
   return {met, gaps};
+}
+
+/* ---------- Role-specific phased learning paths ---------- */
+// Each phase: [name, topic ids in study order, teach-back (Knowledge), capstone (Skill), milestone (Success)]
+const PHASES = {
+"data-scientist":[
+ ["Foundations","programming dataeng descstats probbasics vectors viz","Explain when the mean misleads and the median doesn't","Clean and profile a messy real-world dataset",""],
+ ["Statistics for decisions","randvar expect clt hyptest bayesinf mle","Explain p-values and confidence intervals to a product manager","Run and write up an A/B test with bootstrap intervals","Your test result settles a real decision"],
+ ["Core machine learning","mlbasics linreg logreg biasvar regularization cvval metrics","Teach bias–variance using your own learning curves","Build a churn or pricing model with leak-free validation",""],
+ ["Tabular power tools","features trees forests boosting kmeans pca","Explain why boosting usually wins on tabular data","Reach a strong Kaggle-style score with engineered features","A model your team uses for a weekly decision"],
+ ["Causality and time","causal timeseries anomaly","Explain confounding with an example from your domain","Ship a forecast or an uplift analysis with backtests","You are the go-to person for 'did it actually work?'"],
+ ["Modern toolkit","sentemb incontext rag llmevals","Explain when an LLM beats a classic model, and when it doesn't","Add an LLM-powered feature with its own eval set","A business team adopts it"]],
+"ml-engineer":[
+ ["Software and data","programming complexity datastruct dataeng tensors","Explain broadcasting and why vectorised code is faster","Build a tested data pipeline",""],
+ ["ML essentials","mlbasics linreg logreg cvval metrics boosting","Explain validation strategy and metric choice","Ship a baseline model with an evaluation report",""],
+ ["Deep learning","mlp backprop sgd adam normalization resnet frameworks","Teach backprop at a whiteboard","Write a PyTorch training loop from scratch",""],
+ ["Modern architectures","cnnarch transfer transformer bert gpt","Explain attention vs convolution and when to fine-tune","Fine-tune a pretrained model for a real task","Your model powers a product feature"],
+ ["Production","gputrain hpo mlworkflow mlops quant","Explain your deploy, monitoring and rollback process","Serve a model behind an API with monitoring and drift alerts","Your model runs in production for real users"],
+ ["Scale and cost","disttrain peft kvcache distill","Explain the cost vs quality trade-offs of serving","Distil or quantise a model to cut serving cost","Recognised as the team's model-shipping SME"]],
+"ai-engineer":[
+ ["Foundations","programming dataeng probbasics vectors normsip","Explain cosine similarity and why embeddings work","Build a small semantic search over your notes",""],
+ ["ML essentials","mlbasics metrics cvval contrastive sentemb","Explain how to evaluate a model honestly","Train or pick an embedding model and evaluate retrieval quality",""],
+ ["How LLMs work","tokenization selfattn transformer gpt decoding","Teach how an LLM turns a prompt into text","Compare models and decoding settings on one task","You run a 'how LLMs work' session for your team"],
+ ["Building with LLMs","incontext rag vecdb tooluse peft","Explain RAG vs fine-tuning trade-offs to a stakeholder","Ship a RAG assistant over real documents, with citations","A team relies on it daily"],
+ ["Production quality","llmevals hallucination redteam kvcache quant","Explain how you know your assistant is getting better","Build an eval harness and guardrails for your assistant","Your eval set becomes the team standard"],
+ ["Agents","agents mcp contexteng codingagents agentsafety","Explain agent failure modes and how you contain them","Build an agent that completes multi-step tasks with tools","An open-source tool or talk others use"]],
+"cv-engineer":[
+ ["Foundations","programming tensors matrices imgproc fourier","Explain convolution as a filter","Build an edge-detection and feature-matching pipeline",""],
+ ["Neural network basics","mlbasics metrics mlp backprop frameworks","Explain backprop and overfitting","Train an MLP image classifier",""],
+ ["Convolutional vision","cnn cnnarch transfer detection","Explain receptive fields and anchor-free detection","Train a detector on a custom dataset","A model used on a real inspection or retail task"],
+ ["Transformers for vision","vit sslvision clip sam","Explain how CLIP enables zero-shot classification","Build zero-shot visual search with CLIP or segmentation with SAM",""],
+ ["Multimodal and deployment","vlm ldm quant mlops","Explain the trade-offs of edge vs cloud vision","Deploy a quantised vision model with monitoring","Your system runs in production, or a paper at a CV workshop"]],
+"nlp-speech":[
+ ["Classic text","programming dataeng probbasics ngram tfidf","Explain perplexity and TF-IDF","Build a BM25 search engine",""],
+ ["Neural sequences","wordemb rnn lstm seq2seq tokenization","Explain why RNNs struggle with long text","Train a BPE tokenizer and a small seq2seq model",""],
+ ["Transformers","attention transformer bert t5 gpt","Explain encoder vs decoder models and when to use each","Fine-tune BERT or T5 for a real text task","A classifier or summariser used by a team"],
+ ["Search and grounding","sentemb vecdb rag llmevals","Explain bi-encoders vs cross-encoders","Build semantic search with reranking and an eval set",""],
+ ["Speech","speech audiollm decoding","Explain how speech becomes text and back","Build a transcription or voice assistant app","A speech product people use, or a workshop paper"]],
+"genai-media":[
+ ["Probabilistic foundations","programming tensors gaussian kl sampling","Explain sampling and KL divergence","Sample from and fit simple distributions in code",""],
+ ["Neural basics","mlp backprop frameworks cnn autoenc","Explain how an autoencoder compresses images","Train a convolutional autoencoder",""],
+ ["Classic generative models","vae gan vqvae flows","Explain the trade-offs between VAEs, GANs and flows","Train a VAE and a small GAN and compare samples",""],
+ ["Diffusion era","ddpm ldm flowmatch dit","Teach how diffusion turns noise into an image","Fine-tune Stable Diffusion with LoRA for a style","Creators or a brand use your model"],
+ ["Video and beyond","peft videogen worldmodels omni","Explain temporal consistency and its failure modes","Build a text-to-video or image-to-video pipeline","A tool or technique others adopt"]],
+"rl-robotics":[
+ ["Foundations","programming probbasics expect markov dynprog","Explain Markov chains and dynamic programming","Simulate a Markov process and solve a DP puzzle",""],
+ ["Decision making","mdp bellman bandits qlearning","Explain the Bellman equation","Solve gridworld with value iteration and Q-learning",""],
+ ["Deep RL","mlp backprop frameworks dqn polgrad ppo","Explain policy gradients vs Q-learning","Train PPO on a custom environment",""],
+ ["Planning and offline data","mcts modelrl offlinerl","Explain model-based vs model-free RL","Build an MCTS game bot or train from logged data","A bot or policy used by others"],
+ ["Embodied AI","vlm embodied worldmodels rlvr","Explain vision-language-action models","Fine-tune a robot policy in simulation","A demo on hardware, or a CoRL-style paper"]],
+"research-scientist":[
+ ["Mathematical toolkit","multivar gradient eigen svd mle infotheory kl","Derive maximum likelihood and cross-entropy at a whiteboard","Implement the derivations in NumPy and verify them numerically",""],
+ ["Learning and optimisation theory","learnth biasvar convex gd sgd adam","Explain generalisation bounds and their limits","Reproduce an optimisation result from a paper",""],
+ ["Deep learning core","mlp backprop resnet normalization transformer","Teach the Transformer from first principles","Implement and train a Transformer from scratch",""],
+ ["Modern methods","ddpm flowmatch ssm moe scaling","Critique an architecture paper's claims","Reproduce a key result from a recent paper","A workshop paper or a cited reproduction"],
+ ["Open problems","dlth rlhf reasoning mechinterp","Explain an open question in your area clearly","Run an original experiment on an open question","A main-conference paper"],
+ ["Frontier","latentreason diffusionlm hybrid jepa","Give a talk on where your sub-field is heading","Propose and test a new method","A technique others adopt and cite"]],
+"research-engineer":[
+ ["Systems foundations","programming tensors parallel numstab","Explain memory-bound vs compute-bound code","Profile and speed up a slow training script",""],
+ ["Training mechanics","backprop adam lrsched init normalization frameworks","Explain training instabilities and their fixes","Diagnose and fix a diverging training run",""],
+ ["Language models","transformer gpt tokenization scaling","Explain compute-optimal scaling","Train nanoGPT and fit a small scaling law",""],
+ ["Scale","gputrain disttrain flashattn moe","Explain FSDP vs tensor parallelism","Run multi-GPU training with FSDP","Your training stack is used by others"],
+ ["Pretraining and post-training","pretrain datacuration sft rlhf dpo","Explain the full LLM training pipeline","Pretrain a small LLM, then instruction-tune it",""],
+ ["Frontier training","rlvr reasoning muon lowprec moemodern","Explain GRPO and verifiable rewards","Run RL with verifiable rewards on math problems","A recipe improvement adopted in a real training run"]],
+"ai-scientist":[
+ ["Scientific data","programming dataeng gaussian bayesinf hyptest","Explain uncertainty in measurements","Analyse a real scientific dataset with proper statistics",""],
+ ["Careful ML","mlbasics cvval uncertainty gp causal","Explain why random splits can mislead in science","Build a model with calibrated uncertainty",""],
+ ["Deep learning","mlp backprop frameworks gnn","Explain message passing on molecular graphs","Train a GNN on molecules or materials",""],
+ ["Structure-aware models","transformer geodl selfsup","Explain equivariance and why symmetry matters","Train an equivariant model on 3D structures","A collaboration paper with domain scientists"],
+ ["AI-driven discovery","aiscience agents reasoning","Explain how AI is changing your field","Build an AI-assisted analysis or discovery loop","A finding or tool other scientists use"]],
+"mlops":[
+ ["Engineering foundations","programming complexity datastruct dataeng","Explain idempotent, testable pipelines","Build a tested ETL pipeline",""],
+ ["ML lifecycle","mlbasics cvval metrics mlworkflow","Explain reproducibility and experiment tracking","Set up experiment tracking and model versioning",""],
+ ["Training infrastructure","frameworks gputrain parallel","Explain GPU utilisation and its bottlenecks","Containerise and schedule GPU training jobs",""],
+ ["Serving","mlops vecdb kvcache quant","Explain the serving trade-offs between latency, cost and quality","Serve models with autoscaling, monitoring and drift alerts","Every model team uses your platform"],
+ ["Scale and safety","disttrain specdec llmevals agentsafety","Explain how to run evals and guardrails in CI","Add evaluation gates and safe rollouts to the platform","Recognised as the platform SME"]],
+"inference-perf":[
+ ["Machine foundations","programming binary numstab complexity","Explain floating-point formats and rounding","Show numeric errors across FP32, BF16 and FP8",""],
+ ["GPU programming","matrices tensors parallel frameworks","Explain arithmetic intensity","Write and profile a Triton or CUDA kernel",""],
+ ["Attention internals","selfattn transformer flashattn","Explain why FlashAttention is faster","Benchmark naive vs fused attention",""],
+ ["Serving optimisation","kvcache quant specdec distill","Explain prefill vs decode and the KV cache","Cut a model's serving cost by quantising and batching","Your optimisation ships in production"],
+ ["Frontier efficiency","disttrain lowprec moemodern smallmodels","Explain FP8 training and MoE serving","Contribute a kernel or optimisation upstream","A merged contribution to a widely used library"]],
+"data-engineer":[
+ ["Data foundations","programming datastruct dataeng viz","Explain schema design and data quality checks","Build a validated ingestion pipeline",""],
+ ["Data for ML","descstats hyptest metrics mlworkflow","Explain data leakage and dataset versioning","Version a dataset with quality reports",""],
+ ["Text processing","tokenization ngram tfidf sentemb","Explain tokenizers and deduplication","Build a text dedup and quality filter",""],
+ ["Curation at scale","datacuration vecdb privacy","Explain web-scale curation trade-offs","Curate a domain corpus with dedup, filters and PII removal","A dataset other teams train on"],
+ ["Synthetic data","synthetic llmevals distill","Explain the risks of synthetic data","Generate and verify a synthetic training set","Your dataset improves a model measurably"]],
+"safety-researcher":[
+ ["Foundations","probbasics kl infotheory gd","Explain KL penalties and optimisation pressure","Show reward overoptimisation in a toy setting",""],
+ ["How models work","mlp backprop transformer gpt","Teach the Transformer's residual stream","Train a small Transformer you can inspect",""],
+ ["Alignment methods","rlhf alignment cai","Explain reward hacking and specification gaming","Reproduce a reward-hacking or sycophancy result",""],
+ ["Interpretability","mechinterp saes xai","Explain superposition and sparse features","Find and explain a circuit or SAE feature","A workshop paper or public write-up"],
+ ["Evaluation and red teaming","redteam frontierevals hallucination","Explain dangerous-capability evals","Design an eval with graded tasks",""],
+ ["Oversight","scalableov cotmon agentsafety","Explain AI control and weak-to-strong generalisation","Run an oversight or monitoring experiment","Research that labs or institutes adopt"]],
+"ai-security":[
+ ["Foundations","programming dataeng sets probbasics","Explain threat modelling basics","Write a threat model for a small app",""],
+ ["Attacking models","mlbasics backprop adversarial","Explain adversarial examples","Attack and harden an image classifier",""],
+ ["LLM attack surface","transformer gpt incontext rag tooluse","Explain prompt injection vs jailbreaks","Map the attack surface of a RAG app",""],
+ ["Offence and defence","redteam hallucination privacy","Explain defences and their limits","Red-team an LLM app and fix what you find","A vendor fixes an issue you reported"],
+ ["Agent security","agents agentsafety mcp computeruse","Explain least privilege for agents","Sandbox an agent and test it against injection","Recognised as the AI security SME"]],
+"responsible-ai":[
+ ["Evidence basics","descstats probbasics hyptest metrics","Explain base rates and error rates","Audit a metric report for flaws",""],
+ ["Fairness and explanation","mlbasics biasvar fairness xai","Explain fairness metrics and their trade-offs","Run a fairness audit with SHAP explanations",""],
+ ["LLM behaviour","gpt incontext llmevals hallucination","Explain why LLMs hallucinate","Evaluate an assistant for factuality and harm",""],
+ ["Risk","privacy alignment redteam","Explain privacy and misuse risks","Write a risk assessment for an AI feature",""],
+ ["Governance","governance frontierevals","Explain the EU AI Act and frontier safety frameworks","Write a model card and governance process","Your policy is adopted across the organisation"]],
+"ai-pm":[
+ ["Data literacy","probbasics descstats hyptest mlbasics","Explain an A/B test result to leadership","Design an experiment for a product change",""],
+ ["Measuring models","metrics cvval fairness","Explain precision vs recall in product terms","Write success metrics for an ML feature",""],
+ ["How LLMs behave","gpt incontext decoding","Explain why outputs vary and how to control them","Prototype a feature with prompting",""],
+ ["AI product patterns","rag tooluse agents","Explain when to use RAG, tools or agents","Write a PRD for an AI assistant",""],
+ ["Shipping responsibly","llmevals hallucination kvcache governance","Explain quality, cost and risk trade-offs","Define an eval plan and launch criteria","An AI feature users adopt"]],
+"educator":[
+ ["Math intuition","deriv chainrule matrices probbasics","Explain the chain rule visually","Make a visual explainer",""],
+ ["How networks learn","gd mlp backprop","Teach gradient descent and backprop to beginners","Build an interactive training demo",""],
+ ["Language models","transformer gpt","Teach how ChatGPT-style models work","Create a 'build a GPT' tutorial","Your tutorial is shared widely"],
+ ["Generative and applied AI","ddpm rag agents","Explain diffusion and RAG simply","Publish a hands-on workshop",""],
+ ["Frontier","reasoning rlvr mechinterp","Explain reasoning models and interpretability","Run a talk or course on frontier topics","Your course is what others learn from"]],
+"solutions-architect":[
+ ["Technical grounding","programming dataeng mlbasics metrics","Explain what ML can and cannot do","Assess a business problem for ML fit",""],
+ ["LLM fundamentals","gpt incontext transformer","Explain LLM capabilities and limits to executives","Prototype a use case with prompting",""],
+ ["Solution patterns","rag vecdb tooluse peft sft","Explain build vs buy vs fine-tune","Design a reference architecture for an enterprise assistant",""],
+ ["Operating AI","llmevals kvcache quant mlops","Explain the cost, latency and quality budget","Estimate the total cost of a deployment","A client or team adopts your architecture"],
+ ["Risk and agents","agents mcp governance privacy agentsafety","Explain compliance and agent risks","Write a rollout plan with governance","Recognised as the trusted adviser on AI adoption"]],
+"eval-engineer":[
+ ["Statistics","programming probbasics descstats hyptest","Explain statistical significance for model comparisons","Compare two models with confidence intervals",""],
+ ["Evaluation design","metrics cvval biasvar","Explain contamination and overfitting to benchmarks","Design a held-out eval set",""],
+ ["LLM behaviour","gpt incontext decoding","Explain sampling variance in evals","Measure output variance across settings",""],
+ ["LLM evals","llmevals hallucination prm","Explain LLM-as-judge pitfalls","Build an eval harness with a judge and human checks","Your eval becomes a team standard"],
+ ["Frontier evals","redteam frontierevals agents","Explain capability elicitation","Build an agentic or safety eval suite","Labs or the community report results on your eval"]]
+};
+const BACKGROUNDS = [
+ {id:"new", name:"New to tech (student or career changer)", topics:""},
+ {id:"swe", name:"Software engineer", topics:"numbers arith fractions exponents logs ratios sets binary sumnot algebra functions programming complexity datastruct graphs dataeng dynprog"},
+ {id:"analyst", name:"Data analyst", topics:"numbers arith fractions exponents logs ratios sumnot algebra functions coord programming dataeng viz descstats probbasics condprob bayes randvar expect clt hyptest linreg metrics"},
+ {id:"mlpro", name:"ML practitioner", topics:"@lv<=3 mlp backprop sgd adam frameworks activations normalization dropout cnn transfer"}
+];
+function bgSet(bg){
+  const s=new Set(); (bg.topics||"").split(/\s+/).filter(Boolean).forEach(t=>{ const m=t.match(/^@lv<=(\d)$/); if(m) nodes.filter(n=>n.lv<=+m[1]).forEach(n=>s.add(n.id)); else s.add(t); });
+  return s;
+}
+function getBg(){ try{ return localStorage.getItem("atlas-bg")||"new"; }catch(e){ return "new"; } }
+function setBg(v){ try{ localStorage.setItem("atlas-bg",v); }catch(e){} }
+// A phase counts as covered when every topic is in your background or you have marked it at Knowledge or above.
+function phaseStatus(role){
+  const bg=bgSet(BACKGROUNDS.find(b=>b.id===getBg())||BACKGROUNDS[0]);
+  let started=false;
+  return (PHASES[role.id]||[]).map(ph=>{
+    const ids=ph[1].split(/\s+/); const known=new Set(ids.filter(id=>bg.has(id)||STAGE_IDX[getStage(id)]>=1)); const covered=known.size===ids.length;
+    let st = covered && !started ? "done" : (!started ? (started=true,"now") : "next");
+    return {ph, ids, st, known};
+  });
 }
 
 /* ---------- Model ---------- */
@@ -1751,10 +1929,11 @@ function overviewHTML(){
     <div class="stats"><div><b>${nodes.length}</b><span>topics</span></div><div><b>${edges.length}</b><span>links</span></div><div><b>${DOMAINS.length}</b><span>domains</span></div></div>
     ${funnelHTML()}
     <h3>Ways to explore</h3>
-    <ol class="howto"><li>Select a topic to light up its full learning path back to the basics.</li><li>Switch to “What it unlocks” to see where a topic leads.</li><li>Tap a domain chip to see one field across all levels.</li><li>Use Curriculum for a level-by-level reading list.</li><li>Use Roles for a learning path and gap check for 18 AI jobs.</li></ol>
+    <ol class="howto"><li>Select a topic to light up its full learning path back to the basics.</li><li>Switch to “What it unlocks” to see where a topic leads.</li><li>Tap a domain chip to see one field across all levels.</li><li>Use Curriculum for a level-by-level reading list.</li><li>Use Roles for a phased learning path and gap check for 20 AI jobs.</li></ol>
     <h3>Good places to start</h3><div class="links">${starts.map(itemHTML).join("")}</div>
     <p class="foot">The frontier column reflects developments through mid-2026. It moves fast.</p>`;
 }
+panel.addEventListener("change", ev=>{ if(ev.target.matches("[data-bg]")){ setBg(ev.target.value); renderPanel(); if(state.view==="roles") renderRoles(); } });
 panel.addEventListener("click", ev=>{
   const m = ev.target.closest("[data-mode]"); if(m){ state.mode=m.dataset.mode; renderPanel(); applyHighlight(); return; }
   const o = ev.target.closest("[data-open]"); if(o){ openModal(o.dataset.open); return; }
@@ -1956,25 +2135,40 @@ function roleHTML(role){
     <h3>Your readiness</h3>
     <div class="prog" style="--c:var(--accent)"><div class="track"><div class="fill" style="width:${pct}%"></div></div><span>${met} of ${need.size} at the required rung</span></div>
     <p class="none" style="margin-top:6px">Required rungs come from the map: the role's core topics at ${role.depth==="s"?"Skill":"Knowledge"}, their direct prerequisites at ${role.depth==="s"?"Knowledge":"Information"}, and everything further back at Information. Mark your rungs in any topic to update this.</p>
+    <h3>Your starting point</h3>
+    <select class="bgsel" data-bg aria-label="Your background">${BACKGROUNDS.map(b=>`<option value="${b.id}" ${b.id===getBg()?"selected":""}>${esc(b.name)}</option>`).join("")}</select>
+    <h3>Learning path: ${(PHASES[role.id]||[]).length} phases</h3>
+    <ol class="phases">${phaseStatus(role).map(({ph,ids,st,known},i)=>`<li class="phase ${st}">
+      <div class="phhead"><span class="phn">${i+1}</span><b>${esc(ph[0])}</b><span class="phst">${st==="done"?"Covered":(st==="now"?"Start here · ":"")+`${ids.length-known.size} new`}</span></div>
+      ${st==="done"?`<p class="none">Covered by your background or your marked rungs.</p>`:`
+      <div class="links">${ids.map(id=>known.has(id)?itemHTML(byId.get(id)).replace('class="item"','class="item known" title="Already covered"'):itemHTML(byId.get(id))).join("")}</div>
+      <dl class="phk">
+        <div><dt><span class="rk2">K</span>Teach-back</dt><dd>${esc(ph[2])}</dd></div>
+        <div><dt><span class="rk2">S</span>Capstone</dt><dd>${esc(ph[3])}</dd></div>
+        ${ph[4]?`<div><dt><span class="rk2">★</span>Milestone</dt><dd>${esc(ph[4])}</dd></div>`:""}
+      </dl>`}
+    </li>`).join("")}</ol>
     ${next.length?`<h3>Close these gaps next</h3><div class="links">${next.map(n=>`<button class="item" data-id="${n.id}" style="--c:var(--d-${n.d})"><span class="dot"></span>${esc(n.label)}<span class="need">needs ${STAGE_LETTER[need.get(n)]}</span></button>`).join("")}</div>`:`<p class="none">You meet every required rung for this role.</p>`}
-    <h3>Learning path</h3>
-    ${group(RUNG_LABEL[role.depth], role.depth==="s"?S:K, true)}
-    ${role.depth==="s"?group(RUNG_LABEL.k, K, true):""}
+    <h3>Full topic set by rung</h3>
+    ${group(RUNG_LABEL[role.depth], role.depth==="s"?S:K, false)}
+    ${role.depth==="s"?group(RUNG_LABEL.k, K, false):""}
     ${group(RUNG_LABEL.i, I, false)}
     <p class="foot">Click empty map space to leave this role. Link to this role: #role-${role.id}</p>`;
 }
 function renderRoles(){
   const el=document.getElementById("roles");
-  el.innerHTML = `<div class="rolesintro"><h2>Learning paths by role</h2><p>Each path is built from the map. Pick a role to see what to build, what to be able to teach, and where your gaps are.</p></div>` +
+  el.innerHTML = `<div class="rolesintro"><h2>Learning paths by role</h2><p>Each role has an ordered path of phases. Every phase lists topics to study, a teach-back to prove Knowledge, a capstone to prove Skill and a milestone for Success. Pick your background to skip what you already know.</p>
+    <label class="bglabel">Your background <select class="bgsel" data-bg aria-label="Your background">${BACKGROUNDS.map(b=>`<option value="${b.id}" ${b.id===getBg()?"selected":""}>${esc(b.name)}</option>`).join("")}</select></label></div>` +
     Object.entries(ROLE_FAMILIES).map(([f,fname])=>`<section class="rfam"><h3>${esc(fname)}</h3><div class="rcards">${ROLES.filter(r=>r.fam===f).map(r=>{
       const need=rolePath(r), {met}=roleGap(need), core=[...need.values()].filter(x=>x===r.depth).length;
       return `<button class="rcard${state.role===r.id?" cur":""}" data-role="${r.id}">
         <b>${esc(r.name)}</b><span class="rd">${esc(r.does)}</span>
-        <span class="rm">${core} core topics at ${r.depth==="s"?"Skill":"Knowledge"} · ${need.size} in path</span>
+        <span class="rm">${(()=>{ const ps=phaseStatus(r), tot=ps.reduce((a,x)=>a+x.ids.length,0), kn=ps.reduce((a,x)=>a+x.known.size,0), at=ps.findIndex(x=>x.st==="now")+1; return `${ps.length} phases · ${at?`start at phase ${at}`:"all covered"} · ${tot-kn} of ${tot} topics new to you`; })()}</span>
         <span class="rm">Success: ${r.success.map(k=>esc(FORM[k].name)).join(" · ")}</span>
         <span class="rbar"><span style="width:${Math.round(met/need.size*100)}%"></span></span>
       </button>`; }).join("")}</div></section>`).join("");
 }
+document.getElementById("roles").addEventListener("change", ev=>{ if(ev.target.matches("[data-bg]")){ setBg(ev.target.value); renderRoles(); if(state.role) renderPanel(); } });
 document.getElementById("roles").addEventListener("click", ev=>{ const c=ev.target.closest("[data-role]"); if(!c) return; setView("graph"); selectRole(c.dataset.role,{scroll:true}); });
 
 /* ---------- Success goal ---------- */
