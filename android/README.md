@@ -5,6 +5,14 @@ An offline Android app for The K.I.S.S model for mastering AI, a knowledge map o
 
 ## What the app does
 
+- **Phone-first layout.** Bottom navigation (Home · Map · Curriculum · Roles), a compact top bar with
+  Search and Settings, and a Home screen with your K.I.S.S funnel, a "Continue" card for your role and
+  the next topics to convert. A short intro explains the model on first launch.
+- **Readable map.** On phones the map opens at a readable zoom with level jump chips and larger tap areas.
+- **Topic sheet.** A "Where am I?" selector marks your rung in one tap; tabs split the topic into
+  Ladder, Study, Resources and Path.
+- **Settings with backup.** Success goal, your background, and backup/restore of all progress.
+
 - **Works offline.** The atlas page, d3 and the fonts ship inside the APK. Only the external learning
   resources need a connection.
 - **Opens resources in Chrome Custom Tabs**, so reading a paper or course page and coming back is quick.

@@ -81,6 +81,7 @@ main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 390px}
 .edge.hov{stroke:var(--fg);opacity:.95;stroke-width:1.8}
 .edge.dim{opacity:.05}
 .node{cursor:pointer;transition:opacity .2s}
+.node rect.hit{fill:transparent!important;stroke:none!important}
 .node rect{fill:var(--surface);stroke:color-mix(in srgb,var(--c) 40%,var(--line));stroke-width:1}
 .node circle{fill:var(--c)}
 .node text{font-family:var(--font-body);font-size:11.5px;font-weight:500;fill:var(--fg)}
@@ -134,7 +135,7 @@ aside h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var
 .howto{margin:0;padding-left:18px;font-size:.88rem}
 .howto li{margin-bottom:4px}
 .foot{margin-top:24px;font-size:.75rem;color:var(--muted)}
-/* K.I.S.S. */
+/* K.I.S.S */
 .rk2{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:5px;background:var(--fg);color:var(--bg);font-family:var(--font-mono);font-size:.7rem;font-weight:600;flex:none}
 .ladder{display:flex;flex-direction:column;gap:6px;margin-top:20px}
 .ladhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px}
@@ -266,13 +267,89 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
   .sheet{border-radius:16px 16px 0 0;max-height:92vh;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
   .mgrid{grid-template-columns:1fr}
 }
+/* ---------- Shared new components ---------- */
+.iconbtn{display:inline-grid;place-items:center;width:40px;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--surface);cursor:pointer;font-size:1.1rem;line-height:1;flex:none}
+.phonebar{display:none}
+.bnav{display:none}
+#home{height:100%;overflow:auto;padding:18px max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+.homewrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px 16px}
+.card h2{font-family:var(--font-display);font-size:1.15rem;margin:0 0 6px;line-height:1.2}
+.card h3{margin-top:14px}
+.card p{margin:0}
+.intro{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+.introgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+.introgrid div{display:flex;gap:8px;align-items:flex-start;font-size:.86rem;line-height:1.35}
+.introgrid b{display:block}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{min-height:44px;padding:0 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-weight:600;cursor:pointer}
+.btn.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.levelbar{display:none}
+.mapbar{position:absolute;left:12px;right:12px;top:58px;z-index:5;display:flex;align-items:center;gap:8px;padding:6px 6px 6px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:0 6px 18px rgba(10,20,40,.14);font-size:.84rem}
+.mapbar[hidden]{display:none}
+.mapbar .mt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mapbar .btn{min-height:36px;padding:0 12px;font-size:.82rem}
+/* Where am I? selector and popup tabs */
+.whereami{margin-top:16px}
+.whereami .wl{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:6px}
+.wseg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:4px;border-radius:12px;background:var(--surface-2)}
+.wseg button{min-height:44px;border:0;border-radius:9px;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:.72rem;color:var(--muted);padding:2px}
+.wseg button b{font-family:var(--font-mono);font-size:.95rem;color:var(--fg)}
+.wseg button[aria-pressed="true"]{background:var(--c);color:var(--on-c)}
+.wseg button[aria-pressed="true"] b{color:var(--on-c)}
+.tabs{display:flex;gap:4px;margin-top:18px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:none;min-height:44px;padding:0 14px;border:0;border-bottom:3px solid transparent;background:none;cursor:pointer;font-weight:600;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--c)}
+.tabpane{padding-top:14px}
+.tabpane[hidden]{display:none}
+.tabpane .mgrid{margin-top:0}
+.settings h2{margin-bottom:14px}
+.settings section{padding:14px 0;border-top:1px solid var(--line)}
+.settings label.sl{display:block;font-weight:600;margin-bottom:6px}
+.settings select,.settings textarea{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg);font:inherit}
+.settings textarea{min-height:90px;font-family:var(--font-mono);font-size:.78rem}
+.settings .note{font-size:.8rem;color:var(--muted);margin-top:6px}
+.settings .status{font-size:.84rem;margin-top:8px;font-weight:600}
+#home h3,.rdetail h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:18px 0 8px;font-weight:600}
+#home .card>h3:first-child{margin-top:0}
+.rdetail h2{font-family:var(--font-display);font-size:1.5rem;line-height:1.15;margin:8px 0 8px;text-wrap:balance}
+.roleback{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+/* ---------- Phones ---------- */
 @media (max-width:860px){
-  .app{height:auto}
-  main{display:block}
-  .pane{height:64vh;border-bottom:1px solid var(--line)}
-  aside{border-left:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  header{padding-block:8px 6px;gap:6px}
+  .toprow{flex-wrap:nowrap}
+  .brand h1,.brand .sub{display:none}
+  .phonebar{display:flex;align-items:center;gap:8px}
+  .ptitle{flex:1;min-width:0;font-family:var(--font-display);font-weight:700;font-size:1.02rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .controls{display:none}
+  header.searching .controls{display:flex;position:absolute;left:0;right:0;top:0;z-index:30;padding:8px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
+  header.searching .controls .seg,header.searching #openSettings{display:none}
+  header.searching .search{flex:1}
+  header.searching .search input{width:100%;min-height:44px;font-size:1rem}
+  header{position:relative}
+  .legend{display:none}
+  body[data-view="graph"] .legend{display:flex}
+  .legend{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
+  .chip{min-height:36px}
+  main{display:block;position:relative}
+  .pane{height:100%}
+  aside{display:none}
+  .bnav{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);background:var(--surface);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+  .bnav button{min-height:58px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:.74rem;font-weight:600;color:var(--muted);cursor:pointer}
+  .bnav .bi{font-size:1.15rem;line-height:1}
+  .bnav button[aria-current="page"]{color:var(--fg)}
+  .bnav button[aria-current="page"] .bi{color:var(--accent)}
+  .levelbar{display:flex;gap:6px;position:absolute;left:0;right:0;top:0;z-index:6;padding:8px 12px;overflow-x:auto;scrollbar-width:none;background:linear-gradient(var(--bg) 70%,transparent)}
+  .levelbar[hidden]{display:none}
+  .levelbar button{flex:none;min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-size:.8rem;font-weight:600;cursor:pointer}
+  .zoombtns button{width:44px;height:44px}
+  .item{min-height:40px}
+  .seg button{min-height:44px}
+  .xbtn{width:44px;height:44px}
   .lvl{grid-template-columns:1fr}
   .hint{display:none}
+  .introgrid{grid-template-columns:1fr}
+  #roles .phase .links,.card .links{gap:8px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -283,6 +360,11 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
   <header>
     <div class="toprow">
       <div class="brand">
+        <div class="phonebar">
+          <span class="ptitle">The K.I.S.S model for mastering AI</span>
+          <button class="iconbtn" id="pSearch" aria-label="Search topics">⌕</button>
+          <button class="iconbtn" id="pSettings" aria-label="Settings">⚙</button>
+        </div>
         <h1>The K.I.S.S model for mastering AI</h1>
         <p class="sub" id="sub">From arithmetic to reasoning models and agents. Pick any topic to trace everything it builds on.</p>
       </div>
@@ -291,20 +373,12 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
           <input id="q" type="search" placeholder="Search topics, e.g. attention" autocomplete="off" aria-label="Search topics">
           <ul id="qres" hidden></ul>
         </div>
-        <select id="goalSel" class="goalsel" aria-label="What success means to you">
-          <option value="">Success: natural for each topic</option>
-          <option value="sme">Success: SME recognition</option>
-          <option value="paper">Success: paper or talk</option>
-          <option value="technique">Success: new technique</option>
-          <option value="adoption">Success: adoption</option>
-          <option value="influence">Success: influence</option>
-          <option value="money">Success: money</option>
-        </select>
         <div class="seg" role="group" aria-label="View">
           <button id="vGraph" aria-pressed="true">Map</button>
           <button id="vList" aria-pressed="false">Curriculum</button>
           <button id="vRoles" aria-pressed="false">Roles</button>
         </div>
+        <button class="iconbtn" id="openSettings" aria-label="Settings" title="Settings">⚙</button>
       </div>
     </div>
     <div class="legend" id="legend" aria-label="Domains"></div>
@@ -312,6 +386,9 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
   <main>
     <div class="pane" id="pane">
       <svg id="map" aria-label="Knowledge graph of AI and ML topics"></svg>
+      <div id="home" hidden></div>
+      <div class="levelbar" id="levelbar" aria-label="Jump to level"></div>
+      <div class="mapbar" id="mapbar" hidden></div>
       <div id="list" hidden></div>
       <div id="roles" hidden></div>
       <div class="zoombtns" id="zoombtns">
@@ -323,6 +400,12 @@ a.res .rk{grid-row:1/span 2;grid-column:2;align-self:center;font-family:var(--fo
     </div>
     <aside id="panel" aria-live="polite"></aside>
   </main>
+  <nav class="bnav" id="bnav" aria-label="Sections">
+    <button data-view="home"><span class="bi">★</span>Home</button>
+    <button data-view="graph"><span class="bi">◎</span>Map</button>
+    <button data-view="list"><span class="bi">≡</span>Curriculum</button>
+    <button data-view="roles"><span class="bi">◆</span>Roles</button>
+  </nav>
 </div>
 <div class="modal" id="modal" hidden>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="mTitle"></div>
@@ -1172,7 +1255,7 @@ function resourcesFor(n){
   return {learn: out.filter(r=>r.type!=="paper"), papers: out.filter(r=>r.type==="paper"), search};
 }
 
-/* ---------- K.I.S.S. ladder: Information → Knowledge → Skill → Success ($) ---------- */
+/* ---------- K.I.S.S ladder: Information → Knowledge → Skill → Success ($) ---------- */
 const KISS_STAGES = [
   {k:"i", name:"Information", verb:"Aware", def:"You know it exists, what it is for, and where it sits in the map."},
   {k:"k", name:"Knowledge", verb:"Can teach", def:"You can teach it or hold a technical conversation about it without notes."},
@@ -1527,7 +1610,7 @@ function kissFor(n){
   const [build,earn]=(KISS[n.id]||"|").split("|");
   const first=n.desc.split(/(?<=\.)\s/)[0];
   return [
-    `Know what it is and why it matters: ${first}`,
+    `Name it, say what problem it solves, and place it on the map: Level ${n.lv} (${LEVELS[n.lv][0]}), ${DOMAINS.find(d=>d[0]===n.d)[1]}.`,
     `Explain without notes: ${subs.slice(0,3).join(", ")}${subs.length>3?", "+subs.slice(3,-1).join(", ")+(subs.length>4?",":"")+" and "+subs[subs.length-1]:""}${n.f?`. Walk through: ${n.f.replace(/\n/g,"; ")}`:""}.`,
     `${build}.`,
     successFor(n).text
@@ -1834,7 +1917,8 @@ function renderGraph(){
     .on("keydown",(ev,n)=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); select(n.id,{pop:true}); } })
     .on("mouseenter",(ev,n)=>{ edgeSel.classed("hov",e=>e.s===n||e.t===n); d3.select(ev.currentTarget).raise(); })
     .on("mouseleave",()=> edgeSel.classed("hov",false));
-  nodeSel.append("rect").attr("width",n=>n.w).attr("height",PH).attr("rx",PH/2);
+  nodeSel.append("rect").attr("class","hit").attr("x",-6).attr("y",-(ROWH-PH)/2).attr("width",n=>n.w+12).attr("height",ROWH);
+  nodeSel.append("rect").attr("class","pill").attr("width",n=>n.w).attr("height",PH).attr("rx",PH/2);
   nodeSel.append("circle").attr("cx",10).attr("cy",PH/2).attr("r",3.6);
   nodeSel.append("text").attr("class","lbl").attr("x",19).attr("y",PH/2+4).text(n=>n.label);
   nodeSel.append("text").attr("class","sl").attr("x",10).attr("y",PH/2+3).attr("text-anchor","middle");
@@ -1878,6 +1962,7 @@ function applyHighlight(){
   edgeSel.classed("on", e=>!!act && act.has(e.s) && act.has(e.t)).classed("dim", e=>!!act && !(act.has(e.s)&&act.has(e.t)))
     .attr("style", e=> act && act.has(e.s)&&act.has(e.t) ? `--c:var(--d-${(sel||e.t).d})` : null);
   edgeSel.filter(".on").raise();
+  updateMapbar();
   document.querySelectorAll("#list .item").forEach(b=>{ const n=byId.get(b.dataset.id); b.classList.toggle("sel",n===sel); b.classList.toggle("on",!!act&&act.has(n)&&n!==sel); b.classList.toggle("dim",!!act&&!act.has(n)); });
   document.querySelectorAll("#legend .chip").forEach(c=>c.setAttribute("aria-pressed", String(c.dataset.d===state.dom)));
 }
@@ -1920,7 +2005,7 @@ function funnelHTML(){
   const g=getGoal();
   const verbs = ["Turn into knowledge (teach it)","Turn into skill (build it)", g&&FORM[g] ? `Turn into success: ${FORM[g].name.toLowerCase()}` : "Turn into success (get it recognised or used)"];
   const anyMarked = reached[0]>0;
-  return `<h3>Your K.I.S.S. funnel</h3>
+  return `<h3>Your K.I.S.S funnel</h3>
     <p class="none" style="margin-bottom:10px">Information is awareness, knowledge is being able to teach it, skill is being able to build with it, and success is when others recognise, use or build on it. Push topics up the ladder.</p>
     <div class="funnel">${KISS_STAGES.map((st,i)=>`<div class="frow">
       <span class="fl"><span class="rk2">${STAGE_LETTER[st.k]}</span>${i===3&&g&&FORM[g]?esc(FORM[g].name):st.name}</span>
@@ -1932,18 +2017,17 @@ function funnelHTML(){
 }
 function overviewHTML(){
   const starts = ["gd","backprop","transformer","rlhf","reasoning","agents"].map(id=>byId.get(id));
-  return `<div class="meta"><span class="lvtag">Overview</span></div>
-    <h2>How to read this atlas</h2>
+  return `${homeHTML()}<div style="margin-top:22px"><div class="meta"><span class="lvtag">Overview</span></div>
+    <h2>How to read the map</h2>
     <p class="desc">Topics flow left to right through eight levels, from arithmetic to the 2024–26 frontier. Each line means "is a prerequisite for". Colours mark the domain.</p>
     <div class="stats"><div><b>${nodes.length}</b><span>topics</span></div><div><b>${edges.length}</b><span>links</span></div><div><b>${DOMAINS.length}</b><span>domains</span></div></div>
-    ${funnelHTML()}
     <h3>Ways to explore</h3>
     <ol class="howto"><li>Select a topic to light up its full learning path back to the basics.</li><li>Switch to “What it unlocks” to see where a topic leads.</li><li>Tap a domain chip to see one field across all levels.</li><li>Use Curriculum for a level-by-level reading list.</li><li>Use Roles for a phased learning path and gap check for 20 AI jobs.</li></ol>
-    <h3>Good places to start</h3><div class="links">${starts.map(itemHTML).join("")}</div>
-    <p class="foot">The frontier column reflects developments through mid-2026. It moves fast.</p>`;
+    <p class="foot">The frontier column reflects developments through mid-2026. It moves fast.</p></div>`;
 }
 panel.addEventListener("change", ev=>{ if(ev.target.matches("[data-bg]")){ setBg(ev.target.value); renderPanel(); if(state.view==="roles") renderRoles(); } });
 panel.addEventListener("click", ev=>{
+  if(homeClick(ev)) return;
   const m = ev.target.closest("[data-mode]"); if(m){ state.mode=m.dataset.mode; renderPanel(); applyHighlight(); return; }
   const o = ev.target.closest("[data-open]"); if(o){ openModal(o.dataset.open); return; }
   const b = ev.target.closest("[data-id]"); if(b) select(b.dataset.id,{pop:true});
@@ -1956,8 +2040,10 @@ function getDone(id){ try{ return JSON.parse(localStorage.getItem(doneKey(id))||
 function setDone(id, arr){ try{ localStorage.setItem(doneKey(id), JSON.stringify(arr)); }catch(e){} }
 const KIND = {course:"Course",book:"Book",video:"Video",article:"Article",docs:"Docs",tool:"Code",paper:"Paper"};
 const resHTML = r => `<a class="res" href="${esc(r.u)}" target="_blank" rel="noopener noreferrer"><span class="rt">${esc(r.t)} ↗</span><span class="rs">${esc(r.src)}</span><span class="rk">${KIND[r.type]||""}</span></a>`;
-function openModal(id){
+let modalTab = "ladder";
+function openModal(id, keep=false){
   const n = byId.get(id); if(!n) return;
+  if(!keep && modalId!==id) modalTab = "ladder";
   modalId = id;
   const subs = (SYL[id]||"").split(";").map(s=>s.trim()).filter(Boolean);
   const done = new Set(getDone(id));
@@ -1965,30 +2051,46 @@ function openModal(id){
   const anc = [...closure(n,"pre")]; const lvls = anc.map(a=>a.lv);
   const range = anc.length ? `L${Math.min(...lvls)}–L${Math.max(...lvls)}` : "none";
   sheet.style.setProperty("--c", `var(--d-${n.d})`);
+  const cur = STAGE_IDX[getStage(id)];
+  const pre = [...n.pre].sort((a,b)=>a.lv-b.lv), kids=[...n.kids].sort((a,b)=>a.lv-b.lv);
+  const TABS = [["ladder","Ladder"],["study","Study"],["res","Resources"],["path","Path"]];
+  if(!TABS.some(t=>t[0]===modalTab)) modalTab="ladder";
   sheet.innerHTML = `
     <button class="xbtn" id="mClose" aria-label="Close">×</button>
     <div class="meta"><span class="dchip"><span class="dot"></span>${esc(dName[n.d])}</span><span class="lvtag">Level ${n.lv} · ${esc(LEVELS[n.lv][0])}</span>${HAND[n.id]?`<span class="keytag">Key topic</span>`:""}</div>
     <h2 id="mTitle">${esc(n.label)}</h2>
     <p class="desc">${esc(n.desc)}</p>
-    <div class="scope">
-      <span><b>${subs.length}</b> subtopics to cover</span>
-      ${anc.length?`<span>Builds on <b>${n.nAnc}</b> topics across ${range}</span>`:`<span>A starting point: no prerequisites</span>`}
-      <span>Unlocks <b>${n.nDesc}</b> topics</span>
+    <div class="whereami" role="group" aria-label="Where am I on the K.I.S.S ladder for this topic?">
+      <div class="wl">Where am I?</div>
+      <div class="wseg">
+        <button data-stage="" aria-pressed="${cur<0}"><b>–</b>Not yet</button>
+        ${KISS_STAGES.map((st,i)=>`<button data-stage="${st.k}" aria-pressed="${i===cur}"><b>${STAGE_LETTER[st.k]}</b>${({i:"Aware",k:"Teach",s:"Build","$":"Success"})[st.k]}</button>`).join("")}
+      </div>
     </div>
-    ${ladderHTML(n)}
-    <div class="mgrid">
-      <section>
-        <h3>Topics to cover</h3>
-        <ol class="subs">${subs.map((s,i)=>`<li><label for="chk-${id}-${i}"><input type="checkbox" id="chk-${id}-${i}" data-i="${i}" ${done.has(i)?"checked":""}><span>${esc(s)}</span></label></li>`).join("")}</ol>
-        <div class="prog" id="mProg"></div>
-        ${n.f?`<div class="formula" style="margin-top:16px">${esc(n.f)}</div>`:""}
-      </section>
-      <section>
-        ${r.learn.length?`<h3>Learn it</h3><div class="reslist">${r.learn.map(resHTML).join("")}</div>`:""}
-        ${r.papers.length?`<h3>Key papers</h3><div class="reslist">${r.papers.map(resHTML).join("")}</div>`:""}
-        <h3>Search further</h3>
-        <div class="searchlinks">${r.search.map(s=>`<a href="${esc(s.u)}" target="_blank" rel="noopener noreferrer">${esc(s.t)} ↗</a>`).join("")}</div>
-      </section>
+    <div class="tabs" role="tablist">${TABS.map(([k,l])=>`<button role="tab" data-tab="${k}" aria-selected="${modalTab===k}">${l}</button>`).join("")}</div>
+    <div class="tabpane" data-pane="ladder" ${modalTab==="ladder"?"":"hidden"}>${ladderHTML(n)}</div>
+    <div class="tabpane" data-pane="study" ${modalTab==="study"?"":"hidden"}>
+      <div class="scope">
+        <span><b>${subs.length}</b> subtopics to cover</span>
+        ${anc.length?`<span>Builds on <b>${n.nAnc}</b> topics across ${range}</span>`:`<span>A starting point: no prerequisites</span>`}
+        <span>Unlocks <b>${n.nDesc}</b> topics</span>
+      </div>
+      <h3 style="margin-top:14px">Topics to cover</h3>
+      <ol class="subs">${subs.map((s,i)=>`<li><label for="chk-${id}-${i}"><input type="checkbox" id="chk-${id}-${i}" data-i="${i}" ${done.has(i)?"checked":""}><span>${esc(s)}</span></label></li>`).join("")}</ol>
+      <div class="prog" id="mProg"></div>
+      ${n.f?`<div class="formula" style="margin-top:16px">${esc(n.f)}</div>`:""}
+    </div>
+    <div class="tabpane" data-pane="res" ${modalTab==="res"?"":"hidden"}>
+      ${r.learn.length?`<h3>Learn it</h3><div class="reslist">${r.learn.map(resHTML).join("")}</div>`:""}
+      ${r.papers.length?`<h3>Key papers</h3><div class="reslist">${r.papers.map(resHTML).join("")}</div>`:""}
+      <h3>Search further</h3>
+      <div class="searchlinks">${r.search.map(s=>`<a href="${esc(s.u)}" target="_blank" rel="noopener noreferrer">${esc(s.t)} ↗</a>`).join("")}</div>
+    </div>
+    <div class="tabpane" data-pane="path" ${modalTab==="path"?"":"hidden"}>
+      <h3>Builds directly on</h3>
+      ${pre.length?`<div class="links">${pre.map(itemHTML).join("")}</div>`:`<p class="none">Nothing. This is a starting point.</p>`}
+      <h3>Leads directly to</h3>
+      ${kids.length?`<div class="links">${kids.map(itemHTML).join("")}</div>`:`<p class="none">Nothing yet. This is at the current frontier.</p>`}
     </div>
     <div class="mfoot">
       <button class="primary" id="mPath">Show learning path on map</button>
@@ -1997,14 +2099,14 @@ function openModal(id){
     </div>`;
   updateProg();
   if(modal.hidden) lastFocus = document.activeElement;
-  modal.hidden = false; sheet.scrollTop = 0;
-  document.getElementById("mClose").focus();
+  modal.hidden = false; if(!keep) sheet.scrollTop = 0;
+  if(!keep) document.getElementById("mClose").focus();
 }
 const STAGE_IDX = {"":-1,i:0,k:1,s:2,"$":3};
 function ladderHTML(n){
   const lines = kissFor(n), cur = STAGE_IDX[getStage(n.id)];
-  return `<section class="ladder" aria-label="K.I.S.S. ladder">
-    <div class="ladhead"><h3>K.I.S.S. ladder for this topic</h3><span class="ladnote">Mark the highest rung you have reached</span></div>
+  return `<section class="ladder" aria-label="K.I.S.S ladder">
+    <div class="ladhead"><h3>What each rung means for this topic</h3><span class="ladnote">Tap a rung to mark it</span></div>
     ${KISS_STAGES.map((st,i)=>`<button class="rung${i<=cur?" reached":""}${i===cur?" current":""}" data-stage="${st.k}" aria-pressed="${i===cur}">
       <span class="rl"><span class="rk2">${STAGE_LETTER[st.k]}</span><span><b>${st.name}</b><small>${st.verb}</small></span></span>
       <span class="rt2">${i===3?`<span class="sform${successFor(n).custom?" mine":""}">${esc(successFor(n).name)}${successFor(n).fits?"":" (less natural here)"}</span>`:""}${esc(lines[i])}</span>
@@ -2029,6 +2131,8 @@ function refreshStages(){
     nodeSel.select("text.sl").text(n=>{ const st=getStage(n.id); return st ? STAGE_LETTER[st] : ""; });
   }
   if(!state.sel) renderPanel();
+  if(state.view==="home") renderHome();
+  if(state.view==="roles") renderRoles();
 }
 function updateProg(){
   const boxes=[...sheet.querySelectorAll(".subs input")]; const c=boxes.filter(b=>b.checked).length;
@@ -2043,6 +2147,7 @@ sheet.addEventListener("input", ev=>{
   if(t) t.innerHTML = `<span class="sform${sf.custom?" mine":""}">${esc(sf.name)}${sf.fits?"":" (less natural here)"}</span>${esc(sf.text)}`;
 });
 sheet.addEventListener("change", ev=>{
+  if(settingsChange(ev)) return;
   if(!ev.target.matches(".subs input")) return;
   const arr=[...sheet.querySelectorAll(".subs input")].filter(b=>b.checked).map(b=>+b.dataset.i);
   setDone(modalId, arr); updateProg();
@@ -2051,8 +2156,13 @@ sheet.addEventListener("click", ev=>{
   if(ev.target.closest("#mClose")) return closeModal();
   if(ev.target.closest("#mShare")){ shareTopic(modalId); return; }
   const sb = ev.target.closest("[data-stage]");
-  if(sb){ const id=modalId, top=sheet.scrollTop; setStage(id, sb.dataset.stage); const lad=sheet.querySelector(".ladder"); lad.outerHTML = ladderHTML(byId.get(id)); sheet.scrollTop=top; refreshStages(); return; }
-  const p = ev.target.closest("#mPath,#mUnlocks");
+  if(sb && modalId){ const id=modalId, top=sheet.scrollTop; setStage(id, sb.dataset.stage); openModal(id,true); sheet.scrollTop=top; refreshStages(); return; }
+  const tb = ev.target.closest("[data-tab]");
+  if(tb){ modalTab=tb.dataset.tab; sheet.querySelectorAll("[data-tab]").forEach(b=>b.setAttribute("aria-selected", String(b===tb))); sheet.querySelectorAll("[data-pane]").forEach(pn=>pn.hidden = pn.dataset.pane!==modalTab); return; }
+  const it = ev.target.closest(".tabpane [data-id]");
+  if(it){ openModal(it.dataset.id); return; }
+  if(settingsClick(ev)) return;
+  const p = modalId && ev.target.closest("#mPath,#mUnlocks");
   if(p){ const id=modalId; state.mode = p.id==="mPath"?"pre":"kids"; closeModal(); setView("graph"); select(id,{scroll:true}); }
 });
 modal.addEventListener("click", ev=>{ if(ev.target===modal) closeModal(); });
@@ -2069,7 +2179,6 @@ function select(id, opts={}){
   renderPanel(); applyHighlight();
   if(id){ if(state.view==="graph" && opts.focus!==false) focusNode(byId.get(id), opts.anim!==false);
     if(location.hash.slice(1)!==id){ try{ history.replaceState(null,"","#"+id); }catch(e){ location.hash=id; } }
-    if(window.matchMedia("(max-width:860px)").matches && opts.scroll) panel.scrollIntoView({behavior:"smooth"});
   }
   if(id && opts.pop) openModal(id);
   if(state.view==="list" && id){ const b=document.querySelector(`#list .item[data-id="${id}"]`); b && b.scrollIntoView({block:"nearest",behavior:"smooth"}); }
@@ -2101,22 +2210,164 @@ q.addEventListener("keydown", ev=>{
 });
 qres.addEventListener("click", ev=>{ const b=ev.target.closest("[data-id]"); if(b) pick(b.dataset.id); });
 document.addEventListener("click", ev=>{ if(!ev.target.closest(".search")) qres.hidden=true; });
-function pick(id){ qres.hidden=true; q.value=""; select(id,{pop:true}); }
+function pick(id){ qres.hidden=true; q.value=""; document.querySelector("header").classList.remove("searching"); select(id,{pop:true,focus:state.view==="graph"}); }
 
 /* ---------- Views & zoom buttons ---------- */
+const isPhone = () => window.matchMedia("(max-width:860px)").matches;
 function setView(v){
-  state.view=v; document.getElementById("vGraph").setAttribute("aria-pressed",v==="graph"); document.getElementById("vList").setAttribute("aria-pressed",v==="list"); document.getElementById("vRoles").setAttribute("aria-pressed",v==="roles");
+  if(v==="home" && !isPhone()) v="graph";
+  state.view=v; document.body.dataset.view=v;
+  document.getElementById("vGraph").setAttribute("aria-pressed",v==="graph"); document.getElementById("vList").setAttribute("aria-pressed",v==="list"); document.getElementById("vRoles").setAttribute("aria-pressed",v==="roles");
+  document.querySelectorAll("#bnav [data-view]").forEach(b=> b.dataset.view===v ? b.setAttribute("aria-current","page") : b.removeAttribute("aria-current"));
+  document.getElementById("home").hidden = v!=="home"; if(v==="home") renderHome();
   document.getElementById("roles").hidden = v!=="roles"; if(v==="roles") renderRoles();
   document.getElementById("map").style.display = v==="graph"?"block":"none";
   document.getElementById("list").hidden = v!=="list";
+  document.getElementById("levelbar").hidden = v!=="graph";
   document.getElementById("zoombtns").hidden = v!=="graph"; document.getElementById("hint").hidden = v!=="graph";
   if(v==="graph" && state.sel) focusNode(byId.get(state.sel), false);
   if(v==="graph" && !state.sel && state.role) fitNodes([...rolePath(ROLES.find(x=>x.id===state.role)).keys()], false);
+  updateMapbar();
   try{ localStorage.setItem("atlas-view", v); }catch(e){}
 }
 document.getElementById("vGraph").onclick=()=>setView("graph");
 document.getElementById("vList").onclick=()=>setView("list");
 document.getElementById("vRoles").onclick=()=>setView("roles");
+document.getElementById("bnav").addEventListener("click", ev=>{ const b=ev.target.closest("[data-view]"); if(!b) return; if(b.dataset.view==="roles" && state.view==="roles"){ roleDetail=null; } setView(b.dataset.view); });
+
+/* ---------- Phone map: readable zoom, level jumps, info bar ---------- */
+const PHONE_K = .9;
+function jumpLevel(i, anim=true){
+  const r=svg.node().getBoundingClientRect(); const cur=d3.zoomTransform(svg.node());
+  const k=Math.max(cur.k, isPhone()?PHONE_K:.6);
+  const col=nodes.filter(n=>n.lv===i); const cy=(Math.min(...col.map(n=>n.y))+Math.max(...col.map(n=>n.y)))/2;
+  const t=d3.zoomIdentity.translate(14 - k*(i*COLW-16), r.height/2 + 20 - k*cy).scale(k);
+  (anim?svg.transition().duration(500):svg).call(zoom.transform,t);
+}
+document.getElementById("levelbar").innerHTML = LEVELS.map(([name],i)=>`<button data-lv="${i}" title="${esc(name)}">L${i} · ${esc(name.split(" ")[0].replace("&",""))}</button>`).join("");
+document.getElementById("levelbar").addEventListener("click", ev=>{ const b=ev.target.closest("[data-lv]"); if(b) jumpLevel(+b.dataset.lv); });
+function updateMapbar(){
+  const bar=document.getElementById("mapbar"); if(!bar) return;
+  const show = isPhone() && state.view==="graph" && (state.sel || state.role);
+  bar.hidden = !show; if(!show) return;
+  if(state.sel){ const n=byId.get(state.sel); bar.innerHTML = `<span class="mt">${state.mode==="pre"?"Path to":"Unlocked by"} <b>${esc(n.label)}</b></span><button class="btn" data-mb="open">Details</button><button class="btn" data-mb="clear" aria-label="Clear">✕</button>`; }
+  else { const r=ROLES.find(x=>x.id===state.role); bar.innerHTML = `<span class="mt">Role: <b>${esc(r.name)}</b></span><button class="btn" data-mb="role">Path</button><button class="btn" data-mb="clear" aria-label="Clear">✕</button>`; }
+}
+document.getElementById("mapbar").addEventListener("click", ev=>{
+  const b=ev.target.closest("[data-mb]"); if(!b) return;
+  if(b.dataset.mb==="open") openModal(state.sel);
+  else if(b.dataset.mb==="role"){ roleDetail=state.role; setView("roles"); }
+  else { state.role=null; select(null); }
+});
+
+/* ---------- Home ---------- */
+function introSeen(){ try{ return localStorage.getItem("atlas-intro")==="1"; }catch(e){ return true; } }
+function homeHTML(){
+  const lastRole = (()=>{ try{ return localStorage.getItem("atlas-lastrole"); }catch(e){ return null; } })();
+  const role = ROLES.find(r=>r.id===lastRole);
+  let cont;
+  if(role){
+    const ps=phaseStatus(role), now=ps.find(x=>x.st==="now"), {met}=roleGap(rolePath(role)), need=rolePath(role).size;
+    cont = `<div class="card"><h2>Continue: ${esc(role.name)}</h2>
+      <p class="none">${Math.round(met/need*100)}% ready · ${now?`Phase ${ps.indexOf(now)+1} of ${ps.length}: <b>${esc(now.ph[0])}</b>`:"All phases covered"}</p>
+      ${now?`<div class="links" style="margin-top:10px">${now.ids.filter(id=>!now.known.has(id)).slice(0,5).map(id=>itemHTML(byId.get(id))).join("")}</div>
+      <p style="margin-top:10px;font-size:.86rem"><b>Capstone:</b> ${esc(now.ph[3])}</p>`:""}
+      <div class="btnrow"><button class="btn primary" data-homerole="${role.id}">Open full path</button><button class="btn" data-goto="roles">Change role</button></div></div>`;
+  } else {
+    cont = `<div class="card"><h2>Pick a role to get a learning path</h2><p class="none">20 AI roles, each with ordered phases, a capstone per phase and a check of your gaps.</p><div class="btnrow"><button class="btn primary" data-goto="roles">Choose a role</button></div></div>`;
+  }
+  const intro = introSeen() ? "" : `<div class="card intro"><h2>How the K.I.S.S model works</h2>
+    <p class="none">Every topic has four rungs. Move topics up the ladder.</p>
+    <div class="introgrid">${KISS_STAGES.map(st=>`<div><span class="rk2">${STAGE_LETTER[st.k]}</span><span><b>${st.name}</b>${esc(st.def)}</span></div>`).join("")}</div>
+    <p class="none">Open any topic and tap <b>Where am I?</b> to mark your rung. Your funnel below fills up as you go.</p>
+    <div class="btnrow"><button class="btn primary" data-intro>Got it</button></div></div>`;
+  const starts = ["gd","backprop","transformer","rag","reasoning","agents"].map(id=>byId.get(id));
+  return `<div class="homewrap">${intro}${cont}<div class="card">${funnelHTML()}</div>
+    <div class="card"><h3 style="margin-top:0">Good places to start</h3><div class="links">${starts.map(itemHTML).join("")}</div></div>
+    <p class="foot">${nodes.length} topics · ${edges.length} links · frontier through mid-2026. Progress is saved on this device; back it up in Settings.</p></div>`;
+}
+function renderHome(){ document.getElementById("home").innerHTML = homeHTML(); }
+function homeClick(ev){
+  if(ev.target.closest("[data-intro]")){ try{ localStorage.setItem("atlas-intro","1"); }catch(e){} if(state.view==="home") renderHome(); else renderPanel(); return true; }
+  const g=ev.target.closest("[data-goto]"); if(g){ roleDetail=null; setView(g.dataset.goto); return true; }
+  const hr=ev.target.closest("[data-homerole]"); if(hr){ if(isPhone()){ roleDetail=hr.dataset.homerole; selectRole(hr.dataset.homerole); setView("roles"); } else { setView("graph"); selectRole(hr.dataset.homerole); } return true; }
+  return false;
+}
+document.getElementById("home").addEventListener("click", ev=>{
+  if(homeClick(ev)) return;
+  const it=ev.target.closest("[data-id]"); if(it) openModal(it.dataset.id);
+});
+
+/* ---------- Settings, backup and restore ---------- */
+function openSettings(){
+  modalId=null;
+  sheet.style.setProperty("--c","var(--accent)");
+  const goal=getGoal(), bg=getBg();
+  sheet.innerHTML = `<button class="xbtn" id="mClose" aria-label="Close">×</button>
+    <div class="settings"><h2 id="mTitle">Settings</h2>
+    <section><label class="sl" for="setGoal">What success means to you</label>
+      <select id="setGoal" data-set="goal">
+        <option value="">Natural for each topic</option>${SUCCESS_FORMS.map(f=>`<option value="${f.k}" ${goal===f.k?"selected":""}>${esc(f.name)}</option>`).join("")}
+      </select><p class="note">Sets which form of success the ladder, funnel and suggestions use. Your own definitions on a topic always win.</p></section>
+    <section><label class="sl" for="setBg">Your background</label>
+      <select id="setBg" data-set="bg">${BACKGROUNDS.map(b=>`<option value="${b.id}" ${b.id===bg?"selected":""}>${esc(b.name)}</option>`).join("")}</select>
+      <p class="note">Decides which phases of a role path count as already covered.</p></section>
+    <section><label class="sl" for="setBackup">Back up your progress</label>
+      <p class="note" style="margin:0 0 8px">Rungs, ticked subtopics, success definitions and settings live only on this device. Copy this backup somewhere safe, or paste one below to restore it.</p>
+      <textarea id="setBackup" readonly>${esc(backupJSON())}</textarea>
+      <div class="btnrow"><button class="btn primary" data-set="copy">Copy backup</button>${window.AtlasNative?`<button class="btn" data-set="sharebk">Share backup</button>`:""}</div>
+      <p class="status" id="bkStatus" role="status"></p></section>
+    <section><label class="sl" for="setRestore">Restore from a backup</label>
+      <textarea id="setRestore" placeholder="Paste a backup here"></textarea>
+      <div class="btnrow"><button class="btn" data-set="restore">Restore</button></div>
+      <p class="status" id="rsStatus" role="status"></p></section>
+    </div>`;
+  if(modal.hidden) lastFocus = document.activeElement;
+  modal.hidden=false; sheet.scrollTop=0; document.getElementById("mClose").focus();
+}
+function backupJSON(){
+  const o={}; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.startsWith("atlas-")) o[k]=localStorage.getItem(k); } }catch(e){}
+  return JSON.stringify({app:"kiss-ai", v:1, data:o});
+}
+function settingsChange(ev){
+  const t=ev.target.closest("[data-set]"); if(!t || modalId) return false;
+  if(t.dataset.set==="goal"){ setGoal(t.value); }
+  if(t.dataset.set==="bg"){ setBg(t.value); }
+  rerenderAll(); return true;
+}
+function settingsClick(ev){
+  const t=ev.target.closest("button[data-set]"); if(!t || modalId) return false;
+  const k=t.dataset.set;
+  if(k==="copy"){ const ta=document.getElementById("setBackup"), st=document.getElementById("bkStatus");
+    const done=()=>{ st.textContent="Backup copied. Paste it into a note or message to keep it safe."; };
+    const fall=()=>{ ta.focus(); ta.select(); st.textContent="Select-all is on. Copy it with your device's Copy command."; };
+    try{ navigator.clipboard.writeText(ta.value).then(done, fall); }catch(e){ fall(); } }
+  if(k==="sharebk" && window.AtlasNative){ window.AtlasNative.share("K.I.S.S AI backup", document.getElementById("setBackup").value); }
+  if(k==="restore"){ const st=document.getElementById("rsStatus");
+    try{ const o=JSON.parse(document.getElementById("setRestore").value); if(!o||o.app!=="kiss-ai"||typeof o.data!=="object") throw 0;
+      let c=0; Object.entries(o.data).forEach(([key,val])=>{ if(key.startsWith("atlas-") && typeof val==="string"){ localStorage.setItem(key,val); c++; } });
+      rerenderAll(); st.textContent=`Restored ${c} saved items.`; document.getElementById("setBackup").value=backupJSON();
+    }catch(e){ st.textContent="That doesn't look like a K.I.S.S AI backup. Paste the whole text you copied."; } }
+  return true;
+}
+function rerenderAll(){ refreshStages(); renderPanel(); if(state.view==="roles") renderRoles(); if(state.view==="home") renderHome(); }
+document.getElementById("openSettings").onclick=openSettings;
+document.getElementById("pSettings").onclick=openSettings;
+document.getElementById("pSearch").onclick=()=>{ document.querySelector("header").classList.add("searching"); q.focus(); };
+q.addEventListener("blur", ()=>setTimeout(()=>{ if(qres.hidden) document.querySelector("header").classList.remove("searching"); },150));
+
+/* ---------- Android Back button ---------- */
+window.atlasBack = function(){
+  if(!modal.hidden){ closeModal(); return true; }
+  const hd=document.querySelector("header");
+  if(hd.classList.contains("searching")){ hd.classList.remove("searching"); qres.hidden=true; return true; }
+  if(!qres.hidden){ qres.hidden=true; return true; }
+  if(state.view==="roles" && roleDetail){ roleDetail=null; renderRoles(); return true; }
+  if(state.view==="graph" && (state.sel||state.role)){ state.role=null; select(null); return true; }
+  if(isPhone() && state.view!=="home"){ setView("home"); return true; }
+  if(!isPhone() && state.view!=="graph"){ setView("graph"); return true; }
+  return false;
+};
 document.getElementById("zin").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1.3);
 document.getElementById("zout").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1/1.3);
 document.getElementById("zfit").onclick=()=>fit();
@@ -2125,17 +2376,20 @@ document.getElementById("zfit").onclick=()=>fit();
 function fitNodes(list, anim=true){
   if(!list.length) return; const r=svg.node().getBoundingClientRect(); if(!r.width) return;
   const x0=Math.min(...list.map(n=>n.x))-30, x1=Math.max(...list.map(n=>n.x+n.w))+30, y0=Math.min(...list.map(n=>n.y))-80, y1=Math.max(...list.map(n=>n.y))+30;
-  const k=Math.max(.2, Math.min(1.1, Math.min(r.width/(x1-x0), r.height/(y1-y0))*.95));
+  let k=Math.max(.2, Math.min(1.1, Math.min(r.width/(x1-x0), r.height/(y1-y0))*.95));
+  if(isPhone()){ k=Math.max(k,.75); const tg=state.role ? ROLES.find(x=>x.id===state.role).targets.split(/\s+/).map(id=>byId.get(id)) : list;
+    const cx=(Math.min(...tg.map(n=>n.x))+Math.max(...tg.map(n=>n.x+n.w)))/2, cy=(Math.min(...tg.map(n=>n.y))+Math.max(...tg.map(n=>n.y)))/2;
+    const t=d3.zoomIdentity.translate(r.width/2-k*cx, r.height/2-k*cy).scale(k); (anim?svg.transition().duration(650):svg).call(zoom.transform,t); return; }
   const t=d3.zoomIdentity.translate(r.width/2-k*(x0+x1)/2, r.height/2-k*(y0+y1)/2).scale(k);
   (anim?svg.transition().duration(650):svg).call(zoom.transform,t);
 }
 function selectRole(id, opts={}){
   state.role=id; state.sel=null; state.dom=null;
+  if(id){ try{ localStorage.setItem("atlas-lastrole", id); }catch(e){} }
   if(!modal.hidden) closeModal();
   renderPanel(); applyHighlight();
   if(id && state.view==="graph") fitNodes([...rolePath(ROLES.find(x=>x.id===id)).keys()], opts.anim!==false);
   if(id && location.hash.slice(1)!=="role-"+id){ try{ history.replaceState(null,"","#role-"+id); }catch(e){ location.hash="role-"+id; } }
-  if(id && opts.scroll && window.matchMedia("(max-width:860px)").matches) panel.scrollIntoView({behavior:"smooth"});
 }
 const RUNG_LABEL = {s:"Build it (Skill)", k:"Teach it (Knowledge)", i:"Be aware of it (Information)"};
 function roleHTML(role){
@@ -2175,8 +2429,11 @@ function roleHTML(role){
     ${group(RUNG_LABEL.i, I, false)}
     <p class="foot">Click empty map space to leave this role. Link to this role: #role-${role.id}</p>`;
 }
+let roleDetail = null;
 function renderRoles(){
   const el=document.getElementById("roles");
+  if(isPhone() && roleDetail){ const role=ROLES.find(x=>x.id===roleDetail);
+    el.innerHTML = `<div class="roleback"><button class="btn" data-roleback>‹ All roles</button><button class="btn primary" data-rolemap="${role.id}">Show on map</button></div><div class="rdetail">${roleHTML(role)}</div>`; return; }
   el.innerHTML = `<div class="rolesintro"><h2>Learning paths by role</h2><p>Each role has an ordered path of phases. Every phase lists topics to study, a teach-back to prove Knowledge, a capstone to prove Skill and a milestone for Success. Pick your background to skip what you already know.</p>
     <label class="bglabel">Your background <select class="bgsel" data-bg aria-label="Your background">${BACKGROUNDS.map(b=>`<option value="${b.id}" ${b.id===getBg()?"selected":""}>${esc(b.name)}</option>`).join("")}</select></label></div>` +
     Object.entries(ROLE_FAMILIES).map(([f,fname])=>`<section class="rfam"><h3>${esc(fname)}</h3><div class="rcards">${ROLES.filter(r=>r.fam===f).map(r=>{
@@ -2189,15 +2446,13 @@ function renderRoles(){
       </button>`; }).join("")}</div></section>`).join("");
 }
 document.getElementById("roles").addEventListener("change", ev=>{ if(ev.target.matches("[data-bg]")){ setBg(ev.target.value); renderRoles(); if(state.role) renderPanel(); } });
-document.getElementById("roles").addEventListener("click", ev=>{ const c=ev.target.closest("[data-role]"); if(!c) return; setView("graph"); selectRole(c.dataset.role,{scroll:true}); });
-
-/* ---------- Success goal ---------- */
-const goalSel = document.getElementById("goalSel");
-goalSel.value = getGoal();
-goalSel.addEventListener("change", ()=>{
-  setGoal(goalSel.value);
-  renderPanel();
-  if(!modal.hidden && modalId){ const top=sheet.scrollTop; const lad=sheet.querySelector(".ladder"); lad.outerHTML=ladderHTML(byId.get(modalId)); sheet.scrollTop=top; }
+document.getElementById("roles").addEventListener("click", ev=>{
+  if(ev.target.closest("[data-roleback]")){ roleDetail=null; renderRoles(); document.getElementById("roles").scrollTop=0; return; }
+  const m=ev.target.closest("[data-rolemap]"); if(m){ setView("graph"); selectRole(m.dataset.rolemap); return; }
+  const it=ev.target.closest("[data-id]"); if(it){ openModal(it.dataset.id); return; }
+  const c=ev.target.closest("[data-role]"); if(!c) return;
+  if(isPhone()){ roleDetail=c.dataset.role; selectRole(c.dataset.role); renderRoles(); document.getElementById("roles").scrollTop=0; return; }
+  setView("graph"); selectRole(c.dataset.role);
 });
 
 /* ---------- Android bridge ---------- */
@@ -2211,24 +2466,18 @@ function shareTopic(id){
     "Resources:",...[...r.learn,...r.papers].map(x=>`• ${x.t}: ${x.u}`)].join("\n");
   window.AtlasNative.share(n.label, text);
 }
-// Called by the app's Back button. Returns true when the page handled it.
-window.atlasBack = function(){
-  if(!modal.hidden){ closeModal(); return true; }
-  if(!qres.hidden){ qres.hidden=true; return true; }
-  if(state.view!=="graph"){ setView("graph"); return true; }
-  if(state.role){ state.role=null; select(null); return true; }
-  return false;
-};
-
 /* ---------- Boot ---------- */
 function start(){
   renderGraph(); renderList(); refreshStages();
   const h = location.hash.slice(1); const first = byId.has(h)? h : null;
   const firstRole = h.startsWith("role-") && ROLES.some(r=>r.id===h.slice(5)) ? h.slice(5) : null;
-  let v="graph"; try{ v = localStorage.getItem("atlas-view")||"graph"; }catch(e){}
-  setView(v==="list"?"list":"graph");
+  let v=null; try{ v = localStorage.getItem("atlas-view"); }catch(e){}
+  if(!["home","graph","list","roles"].includes(v)) v = isPhone() ? "home" : "graph";
   const r=svg.node().getBoundingClientRect(); svg.call(zoom.transform, d3.zoomIdentity.translate(r.width/2,r.height/2).scale(.7));
-  if(first) select(first,{anim:false}); else if(firstRole){ setView("graph"); selectRole(firstRole,{anim:false}); } else { renderPanel(); applyHighlight(); if(v!=="list") fit(false); }
+  setView(first||firstRole ? "graph" : v);
+  if(first) select(first,{anim:false}); else if(firstRole){ selectRole(firstRole,{anim:false}); }
+  else { renderPanel(); applyHighlight(); if(state.view==="graph"){ if(isPhone()) jumpLevel(0,false); else fit(false); } }
+  if(isPhone() && state.view!=="graph"){ document.getElementById("map").style.display="block"; jumpLevel(0,false); document.getElementById("map").style.display="none"; }
 }
 (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start, start);
 </script>

@@ -58,15 +58,6 @@ function shareTopic(id){
     "Resources:",...[...r.learn,...r.papers].map(x=>`• ${x.t}: ${x.u}`)].join("\n");
   window.AtlasNative.share(n.label, text);
 }
-// Called by the app's Back button. Returns true when the page handled it.
-window.atlasBack = function(){
-  if(!modal.hidden){ closeModal(); return true; }
-  if(!qres.hidden){ qres.hidden=true; return true; }
-  if(state.view!=="graph"){ setView("graph"); return true; }
-  if(state.role){ state.role=null; select(null); return true; }
-  return false;
-};
-
 /* ---------- Boot ---------- */''')
 s = s.rstrip() + "\n</body>\n</html>\n"
 open(dst, "w", encoding="utf-8").write(s)
